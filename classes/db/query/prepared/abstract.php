@@ -5,7 +5,7 @@
  * DB_Query_Prepared::exec();
  *
  * @author Bence Eros <crystal@cyclonephp.com>
- * @package SimpleDB
+ * @package DB
  */
 abstract class DB_Query_Prepared_Abstract implements DB_Query_Prepared {
 

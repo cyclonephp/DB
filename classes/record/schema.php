@@ -7,6 +7,8 @@
  * initialized in the Record_Abstract::setup() implementations. The singleton
  * instances of the Record classes can access their related schema using their
  * $_schema attribute.
+ *
+ * @package DB
  */
 class Record_Schema {
 

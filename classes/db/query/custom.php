@@ -2,7 +2,7 @@
 
 /**
  * @author Bence Eros <crystal@cyclonephp.com>
- * @package SimpleDB
+ * @package DB
  */
 class DB_Query_Custom implements DB_Query {
 

@@ -2,7 +2,7 @@
 
 /**
  * @author Bence Eros <crystal@cyclonephp.com>
- * @package SimpleDB
+ * @package DB
  */
 class DB_Compiler_Postgres extends DB_Compiler_Abstract {
 

@@ -5,7 +5,7 @@
  * DBMS type, using the appropriate php functions and methods.
  * 
  * @author Bence Eros <crystal@cyclonephp.com>
- * @package SimpleDB
+ * @package DB
  */
 interface DB_Executor {
 

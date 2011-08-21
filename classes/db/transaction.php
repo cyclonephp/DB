@@ -4,7 +4,7 @@
  * Represents a list of SQL queries that should be executed in a transaction.
  *
  * @author Bence Eros <crystal@cyclonephp.com>
- * @package SimpleDB
+ * @package DB
  */
 class DB_Transaction extends ArrayObject {
 

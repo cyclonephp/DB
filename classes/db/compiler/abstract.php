@@ -2,7 +2,7 @@
 
 /**
  * @author Bence Eros <crystal@cyclonephp.com>
- * @package SimpleDB
+ * @package DB
  */
 abstract class DB_Compiler_Abstract implements DB_Compiler {
 

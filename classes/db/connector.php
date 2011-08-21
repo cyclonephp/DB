@@ -8,7 +8,7 @@
  * one DB_Connector instance belongs to each database connections.
  *
  * @author Bence Eros <crystal@cyclonephp.com>
- * @package SimpleDB
+ * @package DB
  */
 interface DB_Connector {
 

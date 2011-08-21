@@ -6,6 +6,9 @@
  * Implementations are able to build proper DDL strings from the PHP objects that
  * represent database objects. These PHP objects are DB_Schema_Table and
  * DB_Schema_Column.
+ * 
+ * @author Bence Eros <crystal@cyclonephp.com>
+ * @package DB
  */
 interface DB_Schema_Generator {
 

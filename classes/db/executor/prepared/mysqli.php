@@ -2,6 +2,7 @@
 
 /**
  * Implementation of DB_Executor_Prepared for MySQLi
+ * @package DB
  */
 class DB_Executor_Prepared_Mysqli extends DB_Executor_Prepared_Abstract {
 

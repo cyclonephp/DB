@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Bence Eros <crystal@cyclonephp.com>
+ * @package DB
+ */
 class DB_Schema_Table {
 
     public static function for_record_schema(Record_Schema $schema) {

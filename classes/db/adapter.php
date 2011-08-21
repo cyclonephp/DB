@@ -7,7 +7,7 @@
  * the SQL. They provide a common, database-independent API.
  *
  * @author Bence Eros <crystal@cyclonephp.com>
- * @package SimpleDB
+ * @package DB
  */
 abstract class DB_Adapter {
 

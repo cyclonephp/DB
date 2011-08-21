@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * The result of a SELECT statement executed on a postgres database.
+ *
+ * @author Bence Eros <crystal@cyclonephp.com>
+ * @package DB
+ * @see DB_Adapter_Mysqli::exec_select()
+ */
+
 class DB_Query_Result_Prepared_MySQLi extends DB_Query_Result {
 
     private $_stmt;

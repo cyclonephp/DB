@@ -18,7 +18,7 @@
  * </code>
  *
  * @author Bence Eros <crystal@cyclonephp.com>
- * @package SimpleDB
+ * @package DB
  */
 abstract class DB_Query_Result extends ArrayIterator implements Countable, Traversable {
 

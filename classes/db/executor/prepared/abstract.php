@@ -6,7 +6,7 @@
  * It contains only a constructor for dependency injection.
  *
  * @author Bence Eros <crystal@cyclonephp.com>
- * @package SimpleDB
+ * @package DB
  */
 abstract class DB_Executor_Prepared_Abstract implements DB_Executor_Prepared {
 

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Bence Eros <crystal@cyclonephp.com>
+ * @package DB
+ */
 class DB_Schema_Generator_Abstract implements DB_Schema_Generator {
 
     private $_cfg;

@@ -8,7 +8,7 @@
  * each database adapters.
  * 
  * @author Bence Eros <crystal@cyclonephp.com>
- * @package SimpleDB
+ * @package DB
  * @see DB::compiler()
  */
 interface DB_Compiler {
