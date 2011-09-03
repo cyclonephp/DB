@@ -6,6 +6,11 @@
  */
 class DB_Compiler_Mysqli extends DB_Compiler_Abstract {
 
+    /**
+     * The table or column name escape character for MySQL is <code>`</code>.
+     *
+     * @var string
+     */
     protected $esc_char = '`';
 
      /**

@@ -6,14 +6,40 @@
  */
 class DB_Query_Select implements DB_Query, DB_Expression {
 
+    /**
+     * If <code>TRUE</code> then the query will be compiled as a
+     * <code>SELECT DISTINCT</code> query.
+     *
+     * @var boolean
+     */
     public $distinct;
 
+    /**
+     * Sequence of columns to be selected. Every item of the array can be:
+     * <ul>
+     * <li>a string (column name)</li>
+     * <li>an array that's 0th item is a column name, the 1st is a column alias</li>
+     * <li>an array that's 0th item is a \c DB_Expression instance, the 1st item
+     *      is an alias</li>
+     * </ul>
+     *
+     * @var array
+     */
     public $columns;
 
+    /**
+     * @var array
+     */
     public $tables;
 
+    /**
+     * @var array
+     */
     public $joins = NULL;
 
+    /**
+     * @var array
+     */
     protected $_last_join;
 
     /**
@@ -21,20 +47,44 @@ class DB_Query_Select implements DB_Query, DB_Expression {
      */
     public $where_conditions;
 
+    /**
+     * @var string
+     */
     public $group_by;
 
+    /**
+     * @var array
+     */
     public $having_conditions;
 
+    /**
+     * @var string
+     */
     public $order_by;
 
+    /**
+     * @var int
+     */
     public $offset;
 
+    /**
+     * @var int
+     */
     public $limit;
 
+    /**
+     * @var boolean
+     */
     public $for_update;
 
+    /**
+     * @var array<DB_Query_Select>
+     */
     public $unions = array();
 
+    /**
+     * @var array<string>
+     */
     public $hints = array();
 
     public function columns() {

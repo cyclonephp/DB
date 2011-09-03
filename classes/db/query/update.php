@@ -6,12 +6,34 @@
  */
 class DB_Query_Update implements DB_Query {
 
+    /**
+     * The table name of the <code>UPDATE</code> query.
+     *
+     * @var string
+     */
     public $table;
 
+    /**
+     * The values to be updated (column name => column value pairs).
+     *
+     * @var array
+     */
     public $values;
 
+    /**
+     * The <code>WHERE</code> clause of the query. All items should be DB_Expression
+     * instances and they will be concatenated with a top-level <code>AND</code>
+     * operator during compilation.
+     *
+     * @var array
+     */
     public $conditions;
 
+    /**
+     * The <code>LIMIT</code> clause of the query.
+     *
+     * @var int
+     */
     public $limit;
 
     public function table($table) {

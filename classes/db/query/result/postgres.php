@@ -9,6 +9,11 @@
  */
 class DB_Query_Result_Postgres extends DB_Query_Result {
 
+    /**
+     * The raw query result.
+     *
+     * @var resource
+     */
     private $_res;
 
     /**

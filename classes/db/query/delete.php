@@ -6,10 +6,27 @@
  */
 class DB_Query_Delete implements DB_Query {
 
+    /**
+     * The table name of the <code>DELETE</code> query.
+     *
+     * @var string
+     */
     public $table;
 
+    /**
+     * The WHERE conditions of the query. All items of the array should be
+     * \c DB_Expression instances, and they will be concatenated by top-level
+     * <code>AND</code> operators during the compilation.
+     *
+     * @var array
+     */
     public $conditions;
 
+    /**
+     * The <code>LIMIT</code> clause of the query.
+     *
+     * @var int
+     */
     public $limit;
 
     public function table($table) {

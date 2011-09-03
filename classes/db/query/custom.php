@@ -6,6 +6,11 @@
  */
 class DB_Query_Custom implements DB_Query {
 
+    /**
+     * A raw SQL query.
+     *
+     * @var string
+     */
     protected $sql;
 
     public function  __construct($sql) {

@@ -6,8 +6,18 @@
  */
 class DB_Query_Insert implements DB_Query {
 
+    /**
+     * The table name of the <code>INSERT</code> query.
+     *
+     * @var string
+     */
     public $table;
 
+    /**
+     * The values to be inserted.
+     *
+     * @var array
+     */
     public $values;
 
     public function table($table) {

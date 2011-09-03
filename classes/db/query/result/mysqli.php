@@ -9,6 +9,11 @@
  */
 class DB_Query_Result_Mysqli extends DB_Query_Result {
 
+    /**
+     * The raw query result.
+     *
+     * @var resource
+     */
     protected $result;
 
     public function  __construct(mysqli_result $result) {

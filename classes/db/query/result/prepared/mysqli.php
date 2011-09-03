@@ -10,8 +10,16 @@
 
 class DB_Query_Result_Prepared_MySQLi extends DB_Query_Result {
 
+    /**
+     * @var MySQLi_STMT
+     */
     private $_stmt;
 
+    /**
+     * Flag marking that the query still has more rows.
+     *
+     * @var boolean
+     */
     private $_is_valid;
 
     public function  __construct(MySQLI_Stmt $stmt, DB_Query_Select $orig_query) {

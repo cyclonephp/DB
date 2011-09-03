@@ -6,14 +6,39 @@
  */
 class DB {
 
+    /**
+     * Object pool for the compiler instances.
+     *
+     * @var array<DB_Compiler>
+     */
     private static $_compilers = array();
 
+    /**
+     * Object pool for the executor instances.
+     *
+     * @var array<DB_Executor>
+     */
     private static $_executors = array();
 
+    /**
+     * Object pool for the prepared statement executor instances.
+     *
+     * @var array<DB_Executor_Prepared>
+     */
     private static $_executor_prepareds = array();
 
+    /**
+     * Object pool for the connector instances.
+     *
+     * @var array<DB_Connector>
+     */
     private static $_connectors = array();
 
+    /**
+     * Object pool for the schema generator instances.
+     *
+     * @var array
+     */
     private static $_schema_generators = array();
 
     /**

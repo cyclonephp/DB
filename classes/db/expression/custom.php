@@ -6,6 +6,12 @@
  */
 class DB_Expression_Custom implements DB_Expression {
 
+    /**
+     * The custom database expression. No escaping or any other processing
+     * will be made on this string while the query is compiled.
+     *
+     * @var string
+     */
     public $str;
 
     public function  __construct($str) {

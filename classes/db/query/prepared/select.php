@@ -6,6 +6,9 @@
  */
 class DB_Query_Prepared_Select extends DB_Query_Prepared_Abstract {
 
+    /**
+     * @var DB_Query_Select
+     */
     private $_query;
 
     public function  __construct($sql, $database, DB_Query_Select $query) {

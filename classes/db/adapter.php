@@ -11,10 +11,23 @@
  */
 abstract class DB_Adapter {
 
+    /**
+     * @var array
+     */
     protected $config;
-    
+
+    /**
+     *
+     * @var array
+     */
     protected $_table_aliases = array();
 
+    /**
+     * The column or table name escaper for the given DBMS (concrete subclasses
+     * define its value).
+     *
+     * @var string
+     */
     protected $esc_char;
 
     /**

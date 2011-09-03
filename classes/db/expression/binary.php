@@ -6,10 +6,27 @@
  */
 class DB_Expression_Binary implements DB_Expression {
 
+    /**
+     * The binary operator.
+     *
+     * @var string
+     */
     public $operator;
 
+    /**
+     * The left operand of the expression. Can be a \c DB_Expression instance
+     * or a scalar value.
+     *
+     * @var mixed
+     */
     public $left_operand;
 
+    /**
+     * The right operand of the expression. Can be a \c DB_Expression instance
+     * or a scalar value.
+     *
+     * @var mixed
+     */
     public $right_operand;
 
     public function  __construct($left_operand, $operator, $right_operand) {

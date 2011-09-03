@@ -5,7 +5,12 @@
  * @package DB
  */
 class DB_Expression_Param implements DB_Expression {
-    
+
+    /**
+     * An untrusted parameter that should be escaped.
+     *
+     * @var scalar
+     */
     protected $val;
 
     public function  __construct($val) {

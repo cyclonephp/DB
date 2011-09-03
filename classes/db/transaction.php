@@ -8,6 +8,11 @@
  */
 class DB_Transaction extends ArrayObject {
 
+    /**
+     * The queries to be executed during the transaction.
+     *
+     * @var array<DB_Query>
+     */
     protected $_queries;
 
     /**

@@ -9,12 +9,29 @@
  */
 abstract class DB_Query_Prepared_Abstract implements DB_Query_Prepared {
 
+    /**
+     * The parameters of the prepared statement
+     *
+     * @var array
+     */
     protected $_params = array();
 
+    /**
+     * The raw SQL
+     *
+     * @var string
+     */
     protected $_sql;
 
+
+    /**
+     * @var mixed
+     */
     protected $_prepared_stmt;
 
+    /**
+     * @var DB_Executor_Prepared
+     */
     protected  $_executor;
 
     public function  __construct($sql, $database) {

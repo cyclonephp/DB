@@ -6,8 +6,19 @@
  */
 class DB_Expression_Unary implements DB_Expression {
 
+    /**
+     * The prefix operator of the unary expression.
+     *
+     * @var string
+     */
     public $operator;
 
+    /**
+     * The operand of the unary expression. Can be a \c DB_Expression instance
+     * or a scalar value.
+     *
+     * @var mixed
+     */
     public $operand;
 
     public function  __construct($operator, $operand) {

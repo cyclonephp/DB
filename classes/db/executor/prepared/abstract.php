@@ -10,8 +10,16 @@
  */
 abstract class DB_Executor_Prepared_Abstract implements DB_Executor_Prepared {
 
+    /**
+     * @var array
+     */
     protected $_config;
 
+    /**
+     * The raw database connection.
+     *
+     * @var recource
+     */
     protected $_db_conn;
 
     public function  __construct($config, $db_conn) {

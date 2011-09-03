@@ -6,6 +6,11 @@
  */
 class DB_Executor_Postgres extends DB_Executor_Abstract {
 
+    /**
+     * The primary key generator sequences.
+     *
+     * @var array
+     */
     private $_generator_sequences;
 
     public function  __construct($config, $db_conn) {

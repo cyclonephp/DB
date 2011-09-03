@@ -6,6 +6,11 @@
  */
 class DB_Schema_Generator_Abstract implements DB_Schema_Generator {
 
+    /**
+     * The configuration passed in the constructor
+     *
+     * @var array
+     */
     private $_cfg;
 
     function __construct($cfg) {

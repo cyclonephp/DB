@@ -22,12 +22,37 @@
  */
 abstract class DB_Query_Result extends ArrayIterator implements Countable, Traversable {
 
+    /**
+     * The type of the resulting rows. Can be <code>array</code> or a class name.
+     * If it's a class name, then the class should have a parameterless constructor
+     * and the values will be populated by simple value assignments (the concrete
+     * subclasses won't try to call setters or whatever other method).
+     *
+     * @var string
+     */
     protected $_row_type = 'array';
 
+    /**
+     * If this value is not <code>NULL</code>, then during processing the result,
+     * the array keys will be the actual values in the current row specified by
+     * this value (so it should be a column name in the query result).
+     *
+     * @var string
+     */
     protected $_index_by;
 
+    /**
+     * The row that's currently processed (a cursor).
+     *
+     * @var array
+     */
     protected $_current_row;
 
+    /**
+     * The index of the currently processed row.
+     *
+     * @var int
+     */
     protected $_idx = -1;
 
     /**

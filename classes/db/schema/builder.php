@@ -29,6 +29,10 @@ class DB_Schema_Builder {
         return $ddl;
     }
 
+    /**
+     *
+     * @var string
+     */
     private $_library;
 
     /**

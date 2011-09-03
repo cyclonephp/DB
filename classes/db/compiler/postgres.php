@@ -6,6 +6,11 @@
  */
 class DB_Compiler_Postgres extends DB_Compiler_Abstract {
 
+    /**
+     * The table or column name escape character for Postgres is <code>"</code>.
+     *
+     * @var string
+     */
     protected $esc_char = '"';
 
     public function  compile_hints($hints) {

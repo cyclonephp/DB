@@ -6,10 +6,28 @@
  */
 abstract class DB_Compiler_Abstract implements DB_Compiler {
 
+    /**
+     * The configuration passed in the constructor
+     *
+     * @var array
+     */
     protected $_config;
 
+    /**
+     * The database connection.
+     *
+     * @var resource
+     */
     protected $_db_conn;
 
+    /**
+     * Sequence of table aliases used in the query. This array is populated
+     * bye the select_aliases() method and used by escape_identifier() to avoid
+     * appending the table prefix (optionally set up for the connection) to table
+     * aliases.
+     *
+     * @var array
+     */
     protected $_table_aliases = array();
 
     public function  __construct($config, $db_conn) {

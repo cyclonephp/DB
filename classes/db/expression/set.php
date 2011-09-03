@@ -5,6 +5,11 @@
  */
 class DB_Expression_Set implements DB_Expression {
 
+    /**
+     * The set to be escaped.
+     *
+     * @var array
+     */
     protected $arr;
 
     public function  __construct($arr) {
