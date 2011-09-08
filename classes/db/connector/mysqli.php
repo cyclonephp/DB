@@ -16,14 +16,13 @@ class DB_Connector_Mysqli extends DB_Connector_Abstract {
             $host = $conn['host'];
         }
 
-
         $this->db_conn = @new mysqli($host, $conn['username'],
                 $conn['password'], $conn['database']
-                , Arr::get($conn, 'port',  ini_get('mysqli.default_port'))
-                , Arr::get($conn, 'socket', ini_get('mysqli.default_socket')));
+                , \cyclone\Arr::get($conn, 'port',  ini_get('mysqli.default_port'))
+                , \cyclone\Arr::get($conn, 'socket', ini_get('mysqli.default_socket')));
         if (mysqli_connect_errno())
             throw new DB_Exception('failed to connect: '.mysqli_connect_error());
-        $this->db_conn->set_charset(isset($conn['charset']) ? $conn['charset'] : Env::$charset);
+        $this->db_conn->set_charset(isset($conn['charset']) ? $conn['charset'] : \cyclone\Env::$charset);
     }
 
     public function disconnect() {

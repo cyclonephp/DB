@@ -201,7 +201,7 @@ abstract class Record_Abstract {
 
     public function  __get($name) {
         if (array_key_exists($name, $this->schema()->columns)) {
-            return Arr::get($this->_row, $name);
+            return \cyclone\Arr::get($this->_row, $name);
         } elseif (array_key_exists($name, $this->_transient_data)) {
             return $this->_transient_data[$name];
         }

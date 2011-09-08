@@ -1,5 +1,7 @@
 <?php
 
+use cyclone as cy;
+
 /**
  * @author Bence Eros <crystal@cyclonephp.com>
  * @package DB
@@ -46,8 +48,8 @@ class DB {
      * @return DB_Compiler
      */
     public static function compiler($config = 'default') {
-        if ( ! array_key_exists($config, self::$_compilers)) {
-            $cfg = Config::inst()->get('simpledb/'.$config);
+        if ( ! isset(self::$_compilers[$config])) {
+            $cfg = cy\Config::inst()->get('simpledb/'.$config);
             $class = 'DB_Compiler_'.$cfg['adapter'];
             self::$_compilers[$config] = new $class($cfg, DB::connector($config)->db_conn);
         }
@@ -59,8 +61,8 @@ class DB {
      * @return DB_Executor
      */
     public static function executor($config = 'default') {
-        if ( ! array_key_exists($config, self::$_executors)) {
-            $cfg = Config::inst()->get('simpledb/'.$config);
+        if ( ! isset(self::$_executors[$config])) {
+            $cfg = cy\Config::inst()->get('simpledb/'.$config);
             $class = 'DB_Executor_'.$cfg['adapter'];
             self::$_executors[$config] = new $class($cfg, DB::connector($config)->db_conn);
         }
@@ -72,8 +74,8 @@ class DB {
      * @return DB_Executor_Prepared
      */
     public static function executor_prepared($config = 'default') {
-        if ( ! array_key_exists($config, self::$_executor_prepareds)) {
-            $cfg = Config::inst()->get('simpledb/'.$config);
+        if ( ! isset(self::$_executor_prepareds[$config])) {
+            $cfg = cy\Config::inst()->get('simpledb/'.$config);
             $class = 'DB_Executor_Prepared_'.$cfg['adapter'];
             self::$_executor_prepareds[$config] = new $class($cfg, DB::connector($config)->db_conn);
         }
@@ -85,8 +87,8 @@ class DB {
      * @return DB_Connector
      */
     public static function connector($config = 'default') {
-        if ( ! array_key_exists($config, self::$_connectors)) {
-            $cfg = Config::inst()->get('simpledb/'.$config);
+        if ( ! isset(self::$_connectors[$config])) {
+            $cfg = cy\Config::inst()->get('simpledb/'.$config);
             $class = 'DB_Connector_'.$cfg['adapter'];
             self::$_connectors[$config] = new $class($cfg);
         }
@@ -98,8 +100,8 @@ class DB {
      * @return DB_Schema_Generator
      */
     public static function schema_generator($config = 'default') {
-        if ( ! array_key_exists($config, self::$_schema_generators)) {
-            $cfg = Config::inst()->get('simpledb/'.$config);
+        if ( ! isset(self::$_schema_generators[$config])) {
+            $cfg = cy\Config::inst()->get('simpledb/'.$config);
             $class = 'DB_Schema_Generator_'.$cfg['adapter'];
             self::$_schema_generators[$config] = new $class($cfg);
         }
