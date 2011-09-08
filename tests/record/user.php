@@ -1,7 +1,9 @@
 <?php
 
+use cyclone\db\record;
 
-class Record_User extends Record_Abstract {
+
+class Record_User extends record\AbstractRecord {
 
     protected function  setup() {
         $this->_schema->database = 'default';
