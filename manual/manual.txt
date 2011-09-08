@@ -1,0 +1,261 @@
+The DB library is
+ - the low-level database abstraction layer of the CyclonePHP
+		framework.
+ - It provides a DBMS-independent way of accessing and 
+		manipulating databases.
+ - Similar to Kohana's Database module.
+ - The back-end layer for JORK
+ - Can be used as a stand-alone module
+ - Supports transactions
+ - Comes with a minimal active record implementation
+ 
+ 
+ @section simpledb-gettingstarted Getting started with SimpleDB
+ 
+ Let's create a sample database in MySQL:
+ 
+ @code
+ CREATE DATABASE simpledb;
+	
+	GRANT ALL ON simpledb.* TO 'simpledb'@'localhost' IDENTIFIED BY 'simpledb';
+	
+	CREATE TABLE users (
+		id INT PRIMARY KEY AUTO_INCREMENT,
+		name VARCHAR(32) NOT NULL
+	);
+	@endcode
+ 
+ Let's set up the database connection in <tt> application/config/simpledb/default.php </tt> :
+ 
+ @code
+ <?php
+
+	return array(
+		'adapter' => 'mysqli',
+		'connection' => array(
+			'username' => 'simpledb',
+			'password' => 'simpledb',
+			'database' => 'simpledb',
+			'host' => 'localhost',
+		)
+	);
+ @endcode
+ 
+ So we told SimpleDB that we will have a database connection called
+  'default', and we are going to use the MySQLi adapter for that.
+ It means that the MySQLi extension will be used to communicate
+ with the database.
+	
+ With SimpleDB you can manage multiple connections at the same time.
+ The only thing you have to do you have to tell the module what connection
+ do you want to use every time you execute an SQL query. If you
+ don't then the default connection will be 'default'.
+ More about it later.
+ 
+ @section simpledb-datamanip Data manipulation
+ 
+ In this section we will cover the steps of building data manipulating SQL statements.
+ 
+ @subsection simpledb-insert INSERT
+ 
+ We are going to load some data into the database, so let's look
+ at the INSERT statements:
+ @code
+ $id = DB::insert('users')->values(array('name' => 'user 01'))->exec();
+ @endcode
+ 
+ This piece of code creates an INSERT statement and executes it
+ on the 'default' database connection. If you have wanted to use - for 
+ example - a connection set up in <tt> application/config/simpledb/legacy.php </tt>
+ then you would call @code exec('legacy') @endcode at the end of the code.
+ 
+ In the above example the @c $id variable stores the primary key of the
+ last inserted row.
+ 
+ <em>Note: retrieving the ID of the last inserted row goes quickly for
+ MySQL, but it can cause some performance overhead for other DBMSs.
+ You can disable the insert ID retrieval by passing FALSE in the
+ second parameter of the exec() call. In this case the return value 
+ will be NULL.</em>
+ 
+ You can insert multiple rows in the same INSERT statement this way:
+ @code
+ DB::insert('users')->values(array('name' => 'user 02')
+ , array('name' => 'user 03'))->exec();
+ @endcode
+ 
+ So, the values() method has variable length parameter list, where
+ every parameter should be a column-name =\> value associative array.
+ 
+ @subsection simpledb-update UPDATE
+ 
+ The syntax of UPDATE statements is very similar to INSERTs.
+ Example:
+ 
+ @code
+ $id = 1;  // we are going to update the row with id = 1
+ $row_count = DB::update('users')->values(array('name' => 'user 01 updated'))
+		->where('id, '=', DB::esc($id))->exec();
+ @endcode
+ 
+ We pass the table name to the \c update() call, then key-value pairs
+ to the \c values() call, where keys should be column names and values
+ should be the values to be updated. Then we create a \c WHERE condition.
+ Note that the ID - the parameter of the query is in a \c DB::esc() call.
+ This method call should be used always when you want to pass
+ any user-entered data to your queries, this way it will be escaped
+ to avoid SQL injection. Furthermore, if you don't use \c DB::esc()
+ then most times the query execution will result into an SQL error.
+ 
+ More about \c WHERE conditions later. Note that you also have to call
+ \c exec() for \c UPDATE statements too, optionally by passing the database
+ connection name.
+ 
+ The \c exec() call for \c UPDATE statements return the number of affected
+ rows by the SQL \c UPDATE (it's stored in the \c $row_count) variable 
+ in this case).
+ 
+ @subsection DELETE
+ 
+ The syntax of DELETE statements is very similar. Example:
+ @code
+ $id = 1;
+ $row_count = DB::delete('users')->where('id', '=', DB::esc($id))->exec();
+ @endcode
+ 
+ The return value is the number of rows deleted.
+ 
+ @section SELECT
+ 
+ SELECT queries can be much more complicated then other SQL statements. In
+  this chapter we are going to look at the most important guidelines of
+  building SELECTs, but we won't cover each query builder methods in detail.
+  For further information please look at the API docs.
+  
+  So let's get started with a simple query:
+  @code
+  DB::select()->from('users')->exec();
+  @endcode
+  
+  This will generate the SQL <tt>SELECT * FROM `users`</tt> and will execute
+  it on the default database connection.
+  
+  To specify the columns to be selected pass them to the <tt>select()</tt> method:
+  @code
+  DB::select('id', 'name')->from('users')->exec();
+  @endcode
+  
+  Generated SQL:
+  @code
+  SELECT `id`, `name` from `users`
+  @endcode
+  
+  <em>Note that in the generated SQL the column and table names are escaped, 
+  so you can use SQL keywords as table or columns names, but it's not recommended</em>
+  
+  Let's add a \c WHERE clause:
+  @code
+  $id = 2;
+  DB::select()->from('users')->where('id', '=', DB::esc($id))->exec();
+  @endcode
+  
+  As it has already been mentioned in the UPDATE section, you have to put your
+  parameters into a \c DB::esc() call.
+  
+  If you select from multiple tables then you have to qualify your table names, 
+  as you normally should do in SQL:
+  @code
+  DB::select('users.id', 'users.name', 'posts.text')->from('users', 'posts')->exec();
+  @endcode
+  
+  Generated SQL:
+  @code
+  SELECT `users`.`id`, `users`.`name`, `posts`.`text` FROM `users`, `posts`
+  @endcode
+  
+  
+  When you have more than one tables in your \c FROM and \c JOIN clauses,
+  you will likely want to add an alias name for them. If you want to add an
+  alias name to a table, you have to use it in <tt>array('table_name', 'alias')</tt>
+  format:
+  @code
+  DB::select('u.id', 'u.name', 'p.text')->from(array('users', 'u')
+  		, array('posts', 'p'))->exec();
+  @endcode
+  
+  If you want to give an alias name to your column in the \c SELECT clause, then
+  you also have to use the same format:
+  @code
+  DB::select(array('u.id', 'userid')
+  		, array('u.name', 'username')
+  		, 'p.text')->from(array('users', 'u'), array('posts', 'p'))->exec();
+  @endcode
+  
+  You can build the JOIN clause of the query using the \c join() and \c on()
+  builder methods. Example:
+  @code
+  DB::select(array('u.id', 'userid')
+  		, array('u.name', 'username')
+  		, 'posts.text')->from(array('users', 'u'))
+  		->join('posts')->on('u.id', '=', 'post.author_fk')->exec();
+  @endcode
+  
+  In the 2th parameter of the \c join() call you can specify what kind of
+  join you want to perform (LEFT, RIGHT, INNER, whatever). The default
+  value is LEFT. SimpleDB won't care about the contents of the 2th parameter,
+  so feel free to use any DBMS-specific join types.
+  
+  If you want to add an alias name to the joined table, then you have to
+  use the same syntax as for table and column aliases, so let's alias
+  the 'posts' table to 'p' in the previous example:
+  @code
+  DB::select(array('u.id', 'userid')
+  		, array('u.name', 'username')
+  		, 'p.text')->from(array('users', 'u'))
+  		->join(array('posts', 'p'))->on('u.id', '=', 'p.author_fk')->exec();
+  @endcode
+  
+  If you want to select anything that is not a database column but any 
+  other database expression, then you have to put it into a \c DB::expr() call. 
+  Don't mix it up with \c DB::esc() since \c DB::expr() won't perform 
+  any escaping. Example:
+  @code
+  DB::select('id')->from('users')
+  	->where('created_at', '=', DB::select(DB::expr('max(u.created_at)'))
+  		->from(array('users', 'u')))->exec();
+  @endcode
+  
+  The query builder won't care about the contents of your \c DB::expr() call,
+  so you can use here whatever complex expression you want.
+  
+  <em>Note: you can also put your database expression into the \c SELECT
+  clause, but in that case you have to pass an alias name using an array.</em>
+  
+  @subsection simpledb-subqueries Using subqueries
+  
+  An other thing you could notice in the previous example that we used a 
+  subquery in the \c WHERE clause. So just like in SQL, you can use subqueries
+  in many places: in the \c SELECT clause, \c FROM clause, \c JOIN clause, etc.
+  
+  An example to select the count of posts for each users:
+  @code
+  DB::select('name'
+  		, array(DB::select(DB::expr('count(posts.id)')->from('posts')
+  			->where('posts.author_fk', '=', 'users.id')
+  		), 'post_count')->from('users')->exec();
+  @endcode
+  
+  Note that you don't have to call the \c exec() method of the subquery,
+  it will be compiled with its 'parent' query.
+  
+  @subsection simpledb-sets Using sets
+  
+  In SQL you can use explicitly defined sets instead of subselects, for 
+  example @code SELECT * FROM users WHERE id IN (1, 2, 3) @endcode .
+  
+  With SimpleDB you can create such queries by putting an array into 
+  a \c DB::expr() call. Example:
+  @code
+  DB::select()->from('users')->where('id', 'IN', DB::expr(array(1, 2, 3))->exec();
+  @endcode
+

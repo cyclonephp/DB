@@ -8,14 +8,12 @@
  * of DB_Query_Result. Result objects are recommended to not be created directly,
  * but via the exec() method of DB_Query_Select.
  *
- * Example:
- * <code>
+ * Example: @code
  * $result = DB::select()->from('t_users')->exec()
- *      ->rows('Model_User')->index_by('id);
+ *      ->rows('Model_User')->index_by('id');
  * foreach ($result as $id => $user) {
  *    echo "user #$id: {$user->name}";
- * }
- * </code>
+ * } @endcode
  *
  * @author Bence Eros <crystal@cyclonephp.com>
  * @package DB
