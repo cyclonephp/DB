@@ -1,6 +1,6 @@
 <?php
 
-require_once DOCROOT.'libs/db/tests/simpledb/mysqli/dbtest.php';
+require_once \cyclone\DOCROOT.'libs/db/tests/simpledb/mysqli/dbtest.php';
 
 class SimpleDB_Mysqli_CompileTest extends SimpleDB_Mysqli_DbTest {
 
