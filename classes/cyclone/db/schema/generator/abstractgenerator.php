@@ -7,7 +7,7 @@ use cyclone\db\schema;
  * @author Bence Eros <crystal@cyclonephp.com>
  * @package DB
  */
-class AbstractGenerator implements db\schema\Generator {
+class AbstractGenerator implements schema\Generator {
 
     /**
      * The configuration passed in the constructor

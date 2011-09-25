@@ -39,7 +39,7 @@ class Table {
     public $table_name;
 
     /**
-     * Column name => DB_Schema_Column pairs
+     * Column name > Column pairs
      *
      * @var array
      */

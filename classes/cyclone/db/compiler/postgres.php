@@ -1,6 +1,6 @@
 <?php
 
-namespace cyclone\db;
+namespace cyclone\db\compiler;
 
 use cyclone\db;
 
