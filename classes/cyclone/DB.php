@@ -49,7 +49,7 @@ class DB {
      */
     public static function compiler($config = 'default') {
         if ( ! isset(self::$_compilers[$config])) {
-            $cfg = Config::inst()->get('simpledb/'.$config);
+            $cfg = Config::inst()->get('db/'.$config);
             $class = '\\cyclone\\db\\compiler\\'.ucfirst($cfg['adapter']);
             self::$_compilers[$config] = new $class($cfg, DB::connector($config)->db_conn);
         }
@@ -62,7 +62,7 @@ class DB {
      */
     public static function executor($config = 'default') {
         if ( ! isset(self::$_executors[$config])) {
-            $cfg = Config::inst()->get('simpledb/'.$config);
+            $cfg = Config::inst()->get('db/'.$config);
             $class = '\\cyclone\\db\\executor\\'.ucfirst($cfg['adapter']);
             self::$_executors[$config] = new $class($cfg, DB::connector($config)->db_conn);
         }
@@ -75,7 +75,7 @@ class DB {
      */
     public static function executor_prepared($config = 'default') {
         if ( ! isset(self::$_executor_prepareds[$config])) {
-            $cfg = Config::inst()->get('simpledb/'.$config);
+            $cfg = Config::inst()->get('db/'.$config);
             $class = '\\cyclone\\db\\prepared\\executor\\'.ucfirst($cfg['adapter']);
             self::$_executor_prepareds[$config] = new $class($cfg, DB::connector($config)->db_conn);
         }
@@ -88,7 +88,7 @@ class DB {
      */
     public static function connector($config = 'default') {
         if ( ! isset(self::$_connectors[$config])) {
-            $cfg = Config::inst()->get('simpledb/'.$config);
+            $cfg = Config::inst()->get('db/'.$config);
             $class = '\\cyclone\\db\\connector\\'.ucfirst($cfg['adapter']);
             self::$_connectors[$config] = new $class($cfg);
         }
@@ -101,7 +101,7 @@ class DB {
      */
     public static function schema_generator($config = 'default') {
         if ( ! isset(self::$_schema_generators[$config])) {
-            $cfg = Config::inst()->get('simpledb/'.$config);
+            $cfg = Config::inst()->get('db/'.$config);
             $class = '\\cyclone\\db\\schema\\generator\\'.ucfirst($cfg['adapter']);
             self::$_schema_generators[$config] = new $class($cfg);
         }
