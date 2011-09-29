@@ -1,19 +1,18 @@
 <?php
 
 return array(
-    'simpledb' => array(
-        'description' => 'SimpleDB is a low-level database abstraction layer for CyclonePHP',
+    'db' => array(
+        'description' => 'The DB library is a low-level database abstraction layer for CyclonePHP',
         'commands' => array(
             'generate-schema' => array(
                 'description' => "Generates database schema.
 
 Iterates on all classes named Record_*, instantiates each one and creates database schema for them.",
                 'arguments' => array(
-                    '--library' => array(
-                        'alias' => '-l',
-                        'parameter' => '<library-name>',
-                        'descr' => 'Database schema will be generated for classes in library <library name>.
-                            You can pass multiple libraries by passing a comma-separated list of library names (eg. -l frontend,backend)',
+                    '--namespace' => array(
+                        'alias' => '-n',
+                        'parameter' => '<namespace>',
+                        'descr' => 'AbstractRecord implementations will be searched under the <namespace> namespace. You can also pass a comma-separated list of namespaces.',
                         'required' => false
                     ),
                     '--forced' => array(
@@ -27,7 +26,7 @@ Iterates on all classes named Record_*, instantiates each one and creates databa
                         'descr' => 'Prints the generated DDL to stdout and does not execute it'
                     )
                 ),
-                'callback' => array('DB_Schema_Builder', 'build_schema')
+                'callback' => array('cyclone\\db\\schema\\Builder', 'build_schema')
             )
         )
     )

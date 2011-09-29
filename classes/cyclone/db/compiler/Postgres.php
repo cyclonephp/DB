@@ -18,7 +18,7 @@ class Postgres extends AbstractCompiler {
     protected $esc_char = '"';
 
     public function  compile_hints($hints) {
-        throw new DB_Exception("postgres doesn't support hints");
+        throw new db\Exception("postgres doesn't support hints");
     }
 
     public function compile_alias($expr, $alias) {
@@ -41,13 +41,13 @@ class Postgres extends AbstractCompiler {
         if ($table instanceof DB_Expression)
             return $table->compile_expr($this);
 
-        $prefix = array_key_exists('prefix', $this->_config)
+        $prefix = isset($this->_config['prefix'])
                 ? $this->_config['prefix']
                 : '';
 
         if (is_array($table)) {
             list($table_name, $alias) = $table;
-            if ($table_name instanceof DB_Expression) {
+            if ($table_name instanceof db\Expression) {
                 $rtable = '(' . $table_name->compile_expr($this) . ') "' . $table[1] . '"';
             } else {
                 $rtable = '"' . $prefix . $table[0] . '" "' . $table[1] . '"';

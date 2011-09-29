@@ -22,11 +22,13 @@ class Postgres extends AbstractConnector {
             $conn_params []= "$k=$v";
         }
         $conn_str = implode(' ', $conn_params);
+        //die("before connect $conn_str\n");
         if ($persistent) {
-            $this->db_conn = @pg_pconnect($conn_str);
+            $this->db_conn = pg_pconnect($conn_str);
         } else {
-            $this->db_conn = @pg_connect($conn_str);
+            $this->db_conn = pg_connect($conn_str);
         }
+        
         if (FALSE == $this->db_conn)
             throw new db\Exception('failed to connect to database: '.$conn_str);
 
@@ -39,7 +41,7 @@ class Postgres extends AbstractConnector {
 
     public function  disconnect() {
         if ( ! pg_close($this->db_conn))
-            throw new DB_Exception("failed to disconnect from database '{$this->_config['connection']['dbname']}'");
+            throw new db\Exception("failed to disconnect from database '{$this->_config['connection']['dbname']}'");
     }
 
     /**

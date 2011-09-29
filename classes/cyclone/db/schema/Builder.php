@@ -19,7 +19,7 @@ class Builder {
         $forced = array_key_exists('--forced', $args) ? $args['--forced'] : FALSE;
         $suppress_execution = array_key_exists('--suppress-execution', $args)
                 ? $args['--suppress-execution'] : FALSE;
-        $library = array_key_exists('--library', $args) ? $args['--library'] : NULL;
+        $library = array_key_exists('--namespace', $args) ? $args['--namespace'] : NULL;
         $builder = new Builder($forced, $suppress_execution, $library);
         $builder->build();
     }
@@ -37,7 +37,7 @@ class Builder {
      *
      * @var string
      */
-    private $_library;
+    private $_namespace;
 
     /**
      * @var boolean
@@ -49,15 +49,18 @@ class Builder {
      */
     private $_suppress_execution = FALSE;
 
-    public function  __construct($forced = FALSE, $suppress_execution = FALSE, $library = NULL) {
-        $this->_library = $library;
+    public function  __construct($forced = FALSE, $suppress_execution = FALSE, $namespace = NULL) {
+        $this->_namespace = $namespace;
         $this->_forced = $forced;
         $this->_suppress_execution = $suppress_execution;
     }
 
     public function build() {
-        $libraries = NULL === $this->_library ? NULL : explode(',', $this->_library);
-        $files = cy\FileSystem::list_directory('classes/record', $libraries);
+        $namespaces = NULL === $this->_namespace ? NULL : explode(',', $this->_namespace);
+        $files = array();
+        foreach ($namespaces as $ns) {
+            $files += cy\FileSystem::list_directory('classes/' . \str_replace('\\', \DIRECTORY_SEPARATOR, $ns));
+        }
         $classes = array();
         foreach ($files as $rel_path => $abs_path) {
             $prefix_len = strlen('classes/record') + 1;

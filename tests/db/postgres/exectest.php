@@ -1,16 +1,20 @@
 <?php
 
-class SimpleDB_Postgres_ExecTest extends SimpleDB_Postgres_DbTest {
+require_once cyclone\LIBPATH.'db/tests/db/postgres/dbtest.php';
+
+use cyclone as cy;
+use cyclone\db;
+
+class DB_Postgres_ExecTest extends DB_Postgres_DbTest {
 
     public function testExecSelect() {
-        die("itt\n");
-        $arr = DB::select()->from('users')->exec('postgres')->as_array();
+        $arr = cy\DB::select()->from('users')->exec('postgres')->as_array();
         $this->assertEquals(array(
             array('id' => 1, 'name' => 'user1'),
             array('id' => 2, 'name' => 'user2')
         ), $arr);
 
-        $result = DB::select()->from('users')->exec('postgres')->index_by('id');
+        $result = cy\DB::select()->from('users')->exec('postgres')->index_by('id');
         $exp_result = array(
             1 => array('id' => 1, 'name' => 'user1'),
             2 => array('id' => 2, 'name' => 'user2')
@@ -31,20 +35,20 @@ class SimpleDB_Postgres_ExecTest extends SimpleDB_Postgres_DbTest {
     }
 
     public function testExecInsert() {
-        $id = DB::insert('users')->values(array('name' => 'user3'))->exec('postgres');
+        $id = cy\DB::insert('users')->values(array('name' => 'user3'))->exec('postgres');
         //$count = count(DB::select()->from('users')->exec('postgres')->as_array());
         //$this->assertEquals(3, $count);
         $this->assertEquals(3, $id);
 
-        $id = DB::insert('serusers')->values(array('name' => 'user1'))->exec('postgres');
+        $id = cy\DB::insert('serusers')->values(array('name' => 'user1'))->exec('postgres');
         $this->assertEquals(3, $id);
 
-        $id = DB::insert('users')->values(array('name' => 'user1'))->exec('postgres', FALSE);
+        $id = cy\DB::insert('users')->values(array('name' => 'user1'))->exec('postgres', FALSE);
         $this->assertNull($id);
     }
 
     public function testExecDelete() {
-        $affected = DB::delete('users')->where('id', '=', DB::esc(1))->exec('postgres');
+        $affected = cy\DB::delete('users')->where('id', '=', cy\DB::esc(1))->exec('postgres');
         $this->assertEquals(1, $affected);
         
         $result = pg_query('select count(1) cnt from users');
@@ -53,8 +57,8 @@ class SimpleDB_Postgres_ExecTest extends SimpleDB_Postgres_DbTest {
     }
 
     public function testExecUpdate() {
-        $affected = DB::update('users')->values(array('name' => 'user2_mod'))
-                ->where('id', '=', DB::esc(2))->exec('postgres');
+        $affected = cy\DB::update('users')->values(array('name' => 'user2_mod'))
+                ->where('id', '=', cy\DB::esc(2))->exec('postgres');
 
         $this->assertEquals(1, $affected);
 
