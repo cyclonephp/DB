@@ -4,7 +4,7 @@ use cyclone as cy;
 use cyclone\db;
 
 
-require_once cy\DOCROOT.'libs/db/tests/db/mysqli/dbtest.php';
+require_once cy\SYSROOT.'libs/db/tests/db/mysqli/dbtest.php';
 
 class DB_Mysqli_CompileTest extends DB_Mysqli_DbTest {
 
