@@ -4,10 +4,10 @@ return array(
     'adapter' => 'postgres',
     'connection' => array(
         'host' => 'localhost',
-        'port' => 5432,
-        'dbname' => 'simpledb',
-        'user' => 'simpledb',
-        'password' => 'simpledb',
+        'port' => 5433,
+        'dbname' => 'cyclone',
+        'user' => 'cyclone',
+        'password' => 'cyclone',
         'persistent' => TRUE
     ),
     'pk_generator_sequences' => array(
