@@ -32,4 +32,3 @@ Iterates on all classes named Record_*, instantiates each one and creates databa
     )
 );
 
-?>

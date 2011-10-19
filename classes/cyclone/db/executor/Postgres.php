@@ -27,7 +27,7 @@ class Postgres extends AbstractExecutor {
     }
 
     public function exec_select($sql) {
-        $result = pg_query($this->_db_conn, $sql);
+        $result = @pg_query($this->_db_conn, $sql);
         if (FALSE === $result)
             throw new db\Exception("Failed to execute SQL: " . pg_last_error($this->_db_conn));
 
@@ -35,7 +35,7 @@ class Postgres extends AbstractExecutor {
     }
 
     public function exec_insert($sql, $return_insert_id, $table = NULL) {
-        if (pg_query($this->_db_conn, $sql) == FALSE)
+        if (@pg_query($this->_db_conn, $sql) == FALSE)
             throw new db\Exception('Failed to execute SQL: ' . pg_last_error($this->_db_conn));
 
         if ( ! $return_insert_id)
@@ -58,7 +58,7 @@ class Postgres extends AbstractExecutor {
     }
 
     public function exec_update($sql) {
-        $result = pg_query($this->_db_conn, $sql);
+        $result = @pg_query($this->_db_conn, $sql);
         if (FALSE == $result)
             throw new db\Exception('Failed to execute SQL: ' . pg_last_error($this->_db_conn));
 
@@ -66,7 +66,7 @@ class Postgres extends AbstractExecutor {
     }
 
     public function exec_delete($sql) {
-        $result = pg_query($this->_db_conn, $sql);
+        $result = @pg_query($this->_db_conn, $sql);
         if (FALSE == $result)
             throw new db\Exception('Failed to execute SQL: ' . pg_last_error($this->_db_conn));
 

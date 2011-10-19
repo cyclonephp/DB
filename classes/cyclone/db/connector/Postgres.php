@@ -18,8 +18,11 @@ class Postgres extends AbstractConnector {
         } else {
             $persistent = FALSE;
         }
+        $valid_options = array('user', 'password', 'host', 'port', 'dbname');
         foreach ($this->_config['connection'] as $k => $v) {
-            $conn_params []= "$k=$v";
+            if (in_array($k, $valid_options)) {
+                $conn_params []= "$k=$v";
+            }
         }
         $conn_str = implode(' ', $conn_params);
         //die("before connect $conn_str\n");

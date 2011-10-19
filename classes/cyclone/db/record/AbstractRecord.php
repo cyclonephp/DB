@@ -192,8 +192,8 @@ abstract class AbstractRecord {
 
     public function insert() {
         $schema = $this->schema();
-        $this->id = cy\DB::insert($schema->table_name)->values($this->_row)
-                ->exec($schema->database);
+        $this->id = cy\DB::insert($schema->table_name)
+                    ->values($this->_row)->exec($schema->database);
     }
 
     public function update() {

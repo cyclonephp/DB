@@ -13,7 +13,7 @@ class Mysqli extends AbstractExecutor {
     public function  exec_select($sql) {
         $result = $this->_db_conn->query($sql);
         if ($result === false)
-            throw new DB_Exception($this->_db_conn->error . ' ( ' . $sql . ' )', $this->_db_conn->errno);
+            throw new db\Exception($this->_db_conn->error . ' ( ' . $sql . ' )', $this->_db_conn->errno);
         return new db\query\result\Mysqli($result);
     }
 
