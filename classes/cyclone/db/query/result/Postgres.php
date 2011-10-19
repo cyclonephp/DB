@@ -30,7 +30,11 @@ class Postgres extends AbstractResult {
      * {@inheritdoc }
      */
     public function  as_array() {
-        return pg_fetch_all($this->_res);
+        $rval = array();
+        foreach ($this as $k => $v) {
+            $rval[$k] = $v;
+        }
+        return $rval;
     }
 
     /**
@@ -44,7 +48,7 @@ class Postgres extends AbstractResult {
         if ('array' == $this->_row_type) {
             $this->_current_row = pg_fetch_assoc($this->_res);
         } else {
-            $this->_current_row = pg_fetch_object($this->_res, $this->_idx
+            $this->_current_row = pg_fetch_object($this->_res, NULL
                     , $this->_row_type);
         }
     }
@@ -81,6 +85,7 @@ class Postgres extends AbstractResult {
      * Returns the number of rows in the result.
      *
      * @return integer
+     * @see pg_num_rows()
      */
     public function count() {
         return pg_num_rows($this->_res);

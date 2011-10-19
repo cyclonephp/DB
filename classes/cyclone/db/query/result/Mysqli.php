@@ -24,10 +24,6 @@ class Mysqli extends AbstractResult {
         $this->result = $result;
     }
 
-    public function  current() {
-        return $this->_current_row;
-    }
-
     public function key() {
         if (is_null($this->_index_by)) {
             return $this->_idx;

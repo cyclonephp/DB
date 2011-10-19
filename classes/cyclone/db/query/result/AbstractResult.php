@@ -93,4 +93,17 @@ abstract class AbstractResult extends \ArrayIterator implements \Countable, \Tra
      */
     public abstract function as_array();
 
+    public function key() {
+        if (is_null($this->_index_by)) {
+            return $this->_idx;
+        }
+        if ('array' == $this->_row_type)
+            return $this->_current_row[$this->_index_by];
+        return $this->_current_row->{$this->_index_by};
+    }
+
+    public function  current() {
+        return $this->_current_row;
+    }
+
 }
