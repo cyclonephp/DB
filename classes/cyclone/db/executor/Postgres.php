@@ -51,7 +51,8 @@ class Postgres extends AbstractExecutor {
                 . '\') as last_pk');
 
         if (FALSE === $result)
-            throw new db\Exception('Failed to retrieve the primary key of the inserted row');
+            throw new db\Exception('Failed to retrieve the primary key of the inserted row ('
+				. pg_last_error($this->_db_conn) . ')');
 
         $row = pg_fetch_assoc($result);
         return $row['last_pk'];
