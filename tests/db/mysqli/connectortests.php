@@ -7,7 +7,7 @@ class DB_MySQLi_ConnectorTest extends Kohana_Unittest_TestCase {
 
     public function testPersistentConnection() {
 
-       $test = new db\connector\MySQLi(array(
+       $test = new db\connector\Mysqli(array(
     'adapter' => 'mysqli',
     'prefix' => 'cy_',
     'connection' => array(
