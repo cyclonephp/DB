@@ -7,10 +7,10 @@ use cyclone\db;
 class DB_Test extends DB_Mysqli_DbTest {
 
     public function testPools() {
-        $this->assertInstanceOf('\\cyclone\\db\\Compiler', cy\DB::compiler());
-        $this->assertInstanceOf('\\cyclone\\db\\Executor', cy\DB::executor());
-        $this->assertInstanceOf('\\cyclone\\db\\Connector', cy\DB::connector());
-        cy\DB::connector()->disconnect();
+        $this->assertInstanceOf('\\cyclone\\db\\Compiler', cy\DB::compiler('cytst-mysqli'));
+        $this->assertInstanceOf('\\cyclone\\db\\Executor', cy\DB::executor('cytst-mysqli'));
+        $this->assertInstanceOf('\\cyclone\\db\\Connector', cy\DB::connector('cytst-mysqli'));
+        cy\DB::connector('cytst-mysqli')->disconnect();
     }
 
     public function testQueryFactory() {
@@ -50,22 +50,22 @@ class DB_Test extends DB_Mysqli_DbTest {
     }
 
     public function testConnector() {
-        $conn = cy\DB::connector();
+        $conn = cy\DB::connector('cytst-mysqli');
         $this->assertInstanceOf('\\cyclone\\db\\connector\\Mysqli', $conn);
     }
 
     public function testCompiler() {
-        $comp = cy\DB::compiler();
+        $comp = cy\DB::compiler('cytst-mysqli');
         $this->assertInstanceOf('\\cyclone\\db\\compiler\\Mysqli', $comp);
     }
 
     public function testExecutor() {
-        $exec = cy\DB::executor();
+        $exec = cy\DB::executor('cytst-mysqli');
         $this->assertInstanceOf('\\cyclone\\db\\executor\\Mysqli', $exec);
     }
 
     public function testExecutorPrepared() {
-        $exec_prep = DB::executor_prepared();
+        $exec_prep = DB::executor_prepared('cytst-mysqli');
         $this->assertInstanceOf('\\cyclone\\db\\prepared\\executor\\Mysqli', $exec_prep);
     }
 

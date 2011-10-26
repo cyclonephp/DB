@@ -6,7 +6,7 @@ use cyclone\db\record;
 class Record_User extends record\AbstractRecord {
 
     protected function  setup() {
-        $this->_schema->database = 'default';
+        $this->_schema->database = 'cytst-mysqli';
         $this->_schema->table_name = 'user';
         $this->_schema->columns = array(
             'id' => 'int primary key auto_increment',

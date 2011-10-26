@@ -8,13 +8,13 @@ use cyclone\db;
 class DB_Postgres_ExecTest extends DB_Postgres_DbTest {
 
     public function testExecSelect() {
-        $arr = cy\DB::select()->from('users')->exec('postgres')->as_array();
+        $arr = cy\DB::select()->from('users')->exec('cytst-postgres')->as_array();
         $this->assertEquals(array(
             array('id' => 1, 'name' => 'user1'),
             array('id' => 2, 'name' => 'user2')
         ), $arr);
 
-        $result = cy\DB::select()->from('users')->exec('postgres')->index_by('id');
+        $result = cy\DB::select()->from('users')->exec('cytst-postgres')->index_by('id');
         $exp_result = array(
             1 => array('id' => 1, 'name' => 'user1'),
             2 => array('id' => 2, 'name' => 'user2')
@@ -35,20 +35,20 @@ class DB_Postgres_ExecTest extends DB_Postgres_DbTest {
     }
 
     public function testExecInsert() {
-        $id = cy\DB::insert('users')->values(array('name' => 'user3'))->exec('postgres');
+        $id = cy\DB::insert('users')->values(array('name' => 'user3'))->exec('cytst-postgres');
         //$count = count(DB::select()->from('users')->exec('postgres')->as_array());
         //$this->assertEquals(3, $count);
         $this->assertEquals(3, $id);
 
-        $id = cy\DB::insert('serusers')->values(array('name' => 'user1'))->exec('postgres');
+        $id = cy\DB::insert('serusers')->values(array('name' => 'user1'))->exec('cytst-postgres');
         $this->assertEquals(3, $id);
 
-        $id = cy\DB::insert('users')->values(array('name' => 'user1'))->exec('postgres', FALSE);
+        $id = cy\DB::insert('users')->values(array('name' => 'user1'))->exec('cytst-postgres', FALSE);
         $this->assertNull($id);
     }
 
     public function testExecDelete() {
-        $affected = cy\DB::delete('users')->where('id', '=', cy\DB::esc(1))->exec('postgres');
+        $affected = cy\DB::delete('users')->where('id', '=', cy\DB::esc(1))->exec('cytst-postgres');
         $this->assertEquals(1, $affected);
         
         $result = pg_query('select count(1) cnt from users');
@@ -58,7 +58,7 @@ class DB_Postgres_ExecTest extends DB_Postgres_DbTest {
 
     public function testExecUpdate() {
         $affected = cy\DB::update('users')->values(array('name' => 'user2_mod'))
-                ->where('id', '=', cy\DB::esc(2))->exec('postgres');
+                ->where('id', '=', cy\DB::esc(2))->exec('cytst-postgres');
 
         $this->assertEquals(1, $affected);
 

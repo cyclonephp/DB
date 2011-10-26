@@ -10,13 +10,13 @@ class Record_Test extends Kohana_Unittest_TestCase {
 
     public function setUp() {
         try {
-            cy\DB::query('truncate cy_user')->exec();
+            cy\DB::query('truncate cy_user')->exec('cytst-mysqli');
             $names = array('user1', 'user2');
             $insert = DB::insert('user');
             foreach ($names as $name) {
                 $insert->values(array('name' => $name));
             }
-            $insert->exec();
+            $insert->exec('cytst-mysqli');
         } catch (db\Exception $ex) {
             $this->markTestSkipped('skipping simpledb tests');
         }
@@ -43,7 +43,8 @@ class Record_Test extends Kohana_Unittest_TestCase {
         $user->save();
         $this->assertEquals(3, $user->id);
 
-        $row = cy\DB::select()->from('user')->where('id', '=', cy\DB::esc(3))->exec()->as_array();
+        $row = cy\DB::select()->from('user')->where('id', '=', cy\DB::esc(3))
+                ->exec('cytst-mysqli')->as_array();
         $this->assertEquals($row[0], array('id' => 3, 'name' => 'user3', 'email' => null));
 
         $user2 = Record_User::inst()->get(2);
