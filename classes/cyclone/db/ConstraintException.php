@@ -8,6 +8,10 @@ class ConstraintException extends Exception {
 
     const NOTNULL_CONSTRAINT = 'notnull';
 
+    const FOREIGNKEY_CONSTRAINT = 'foreignkey';
+
+    const APP_CONSTRAINT = 'app';
+
     public $constraint_type;
 
     public $constraint_name;
