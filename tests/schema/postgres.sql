@@ -10,7 +10,7 @@ create sequence seq_users;
 
 create table users(
     id integer primary key default nextval('seq_users'),
-    name varchar(256) not null
+    name varchar(256) unique not null
 );
 
 create table serusers(
@@ -20,4 +20,4 @@ create table serusers(
 
 insert into users (name) values ('user1'), ('user2');
 
-insert into serusers (name) values ('user1'), ('user2');
+insert into serusers (name) values ('user1'), ('user2')

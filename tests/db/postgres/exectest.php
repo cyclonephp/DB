@@ -35,15 +35,15 @@ class DB_Postgres_ExecTest extends DB_Postgres_DbTest {
     }
 
     public function testExecInsert() {
+        cy\DB::delete('users')->exec('cytst-postgres');
         $id = cy\DB::insert('users')->values(array('name' => 'user3'))->exec('cytst-postgres');
-        //$count = count(DB::select()->from('users')->exec('postgres')->as_array());
-        //$this->assertEquals(3, $count);
+
         $this->assertEquals(3, $id);
 
         $id = cy\DB::insert('serusers')->values(array('name' => 'user1'))->exec('cytst-postgres');
         $this->assertEquals(3, $id);
 
-        $id = cy\DB::insert('users')->values(array('name' => 'user1'))->exec('cytst-postgres', FALSE);
+        $id = cy\DB::insert('users')->values(array('name' => 'user2'))->exec('cytst-postgres', FALSE);
         $this->assertNull($id);
     }
 
@@ -65,6 +65,33 @@ class DB_Postgres_ExecTest extends DB_Postgres_DbTest {
         $result = pg_query('select name from users where id = 2');
         $row = pg_fetch_assoc($result);
         $this->assertEquals('user2_mod', $row['name']);
+    }
+
+    public function testUniqueConstraintException() {
+        $thrown = FALSE;
+        try {
+            cy\DB::insert('users')
+                ->values(array('name' => 'u'))
+                ->values(array('name' => 'u'))->exec('cytst-postgres');
+        } catch (db\ConstraintException $ex) {
+            $this->assertEquals('users_name_key', $ex->constraint_name);
+            $this->assertEquals(db\ConstraintException::UNIQUE_CONSTRAINT, $ex->constraint_type);
+            $this->assertEquals('name', $ex->column);
+            $thrown = TRUE;
+        }
+        $this->assertTrue($thrown, 'ConstraintException thrown');
+    }
+
+    public function testNotNullConstraintException() {
+        $thrown = FALSE;
+        try {
+            cy\DB::insert('users')->values(array('name' => null))->exec('cytst-postgres');
+        } catch (db\ConstraintException $ex) {
+            $this->assertEquals(db\ConstraintException::NOTNULL_CONSTRAINT, $ex->constraint_type);
+            $this->assertEquals('name', $ex->column);
+            $thrown = TRUE;
+        }
+        $this->assertTrue($thrown, 'ConstraintException thrown');
     }
 
 }

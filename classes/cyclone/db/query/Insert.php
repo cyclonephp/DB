@@ -22,7 +22,7 @@ class Insert implements db\Query {
      *
      * @var array
      */
-    public $values;
+    public $values = array();
 
     public function table($table) {
         $this->table = $table;

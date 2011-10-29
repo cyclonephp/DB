@@ -36,7 +36,7 @@ class Postgres extends AbstractExecutor {
 
     public function exec_insert($sql, $return_insert_id, $table = NULL) {
         if (@pg_query($this->_db_conn, $sql) == FALSE)
-            throw new db\Exception('Failed to execute SQL: ' . pg_last_error($this->_db_conn));
+            throw PostgresConstraintExceptionBuilder::for_error(pg_last_error($this->_db_conn));
 
         if ( ! $return_insert_id)
             return NULL;
