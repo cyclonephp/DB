@@ -28,15 +28,18 @@ class Postgres extends AbstractExecutor {
 
     public function exec_select($sql) {
         $result = @pg_query($this->_db_conn, $sql);
-        if (FALSE === $result)
-            throw new db\Exception("Failed to execute SQL: " . pg_last_error($this->_db_conn));
+        if (FALSE === $result) {
+            throw new db\Exception("Failed to execute SQL: " . pg_last_error($this->_db_conn)
+            . '(query: ' . $sql . ')');
+        }
 
         return new db\query\result\Postgres($result);
     }
 
     public function exec_insert($sql, $return_insert_id, $table = NULL) {
         if (@pg_query($this->_db_conn, $sql) == FALSE)
-            throw PostgresConstraintExceptionBuilder::for_error(pg_last_error($this->_db_conn));
+            throw PostgresConstraintExceptionBuilder::for_error(pg_last_error($this->_db_conn)
+            . '(query: ' . $sql . ')');
 
         if ( ! $return_insert_id)
             return NULL;
@@ -61,7 +64,8 @@ class Postgres extends AbstractExecutor {
     public function exec_update($sql) {
         $result = @pg_query($this->_db_conn, $sql);
         if (FALSE == $result)
-            throw new db\Exception('Failed to execute SQL: ' . pg_last_error($this->_db_conn));
+            throw new db\Exception('Failed to execute SQL: ' . pg_last_error($this->_db_conn)
+                    . '(query: ' . $sql . ')');
 
         return pg_affected_rows($result);
     }
@@ -69,13 +73,19 @@ class Postgres extends AbstractExecutor {
     public function exec_delete($sql) {
         $result = @pg_query($this->_db_conn, $sql);
         if (FALSE == $result)
-            throw new db\Exception('Failed to execute SQL: ' . pg_last_error($this->_db_conn));
+            throw new db\Exception('Failed to execute SQL: ' . pg_last_error($this->_db_conn)
+                    . '(query: ' . $sql . ')');
 
         return pg_affected_rows($result);
     }
 
     public function exec_custom($sql) {
-        return pg_query($this->_db_conn, $sql);
+        try {
+            return pg_query($this->_db_conn, $sql);
+        } catch (\Exception $ex) {
+            throw new db\Exception('Failed to execute SQL: ' . pg_last_error($this->_db_conn)
+                    . '(query: ' . $sql . ')');
+        }
     }
     
 }

@@ -33,3 +33,12 @@ create table chk_constraints(
     chk_unnamed int check (chk_unnamed > 0),
     chk_named int constraint chk_constr check (chk_named > 0)
 );
+
+create or replace function test_raise() returns boolean as $$
+    begin
+        raise 'error message' using
+            detail = 'my detail'
+            , hint = 'my hint'
+            , errcode = '11111';
+    end;
+$$ language plpgsql;
