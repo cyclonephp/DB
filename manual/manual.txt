@@ -10,7 +10,7 @@ The DB library is
  - Comes with a minimal active record implementation
  
  
- @section simpledb-gettingstarted Getting started with SimpleDB
+ @section db-gettingstarted Getting started with the DB library
  
  Let's create a sample database in MySQL:
  
@@ -25,7 +25,7 @@ The DB library is
 	);
 	@endcode
  
- Let's set up the database connection in <tt> application/config/simpledb/default.php </tt> :
+ Let's set up the database connection in <tt> application/config/db/default.php </tt> :
  
  @code
  <?php
@@ -41,22 +41,22 @@ The DB library is
 	);
  @endcode
  
- So we told SimpleDB that we will have a database connection called
+ So we told DB that we will have a database connection called
   'default', and we are going to use the MySQLi adapter for that.
  It means that the MySQLi extension will be used to communicate
  with the database.
 	
- With SimpleDB you can manage multiple connections at the same time.
+ With the DB lib you can manage multiple connections at the same time.
  The only thing you have to do you have to tell the module what connection
  do you want to use every time you execute an SQL query. If you
  don't then the default connection will be 'default'.
  More about it later.
  
- @section simpledb-datamanip Data manipulation
+ @section db-datamanip Data manipulation
  
  In this section we will cover the steps of building data manipulating SQL statements.
  
- @subsection simpledb-insert INSERT
+ @subsection db-insert INSERT
  
  We are going to load some data into the database, so let's look
  at the INSERT statements:
@@ -66,7 +66,7 @@ The DB library is
  
  This piece of code creates an INSERT statement and executes it
  on the 'default' database connection. If you have wanted to use - for 
- example - a connection set up in <tt> application/config/simpledb/legacy.php </tt>
+ example - a connection set up in <tt> application/config/db/legacy.php </tt>
  then you would call @code exec('legacy') @endcode at the end of the code.
  
  In the above example the @c $id variable stores the primary key of the
@@ -87,7 +87,7 @@ The DB library is
  So, the values() method has variable length parameter list, where
  every parameter should be a column-name =\> value associative array.
  
- @subsection simpledb-update UPDATE
+ @subsection db-update UPDATE
  
  The syntax of UPDATE statements is very similar to INSERTs.
  Example:
@@ -202,7 +202,7 @@ The DB library is
   
   In the 2th parameter of the \c join() call you can specify what kind of
   join you want to perform (LEFT, RIGHT, INNER, whatever). The default
-  value is LEFT. SimpleDB won't care about the contents of the 2th parameter,
+  value is LEFT. The DB library won't care about the contents of the 2th parameter,
   so feel free to use any DBMS-specific join types.
   
   If you want to add an alias name to the joined table, then you have to
@@ -231,7 +231,7 @@ The DB library is
   <em>Note: you can also put your database expression into the \c SELECT
   clause, but in that case you have to pass an alias name using an array.</em>
   
-  @subsection simpledb-subqueries Using subqueries
+  @subsection db-subqueries Using subqueries
   
   An other thing you could notice in the previous example that we used a 
   subquery in the \c WHERE clause. So just like in SQL, you can use subqueries
@@ -248,12 +248,12 @@ The DB library is
   Note that you don't have to call the \c exec() method of the subquery,
   it will be compiled with its 'parent' query.
   
-  @subsection simpledb-sets Using sets
+  @subsection db-sets Using sets
   
   In SQL you can use explicitly defined sets instead of subselects, for 
   example @code SELECT * FROM users WHERE id IN (1, 2, 3) @endcode .
   
-  With SimpleDB you can create such queries by putting an array into 
+  With the DB library you can create such queries by putting an array into 
   a \c DB::expr() call. Example:
   @code
   DB::select()->from('users')->where('id', 'IN', DB::expr(array(1, 2, 3))->exec();

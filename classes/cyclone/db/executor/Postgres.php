@@ -38,8 +38,7 @@ class Postgres extends AbstractExecutor {
 
     public function exec_insert($sql, $return_insert_id, $table = NULL) {
         if (@pg_query($this->_db_conn, $sql) == FALSE)
-            throw PostgresConstraintExceptionBuilder::for_error(pg_last_error($this->_db_conn)
-            . '(query: ' . $sql . ')');
+            throw PostgresConstraintExceptionBuilder::for_error(pg_last_error($this->_db_conn), $sql);
 
         if ( ! $return_insert_id)
             return NULL;

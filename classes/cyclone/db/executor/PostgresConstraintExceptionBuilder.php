@@ -6,8 +6,9 @@ use cyclone\db;
 
 class PostgresConstraintExceptionBuilder {
 
-    public static function for_error($err_str) {
+    public static function for_error($err_str, $sql = '') {
         $rval = new db\ConstraintException($err_str);
+        $rval->sql = $sql;
         $lines = explode(PHP_EOL, $err_str);
         $line = $lines[0];
         $exc_details = array();
