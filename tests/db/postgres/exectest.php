@@ -1,9 +1,9 @@
 <?php
 
-require_once cyclone\LIBPATH.'db/tests/db/postgres/dbtest.php';
-
 use cyclone as cy;
 use cyclone\db;
+
+require_once cy\FileSystem::get_root_path('db') . 'tests/db/postgres/dbtest.php';
 
 class DB_Postgres_ExecTest extends DB_Postgres_DbTest {
 
