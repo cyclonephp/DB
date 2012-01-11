@@ -4,6 +4,10 @@ namespace cyclone\db\executor;
 
 use cyclone\db;
 
+/**
+ * @package db
+ * @author Bence Eros<crystal@cyclonephp.org>
+ */
 class PostgresConstraintExceptionBuilder {
 
     public static function for_error($err_str, $sql = '') {

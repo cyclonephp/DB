@@ -19,7 +19,8 @@ interface Generator {
     /**
      * Generates the database-specific DDL command for the table.
      *
-     * @param DB_Schema_Table $table
+     * @param Table $table
+     * @param boolean $forced
      * @return string the generated DDL
      */
     public function ddl_create_table(Table $table, $forced = FALSE);
@@ -27,7 +28,7 @@ interface Generator {
     /**
      * Generates the database-specific DDL command for the table column.
      *
-     * @param DB_Schema_Table $table
+     * @param Column $column
      * @return string the generated DDL
      */
     public function ddl_create_column(Column $column);

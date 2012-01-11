@@ -2,6 +2,10 @@
 
 namespace cyclone\db;
 
+/**
+ * @package db
+ * @author Bence Eros<crystal@cyclonephp.org>
+ */
 class ConstraintException extends Exception {
 
     const UNIQUE_CONSTRAINT = 'unique';
