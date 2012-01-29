@@ -279,19 +279,115 @@ use cyclone\db\record;
 class UserRecord extends record\AbstractRecord {
 
     protected function setup() {
-        $this->_schema->database = 'cytst-mysqli';
+        // defininig the table name
         $this->_schema->table_name = 'user';
+        // defining the table columns
         $this->_schema->columns = array(
             'id' => 'int primary key auto_increment',
             'name' => 'varchar(32) not null',
             'email' => 'varchar(32)'
         );
+        // defining hte primary key column
         $this->_schema->primary_key = 'id';
     }
 
+    // boilerplate singleton accessor method
     public static function  inst() {
         return parent::_inst(__CLASS__);
     }
 
 }
 @endcode
+
+As it is shown in the above example to create an active record class you have to
+extend it from the \c cyclone\db\record\AbstractRecord class and you have to
+implement its <code>setup()</code> method. In this method you have to
+populate the properties of <code>$this->_schema</code> which is a
+\c cyclone\db\record\Schema instance. This object will hold the primitive "mapping"
+information which means a table (to be exact: relation) name and a key-value
+pair of column names and DDL strings for the column name. The DDL will only be used
+by the database schema generator, so if you don't want to take the advantage of
+this CLI task then it is easier to omit these DDL fragments and set the array values
+to <code>TRUE</code> (or any other value is ok, since the active record itself
+will only take into account the array keys in the column list array).
+The name of the primary key column is also a mandatory property to be defined (see above).
+
+A boilerplate singleton accessor method should also exist in the active record
+classes. Their implementation is always the same (see above). The <code>AbstractRecord</code>
+class holds an internal object pool for these singletons (classname => instance)
+which are used for operations which doesn't belong to any row already represented
+by an existing active record instance.
+
+@subsection db-activerecord-examples Examples of using the above active record
+
+Reading one entity with id #1:
+@code
+// $user will be an UserRecord instance or NULL if not found
+$user = UserRecord::inst()->get(1); @endcode
+
+Creating an entity:
+@code
+// creating the instance
+$user = new UserRecord;
+
+// setting its properties
+$user->name = 'hello world';
+$user->email = 'helloworld@example.org';
+
+// saving it - since its primary key is unknown it will result in an INSERT statement
+// $user->insert() would have the same effect
+$user->save(); @endcode
+
+Updating an entity:
+@code
+$user = UserRecord::inst()->get(1);
+$user->email = 'changed@example.com';
+
+// the primary key is already known here since it has been read from the database
+// therefore this call will run an UPDATE statement
+// $user->update(); would have the same effect
+$user->save(); @endcode
+
+Deleting an entity (this method is recommended only if reading the
+row is mandatory):
+@code
+$user = UserModel::inst()->get(1);
+$user->delete(); @endcode
+
+Deleting an entity (this method is recommended in most cases, when we just want
+to delete the row and we don't need to process it before/after deleting):
+@code
+UserRecord::inst()->delete(1); @endcode
+
+Reading all entities:
+@code
+// returns an array of UserRecord instances
+$users = UserRecord::inst()->get_all(); @endcode
+
+Reading some entities, filtered by email domain:
+@code
+use cyclone as cy;
+// ...
+$example_users = UserRecord::inst()
+    ->get_list(array('email', 'LIKE', cy\DB::esc('%example.org'))); @endcode
+
+Reading some entities, filtered and ordered list:
+@code
+use cyclone as cy;
+// ...
+$example_users = UserRecord::inst()
+    ->get_list(array('email', 'LIKE', cy\DB::esc('%example.org'))
+        , array('name', 'desc')); @endcode
+
+Reading one entity but not by its primary key:
+@code
+use cyclone as cy;
+// ...
+$user = UserRecord::inst()->get_one(
+    array('email, '=', cy\DB::esc('helloworld@example.org')));@endcode
+
+Reading a "page" (assuming that we want to render the data in a
+paginated way):
+@code
+// second page with 30 items per page
+$users = UserRecord::inst()->get_page(2, 30); @endcode
