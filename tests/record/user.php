@@ -2,7 +2,6 @@
 
 use cyclone\db\record;
 
-
 class Record_User extends record\AbstractRecord {
 
     protected function  setup() {

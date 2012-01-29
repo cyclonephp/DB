@@ -259,3 +259,39 @@ The DB library is
   DB::select()->from('users')->where('id', 'IN', DB::expr(array(1, 2, 3))->exec();
   @endcode
 
+@section db-activerecord The Active Record implementation of the DB library
+
+The DB library contains a lightweight, minimal active record implementation too. In short
+and Active Record is "an object that wraps a row in a database table or view,
+encapsulates the database access, and adds domain logic on that data" (source:
+http://martinfowler.com/eaaCatalog/activeRecord.html ). The active record implementation
+in the DB module means a simple abstract class which' subclasses can be easily used
+as active record classes in the application. This active record implementation
+is meant to be really lightweight since it provides only some simple operations
+on the entity, and it doesn't handle connections between tables/entities.
+
+Let's see an example active record class:
+@code
+namespace app\model;
+
+use cyclone\db\record;
+
+class UserRecord extends record\AbstractRecord {
+
+    protected function setup() {
+        $this->_schema->database = 'cytst-mysqli';
+        $this->_schema->table_name = 'user';
+        $this->_schema->columns = array(
+            'id' => 'int primary key auto_increment',
+            'name' => 'varchar(32) not null',
+            'email' => 'varchar(32)'
+        );
+        $this->_schema->primary_key = 'id';
+    }
+
+    public static function  inst() {
+        return parent::_inst(__CLASS__);
+    }
+
+}
+@endcode

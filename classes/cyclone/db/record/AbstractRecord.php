@@ -17,44 +17,42 @@ abstract class AbstractRecord {
     private static $_instances = array();
 
     /**
+     * Holds the data of the database row represented by the object.
      *
-     * @var array holds the data of the database row represented by the object
+     * @var array
      */
     protected $_row = array();
 
     /**
      *
-     * @var array holds the transient properties of the object that hasn't got
+     * @property array holds the transient properties of the object that hasn't got
      * suitable database fields
      */
     protected $_transient_data = array();
 
     /**
-     *
-     * @var stdClass this property only has non-null value in the singleton
+     * This property only has non-null value in the singleton
      * instances. This holds the mapping-related information. Must be set up
      * in the setup() abstract method.
      *
-     * @property database
-     * @property table_name
-     * @property columns
-     * @property class
+     * @var Schema
      */
     protected $_schema;
 
     /**
-     * the $_schema object properties must be set up here.
+     * the $_schema object properties must be set up here by the implementations
+     * in the subclasses.
      */
     protected abstract function setup();
 
     /**
      * This method must be called by the singleton accessor static methods
      * of descendant Record classes. The parameter must be __CLASS__ in all cases.
-     * A singleton instance is created for the class, and it's setup() method is
+     * A singleton instance is created for the class, and its <code>setup()</code> method is
      * called.
      *
      * @param string $classname
-     * @return Record_Abstract
+     * @return AbstractRecord
      */
     protected static function _inst($classname) {
         if ( ! array_key_exists($classname, self::$_instances)) {
@@ -71,7 +69,7 @@ abstract class AbstractRecord {
     /**
      * Accessor for the singleton instance related to the object.
      * 
-     * @return stdClass
+     * @return Schema
      */
     public function schema() {
         if ( ! array_key_exists(get_class($this), self::$_instances)) {
@@ -85,7 +83,7 @@ abstract class AbstractRecord {
      * that owns the primary key passed by the $id parameter
      *
      * @param int/mixed $id
-     * @return Record_Abstract
+     * @return AbstractRecord
      */
     public function get($id) {
         $query = cy\DB::select()
@@ -99,6 +97,26 @@ abstract class AbstractRecord {
 
     }
 
+    /**
+     * Returns one entity that matches the conditions given by the arguments.
+     *
+     * If 0 row is found the <code>NULL</code> will be returned, if 1 row is found
+     * then a \c AbstractRecord subclass instance will be returned representing the
+     * found row, if more than one row is found then an \c cyclone\db\Exception
+     * will be thrown.
+     *
+     * The method accepts any number of array arguments, every argument should be
+     * a 3-element numeric array where
+     * <ol>
+     *  <li>the first element must be a database column or \c cyclone\db\Expression instance</li>
+     *  <li>the second element must be a database operator (string)</li>
+     *  <li>the third element must be a database column or \c cyclone\db\Expression instance</li>
+     * </ol>
+     *
+     *
+     * @return AbstractRecord
+     * @throws cyclone\db\Exception
+     */
     public function get_one() {
         $schema = $this->schema();
         $query = cy\DB::select()->from($schema->table_name);
@@ -112,6 +130,31 @@ abstract class AbstractRecord {
         }
     }
 
+    /**
+     * Runs a SELECT * FROM &lt;table&gt; WHERE .. ORDER BY ... query and returns
+     * the result as an array of active records. The &lt;table&gt; is always the
+     * table name of the current schema.
+     *
+     * The method accepts a variable length argument list, every argument must be
+     * a numeric array.
+     *
+     * The <code>WHERE</code> clause can be defined by the 3-element arrays in the
+     * argument list, where
+     * <ol>
+     *  <li>the first element must be a database column or \c cyclone\db\Expression instance</li>
+     *  <li>the second element must be a database operator (string)</li>
+     *  <li>the third element must be a database column or \c cyclone\db\Expression instance</li>
+     * </ol>
+     *
+     * The <code>ORDER BY</code> clause of the query can be defined using 2-elements
+     * arrays of the argument list. Every array shouls contain
+     * <ol>
+     *      <li>the order column (string)</li>
+     *      <li>the order direction (string, <code>'ASC'</code> or <code>'DESC'</code>)</li>
+     * </ol>
+     *
+     * @return array<AbstractRecord>
+     */
     public function get_list() {
         $schema = $this->schema();
         $query = cy\DB::select()->from($schema->table_name);
@@ -120,12 +163,33 @@ abstract class AbstractRecord {
         return $query->exec($schema->database)->rows($schema->class);
     }
 
+    /**
+     * Select all rows from the table of the current schema and returns them
+     * as an array of active records representing the rows. The same as
+     * calling \c get_list() without arguments.
+     *
+     * @return array<AbstractRecord>
+     */
     public function get_all() {
         $schema = $this->schema();
         return cy\DB::select()->from($schema->table_name)
                 ->exec($schema->database)->rows($schema->class);
     }
 
+    /**
+     * Returns the given page from the table. The first <code>$page</code>
+     * and <code>$page_size</code> parameters are used to create the OFFSET - LIMIT
+     * clauses of the query, the optional following arguments can be used as
+     * WHERE and ORDER BY clause definitions as at \c get_list() .
+     * Example:
+     * <pre><code>
+     *  // returns the 31. - 60. rows from the table
+     *  $users = UserRecord::inst()->get_page(2, 30);
+     * </code></pre>
+     * @param int $page
+     * @param int $page_size
+     * @return array<AbstractRecord>
+     */
     public function get_page($page, $page_size) {
         $schema = $this->schema();
         $query = cy\DB::select()->from($schema->table_name);
@@ -153,6 +217,28 @@ abstract class AbstractRecord {
         }
     }
 
+    /**
+     * This method can be called both on the singleton instance of the entity class
+     * and any other instances too. In the first case it accepts a mandatory primary
+     * key parameter which is the primary key value of the row to be deleted from
+     * the table of the actual schema, in the second case it deletes the row of the current
+     * instance from the database. Examples:
+     * <pre><code>
+     * // calling on the singleton instance
+     * UserRecord::inst()->delete(3);
+     *
+     * // calling on an actual instance
+     * $user->id = 3;
+     * $user->delete();
+     * </code></pre>
+     *
+     * If we have a an <code>UserRecord</code> active record class mapped to a
+     * <code>users</code> table with <code>id</code> as primary key column then
+     * both calls will result in executing the following SQL: <code>DELETE
+     * FROM `users` WHERE id = 3</code>.
+     *
+     * @return int
+     */
     public function delete() {
         $schema = $this->schema();
         switch (func_num_args()) {
@@ -181,6 +267,14 @@ abstract class AbstractRecord {
         return $result[0]['count'];
     }
 
+    /**
+     * If the primary key value exists in the row data then will update the
+     * database row, otherwise insert it and assign the generated primary key
+     * to the primary key value in the row data.
+     *
+     * @uses insert()
+     * @uses update()
+     */
     public function save() {
         $schema = $this->schema();
         if (array_key_exists($schema->primary_key, $this->_row)) {
@@ -190,12 +284,20 @@ abstract class AbstractRecord {
         }
     }
 
+    /**
+     * Runs an SQL <code>INSERT</code> statement insertint the actual row data.
+     */
     public function insert() {
         $schema = $this->schema();
         $this->id = cy\DB::insert($schema->table_name)
                     ->values($this->_row)->exec($schema->database);
     }
 
+    /**
+     * Runs and SQL <code>UPDATE</code> statement updating the current row data.
+     * If the primary key value doesn't exist in the actual row data then it
+     * doesn't have any effect.
+     */
     public function update() {
         $schema = $this->schema();
         DB::update($schema->table_name)->values($this->_row)
@@ -233,6 +335,11 @@ abstract class AbstractRecord {
                 || array_key_exists($name, $this->_transient_data);
     }
 
+    /**
+     * Returns the entity properties as an array (the internal row data).
+     *
+     * @return array
+     */
     public function as_array() {
         return $this->_row;
     }
