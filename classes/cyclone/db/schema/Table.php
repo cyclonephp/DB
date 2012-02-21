@@ -37,7 +37,7 @@ class Table {
      * @return Column
      */
     public function create_column($name) {
-        return new Column($this, $name);
+        return $this->columns []= new Column($this, $name);
     }
 
 
