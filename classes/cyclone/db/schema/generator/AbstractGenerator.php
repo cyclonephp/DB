@@ -4,7 +4,7 @@ namespace cyclone\db\schema\generator;
 use cyclone\db\schema;
 
 /**
- * @author Bence Eros <crystal@cyclonephp.com>
+ * @author Bence Eros <crystal@cyclonephp.org>
  * @package DB
  */
 class AbstractGenerator implements schema\Generator {
@@ -41,11 +41,11 @@ class AbstractGenerator implements schema\Generator {
     }
 
     public function ddl_create_column(schema\Column $column) {
-        if (!is_null($column->ddl))
+        if ( ! is_null($column->ddl))
             return "`{$column->name}` " . $column->ddl;
         $rval = "`{$column->name}` ";
         $rval .= $column->type;
-        if (!is_null($column->length)) {
+        if ( ! is_null($column->length)) {
             $rval .= '(' . $column->length . ')';
         }
         return $rval;
