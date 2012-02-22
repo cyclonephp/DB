@@ -22,8 +22,8 @@ class DB_Schema_TableTest {
         $this->assertEquals(1, count($table1->foreign_keys));
 
         $fk2 = new schema\ForeignKey;
-        $fk2->local_columns = array($table1->create_column('dummy'));
-        $fk2->foreign_columns = array($table2->create_column('dummy'));
+        $fk2->local_columns = array($table1->get_column('dummy'));
+        $fk2->foreign_columns = array($table2->get_column('dummy'));
 
         $table1->add_foreign_key($fk2);
         $this->assertEquals(2, count($table1->foreign_keys));

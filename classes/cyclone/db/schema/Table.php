@@ -90,13 +90,18 @@ class Table {
      * @param string $name
      * @return Column
      */
-    public function create_column($name) {
+    public function get_column($name) {
+        foreach ($this->columns as $column) {
+            if ($column->name === $name)
+                return $column;
+        }
         return $this->columns []= new Column($this, $name);
     }
 
     /**
      * Adds a new foreign key object to \c $foreign_keys if the new foreign key
-     * is not present yet.
+     * is not present yet. If the foreign key has been added already then it
+     * won't be added again.
      *
      * If the <code>$local_table</code> of the foreign key is <code>NULL</code>
      * then it will default to <code>$this</code>. Otherwise if the local table of
@@ -109,7 +114,7 @@ class Table {
      */
     public function add_foreign_key(ForeignKey $new_fk) {
         $exists = FALSE;
-        foreach ($this->foreign_keys as $old_fk) {
+        foreach ($this->_foreign_keys as $old_fk) {
             if ($old_fk->equals($new_fk)) {
                 $exists = TRUE;
                 break;
@@ -124,6 +129,6 @@ class Table {
         if ($new_fk->local_table !== $this)
             throw new db\Exception("could not attach a foreign key to table {$this->name} with local table {$new_fk->local_table->name}");
 
-        $this->foreign_keys []= $new_fk;
+        $this->_foreign_keys []= $new_fk;
     }
 }

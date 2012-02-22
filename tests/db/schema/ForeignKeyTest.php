@@ -11,12 +11,12 @@ class DB_Schema_ForeignKeyTest extends Kohana_Unittest_TestCase {
      */
     public function testEquals() {
         $table_1 = new schema\Table('tbl_1');
-        $col_1_1 = $table_1->create_column('col_1_1');
-        $col_1_2 = $table_1->create_column('col_1_2');
+        $col_1_1 = $table_1->get_column('col_1_1');
+        $col_1_2 = $table_1->get_column('col_1_2');
 
         $table_2 = new schema\Table('tbl_2');
-        $col_2_1 = $table_2->create_column('col_2_1');
-        $col_2_2 = $table_2->create_column('col_2_2');
+        $col_2_1 = $table_2->get_column('col_2_1');
+        $col_2_2 = $table_2->get_column('col_2_2');
 
         $fk_1 = new schema\ForeignKey;
         $fk_1->local_table = $table_1;
