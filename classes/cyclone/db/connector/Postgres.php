@@ -27,9 +27,9 @@ class Postgres extends AbstractConnector {
         $conn_str = implode(' ', $conn_params);
         //die("before connect $conn_str\n");
         if ($persistent) {
-            $this->db_conn = pg_pconnect($conn_str);
+            $this->db_conn = @pg_pconnect($conn_str);
         } else {
-            $this->db_conn = pg_connect($conn_str);
+            $this->db_conn = @pg_connect($conn_str);
         }
         
         if (FALSE == $this->db_conn)
