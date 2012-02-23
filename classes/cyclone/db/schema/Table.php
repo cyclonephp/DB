@@ -24,6 +24,10 @@ class Table {
         return new Table($name);
     }
 
+    public static function clear_pool() {
+        self::$_instances = array();
+    }
+
     public function __construct($name) {
         if (isset(self::$_instances[$name]))
             throw new db\Exception('Table instance for table "' . $name . '" already created');

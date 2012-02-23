@@ -15,6 +15,15 @@ use cyclone\db;
  */
 class Column {
 
+    /**
+     * Assoc. array with table-name => array-of-columns pairs. Every array of
+     * columns is a pair of column-name => \c Column instance pairs. This
+     * instance pool is maintained by \c get_for() and \c __construct()
+     *
+     * @var array
+     */
+    private static $_instances = array();
+
     public static function get_by_table($table_name) {
         if ( ! isset(self::$_instances[$table_name])) {
             self::$_instances[$table_name] = array();
@@ -46,14 +55,9 @@ class Column {
         return new Column($table, $col_name);
     }
 
-    /**
-     * Assoc. array with table-name => array-of-columns pairs. Every array of
-     * columns is a pair of column-name => \c Column instance pairs. This
-     * instance pool is maintained by \c get_for() and \c __construct()
-     *
-     * @var array
-     */
-    private static $_instances = array();
+    public static function clear_pool() {
+        self::$_instances = array();
+    }
 
     /**
      * @param Table $table the owner table
