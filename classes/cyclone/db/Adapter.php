@@ -72,7 +72,7 @@ abstract class Adapter {
             case 'DB_Query_Delete':
                 return $this->compile_delete($query);
             default:
-                throw new DB_Exception('unknown query type');
+                throw new Exception('unknown query type');
         }
     }
 
