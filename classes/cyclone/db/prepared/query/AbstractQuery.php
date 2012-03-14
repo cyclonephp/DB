@@ -5,9 +5,6 @@ namespace cyclone\db\prepared\query;
 use cyclone\db;
 
 /**
- * Abstract implementation of DB_Query_Prepared. Doesn't implement
- * DB_Query_Prepared::exec();
- *
  * @author Bence Eros <crystal@cyclonephp.com>
  * @package DB
  */
@@ -34,7 +31,7 @@ abstract class AbstractQuery implements db\prepared\Query {
     protected $_prepared_stmt;
 
     /**
-     * @var DB_Executor_Prepared
+     * @var \cyclone\db\prepared\executor\AbstractPreparedExecutor
      */
     protected  $_executor;
 
@@ -47,7 +44,7 @@ abstract class AbstractQuery implements db\prepared\Query {
     /**
      * @param string $key
      * @param scalar $value
-     * @return DB_Query_Prepared_Abstract
+     * @return AbstractQuery $this
      */
     public function param($value, $key = '?') {
         if ('?' == $key) {
@@ -60,7 +57,7 @@ abstract class AbstractQuery implements db\prepared\Query {
 
     /**
      * @param array $params
-     * @return DB_Query_Prepared_Abstract
+     * @return AbstractQuery $this
      */
     public function params(array $params) {
         $this->_params = $params;

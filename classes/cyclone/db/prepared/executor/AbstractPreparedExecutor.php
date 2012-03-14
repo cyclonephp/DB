@@ -5,7 +5,7 @@ namespace cyclone\db\prepared\executor;
 use cyclone\db;
 
 /**
- * Abstract implementation of DB_Executor_Prepared.
+ * Abstract implementation of \cyclone\db\prepared\Executor.
  *
  * It contains only a constructor for dependency injection.
  *

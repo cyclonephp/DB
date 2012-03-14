@@ -16,7 +16,7 @@ class UnaryExpression implements Expression {
     public $operator;
 
     /**
-     * The operand of the unary expression. Can be a \c DB_Expression instance
+     * The operand of the unary expression. Can be a @c \cyclone\db\Expression instance
      * or a scalar value.
      *
      * @var mixed

@@ -19,12 +19,12 @@ class Mysqli extends AbstractCompiler {
     protected $esc_char = '`';
 
      /**
-     * Compiles a DB_Query_Select to SQL according to the SQL dialect of the
-     * DBMS. Recommended to use DB_Query_Select::compile() instead.
+     * Compiles a \cyclone\db\query\Select instance to SQL according to the SQL
+     * dialect of the DBMS. Recommended to use \cyclone\db\query\Select::compile() instead.
      *
-     * @param DB_Query_Select $query
+     * @param \cyclone\db\query\Select $query
      * @return string the generated SQL
-     * @usedby DB_Query_Select::compile()
+     * @usedby \cyclone\db\query\Select::compile()
      */
     public function  compile_select(db\query\Select $query) {
         $this->select_aliases($query->tables, $query->joins);

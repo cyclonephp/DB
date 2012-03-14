@@ -14,7 +14,7 @@ class Transaction extends \ArrayObject {
     /**
      * The queries to be executed during the transaction.
      *
-     * @var array<DB_Query>
+     * @var array<\cyclone\db\Query>
      */
     protected $_queries;
 
@@ -59,13 +59,13 @@ class Transaction extends \ArrayObject {
      *
      * Executes the queries in the same order as they were added to the
      * transaction. If any of the queries throw an exception then rolls
-     * back the query then throws a new DB_Exepction thats source is the original
+     * back the query then throws a new \cyclone\db\Exepction thats source is the original
      * exception.
      *
      * If all queries are successfully executed then commits the transaction.
      *
      * @param string $database
-     * @throws DB_Exception
+     * @throws \cyclone\db\Exception
      */
     public function exec($database = 'default') {
         $db = cy\DB::connector($database);

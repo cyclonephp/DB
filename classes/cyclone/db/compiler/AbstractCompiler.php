@@ -40,12 +40,12 @@ abstract class AbstractCompiler implements db\Compiler {
     }
 
     /**
-     * Compiles a DB_Query_Select to SQL according to the SQL dialect of the
-     * DBMS. Recommended to use DB_Query_Select::compile() instead.
+     * Compiles a qcyclone\db\query\Select instance to SQL according to the SQL
+     * dialect of the DBMS. Recommended to use \cyclone\db\query\Select::compile() instead.
      *
-     * @param cyclone\db\query\Select $query
+     * @param \cyclone\db\query\Select $query
      * @return string the generated SQL
-     * @usedby cyclone\db\query\Select::compile()
+     * @usedby \cyclone\db\query\Select::compile()
      */
     public function  compile_select(db\query\Select $query) {
         $this->select_aliases($query->tables, $query->joins);
@@ -105,19 +105,19 @@ abstract class AbstractCompiler implements db\Compiler {
 
 
     /**
-     * Compiles a DB_Query_Insert to SQL according to the SQL dialect of the
-     * DBMS. Recommended to use DB_Query_Insert::compile() instead.
+     * Compiles a \cyclone\db\query\Insert instance to SQL according to the SQL
+     * dialect of the DBMS. Recommended to use \cyclone\db\query\Insert::compile() instead.
      *
-     * @param DB_Query_Insert $query
+     * @param \cyclone\db\query\Insert $query
      * @return string the generated SQL
-     * @usedby DB_Query_Insert::compile()
+     * @usedby \cyclone\db\query\Insert::compile()
      */
     public function  compile_insert(db\query\Insert $query) {
         $this->select_aliases($query->table);
         $rval = 'INSERT INTO ';
         $rval .= $this->escape_table($query->table);
         if (empty($query->values))
-            throw new DB_Exception('no value lists to be inserted');
+            throw new db\Exception('no value lists to be inserted');
         $rval .= ' ('.$this->escape_values(array_keys($query->values[0])).') VALUES ';
         foreach ($query->values as $value_set) {
             $value_sets []= '('.$this->escape_params($value_set).')';
@@ -128,12 +128,12 @@ abstract class AbstractCompiler implements db\Compiler {
     }
 
     /**
-     * Compiles a DB_Query_Update to SQL according to the SQL dialect of the
-     * DBMS. Recommended to use DB_Query_Update::compile() instead.
+     * Compiles a \cyclone\db\query\Update instance to SQL according to the SQL
+     * dialect of the DBMS. Recommended to use \cyclone\db\query\Update::compile() instead.
      *
-     * @param DB_Query_Update $query
+     * @param \cyclone\db\query\Update $query
      * @return string the generated SQL
-     * @usedby DB_Query_Update::compile()
+     * @usedby \cyclone\db\query\Update::compile()
      */
     public function  compile_update(db\query\Update $query) {
         $this->select_aliases($query->table);
@@ -154,12 +154,12 @@ abstract class AbstractCompiler implements db\Compiler {
     }
 
     /**
-     * Compiles a DB_Query_Delete to SQL according to the SQL dialect of the
-     * DBMS. Recommended to use DB_Query_Delete::compile() instead.
+     * Compiles a \cyclone\db\query\Delete to SQL according to the SQL dialect
+     * of the DBMS. Recommended to use \cyclone\db\query\Delete::compile() instead.
      *
-     * @param cyclone\query\Delete $query
+     * @param \cyclone\query\Delete $query
      * @return string the generated SQL
-     * @usedby cyclone\db\uery\Delete::compile()
+     * @usedby \cyclone\db\uery\Delete::compile()
      */
     public function compile_delete(db\query\Delete $query) {
         $this->select_aliases($query->table);

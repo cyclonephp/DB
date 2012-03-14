@@ -9,7 +9,7 @@ use cyclone\db;
  *
  * @author Bence Eros <crystal@cyclonephp.com>
  * @package DB
- * @see DB_Adapter_Mysqli::exec_select()
+ * @see \cyclone\db\executor\Mysqli::exec_select()
  */
 class Mysqli extends AbstractResult {
 

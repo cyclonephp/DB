@@ -6,7 +6,9 @@ namespace cyclone\db\prepared\executor;
 use cyclone\db;
 
 /**
- * Implementation of DB_Executor_Prepared for MySQLi
+ * Implementation of \cyclone\db\prepared\Executor for MySQLi
+ *
+ * @author Bence Eros <crystal@cyclonephp.org>
  * @package DB
  */
 class Mysqli extends AbstractPreparedExecutor {
@@ -16,7 +18,7 @@ class Mysqli extends AbstractPreparedExecutor {
      *
      * @param string $sql
      * @return MySQLi_Stmt
-     * @throws DB_Exception if the preparation fails.
+     * @throws \cyclone\db\Exception if the preparation fails.
      */
     public function prepare($sql) {
         $rval = $this->_db_conn->prepare($sql);

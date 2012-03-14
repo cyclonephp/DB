@@ -13,7 +13,9 @@ interface Query {
     public function exec($database = 'default');
 
     /**
-     * @return DB_Query_Prepared
+     * Creates a prepared query from the already built query.
+     *
+     * @return \cyclone\db\prepared\Query
      */
     public function prepare($database = 'default');
 

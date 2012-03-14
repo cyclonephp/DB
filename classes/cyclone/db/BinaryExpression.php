@@ -15,7 +15,7 @@ class BinaryExpression implements Expression {
     public $operator;
 
     /**
-     * The left operand of the expression. Can be a \c DB_Expression instance
+     * The left operand of the expression. Can be a @c \cyclone\db\Expression instance
      * or a scalar value.
      *
      * @var mixed
@@ -23,7 +23,7 @@ class BinaryExpression implements Expression {
     public $left_operand;
 
     /**
-     * The right operand of the expression. Can be a \c DB_Expression instance
+     * The right operand of the expression. Can be a @c \cyclone\db\Expression instance
      * or a scalar value.
      *
      * @var mixed

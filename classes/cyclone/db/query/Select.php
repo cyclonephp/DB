@@ -23,7 +23,7 @@ class Select implements db\Query, db\Expression {
      * <ul>
      * <li>a string (column name)</li>
      * <li>an array that's 0th item is a column name, the 1st is a column alias</li>
-     * <li>an array that's 0th item is a \c DB_Expression instance, the 1st item
+     * <li>an array that's 0th item is a @c \cyclone\db\Expression instance, the 1st item
      *      is an alias</li>
      * </ul>
      *
@@ -47,7 +47,7 @@ class Select implements db\Query, db\Expression {
     protected $_last_join;
 
     /**
-     * @var array<DB_Expression>
+     * @var array<\cyclone\db\Expression>
      */
     public $where_conditions;
 
@@ -82,7 +82,7 @@ class Select implements db\Query, db\Expression {
     public $for_update;
 
     /**
-     * @var array<DB_Query_Select>
+     * @var array<\cyclone\db\query\Select>
      */
     public $unions = array();
 
@@ -182,7 +182,7 @@ class Select implements db\Query, db\Expression {
     /**
      *
      * @param string $database
-     * @return DB_Query_Result
+     * @return \cyclone\db\query\result\AbstractResult
      */
     public function exec($database = 'default') {
         $sql = cy\DB::compiler($database)->compile_select($this);
@@ -208,7 +208,7 @@ class Select implements db\Query, db\Expression {
             if (is_string($tbl) && substr($tbl, 0, $tbl_name_len) == $table_name)
                 return TRUE;
 
-            // if it's not a string then it must be a DB_Query_Select
+            // if it's not a string then it must be a @c Select instance
             if ($tbl->contains_table_name($table_name))
                 return TRUE;
         }

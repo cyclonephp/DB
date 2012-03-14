@@ -11,7 +11,7 @@ use cyclone\db;
 class Select extends AbstractQuery {
 
     /**
-     * @var DB_Query_Select
+     * @var \cyclone\db\query\Select
      */
     private $_query;
 

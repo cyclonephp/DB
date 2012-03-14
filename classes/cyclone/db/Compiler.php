@@ -3,8 +3,8 @@
 namespace cyclone\db;
 
 /**
- * Interface for classes that are able to compile DB_Query_* query builder
- * objects to SQL queries for a given SQL dialect.
+ * Interface for classes that are able to compile query builder objects in
+ * the \cyclone\db\query namespace to SQL queries for a given SQL dialect.
  *
  * Exactly one implementation belongs to each DBMS types and one instance to
  * each database adapters.

@@ -8,7 +8,7 @@ use cyclone\db;
  *
  * @author Bence Eros <crystal@cyclonephp.com>
  * @package DB
- * @see DB_Adapter_Postgres::exec_select()
+ * @see \cyclone\db\executor\Postgres::exec_select()
  */
 class Postgres extends AbstractResult {
 
@@ -41,7 +41,7 @@ class Postgres extends AbstractResult {
      * Fetches the next result row in the iteration according to the row type
      * set by rows().
      *
-     * @see DB_Query_Result::rows()
+     * @see \cyclone\db\query\result\AbstractResult::rows()
      */
     public function next() {
         ++$this->_idx;
@@ -74,7 +74,7 @@ class Postgres extends AbstractResult {
     /**
      * Checks if there is a next row to fetch by next().
      *
-     * @see DB_Query_Result_Postgres::next()
+     * @see Postgres::next()
      * @return boolean
      */
     public function valid() {

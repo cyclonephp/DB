@@ -25,7 +25,7 @@ class Update implements db\Query {
     public $values;
 
     /**
-     * The <code>WHERE</code> clause of the query. All items should be DB_Expression
+     * The <code>WHERE</code> clause of the query. All items should be @c \cylone\db\Expression
      * instances and they will be concatenated with a top-level <code>AND</code>
      * operator during compilation.
      *

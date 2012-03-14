@@ -25,14 +25,14 @@ class DB {
     /**
      * Object pool for the prepared statement executor instances.
      *
-     * @var array<DB_Executor_Prepared>
+     * @var array<\cyclone\db\prepared\Executor>
      */
     private static $_executor_prepareds = array();
 
     /**
      * Object pool for the connector instances.
      *
-     * @var array<DB_Connector>
+     * @var array<\cyclone\db\ConnectorConnector>
      */
     private static $_connectors = array();
 
@@ -45,7 +45,7 @@ class DB {
 
     /**
      * @param string $config config file name
-     * @return DB_Compiler
+     * @return \cyclone\db\Compiler
      */
     public static function compiler($config = 'default') {
         if ( ! isset(self::$_compilers[$config])) {
@@ -58,7 +58,7 @@ class DB {
 
     /**
      * @param string $config config file name
-     * @return DB_Executor
+     * @return \cyclone\db\Executor
      */
     public static function executor($config = 'default') {
         if ( ! isset(self::$_executors[$config])) {
@@ -71,7 +71,7 @@ class DB {
 
     /**
      * @param string $config config file name
-     * @return DB_Executor_Prepared
+     * @return \cyclone\db\prepared\Executor
      */
     public static function executor_prepared($config = 'default') {
         if ( ! isset(self::$_executor_prepareds[$config])) {
@@ -84,7 +84,7 @@ class DB {
 
     /**
      * @param string $config config file name
-     * @return DB_Connector
+     * @return \cyclone\db\Connector
      */
     public static function connector($config = 'default') {
         if ( ! isset(self::$_connectors[$config])) {
@@ -97,7 +97,7 @@ class DB {
 
     /**
      * @param string $config config file name
-     * @return DB_Schema_Generator
+     * @return \cyclone\db\schema\Generator
      */
     public static function schema_generator($config = 'default') {
         if ( ! isset(self::$_schema_generators[$config])) {
@@ -112,7 +112,7 @@ class DB {
      * Helper factory method for custom SQL queries.
      *
      * @param string $sql
-     * @return DB_Query_Custom
+     * @return \cyclone\db\query\Custom
      */
     public static function query($sql) {
         return new db\query\Custom($sql);
@@ -121,7 +121,7 @@ class DB {
     /**
      * Helper factory method for SQL SELECT queries.
      *
-     * @return DB_Query_Select
+     * @return \cyclone\db\query\Select
      */
     public static function select() {
         $query = new db\query\Select;
@@ -159,7 +159,7 @@ class DB {
      * Helper factory method for SQL INSERT statements.
      *
      * @param string $table the table to insert into
-     * @return DB_Query_Insert
+     * @return \cyclone\db\query\Insert
      */
     public static function insert($table = null) {
         $query = new db\query\Insert;
@@ -171,7 +171,7 @@ class DB {
      * Helper factory method for SQL DELETE statements.
      *
      * @param string $table the table to delete from
-     * @return DB_Query_Delete
+     * @return \cyclone\db\query\Delete
      */
     public static function delete($table = null) {
         $query = new db\query\Delete;
@@ -179,13 +179,17 @@ class DB {
         return $query;
     }
 
+    /**
+     *
+     * @return \cyclone\db\query\Expression
+     */
     public static function expr() {
         return self::create_expr(func_get_args());
     }
 
     /**
      * @param array $args
-     * @return DB_Expression
+     * @return \cyclone\db\query\Expression
      */
     public static function create_expr($args) {
         switch (count($args)) {
@@ -221,10 +225,19 @@ class DB {
         self::$_executor_prepareds = array();
     }
 
+    /**
+     * @param scalar $param
+     * @return db\ParamExpression
+     */
     public static function esc($param) {
         return new db\ParamExpression($param);
     }
 
+    /**
+     *
+     * @param string $name
+     * @return db\CustomExpression
+     */
     public static function param($name = '?') {
         return new db\CustomExpression($name);
     }

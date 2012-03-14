@@ -6,7 +6,7 @@ namespace cyclone\db;
  *
  * Responsible for connecting/disconnecting and basic transaction handling in the
  * database connection. Every adapters should provide an implementation. Exactly
- * one DB_Connector instance belongs to each database connections.
+ * one <code>Connector</code> instance belongs to each database connections.
  *
  * @author Bence Eros <crystal@cyclonephp.com>
  * @package DB

@@ -8,8 +8,8 @@ use cyclone\db;
  *
  * Database result classes provide a simple and convenient way to iterate on the
  * result of a SELECT query. Every database adapter has it's own implementation
- * of DB_Query_Result. Result objects are recommended to not be created directly,
- * but via the exec() method of DB_Query_Select.
+ * of @c AbstractResult. Result objects are recommended to not be created directly,
+ * but via the exec() method of @c \cyclone\db\query\Select.
  *
  * Example: @code
  * $result = \cyclone\DB::select()->from('t_users')->exec()
@@ -62,7 +62,7 @@ abstract class AbstractResult extends \ArrayIterator implements \Countable, \Tra
      * It can be a valid class name, or 'array'. The latter is the default.
      *
      * @param string $type
-     * @return DB_Query_Result $this
+     * @return AbstractResult $this
      */
     public function rows($type) {
         $this->_row_type = $type;
@@ -78,7 +78,7 @@ abstract class AbstractResult extends \ArrayIterator implements \Countable, \Tra
      * selected).
      *
      * @param string $column
-     * @return DB_Query_Result $this
+     * @return AbstractResult $this
      */
     public function index_by($column) {
         $this->_index_by = $column;

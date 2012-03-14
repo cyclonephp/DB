@@ -38,7 +38,7 @@ class Postgres extends AbstractCompiler {
     }
 
     public function escape_table($table) {
-        if ($table instanceof DB_Expression)
+        if ($table instanceof db\Expression)
             return $table->compile_expr($this);
 
         $prefix = isset($this->_config['prefix'])

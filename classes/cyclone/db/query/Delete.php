@@ -20,7 +20,7 @@ class Delete implements db\Query {
 
     /**
      * The WHERE conditions of the query. All items of the array should be
-     * \c DB_Expression instances, and they will be concatenated by top-level
+     * @c \cyclone\db\Expression instances, and they will be concatenated by top-level
      * <code>AND</code> operators during the compilation.
      *
      * @var array
