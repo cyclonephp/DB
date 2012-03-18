@@ -3,6 +3,9 @@
 namespace cyclone;
 
 /**
+ * Wrapper class of static factory methods for creating database query objects.
+ * Read the library manual for examples of using it.
+ *
  * @author Bence Eros <crystal@cyclonephp.com>
  * @package DB
  */
@@ -44,6 +47,12 @@ class DB {
     private static $_schema_generators = array();
 
     /**
+     * Returns the SQL compiler of the database adapter of the <code>$config</code>
+     * connection.
+     *
+     * The compiler instances are re-used (pooled) on subsequent calls, therefore
+     * only one compiler instance is created for a given DBMS.
+     *
      * @param string $config config file name
      * @return \cyclone\db\Compiler
      */
@@ -57,6 +66,12 @@ class DB {
     }
 
     /**
+     * Returns an @c Executor instance which is able to run an SQL query
+     * on the <code>$config</code> database connection.
+     *
+     * The executor instances are re-used (pooled) on subsequent calls, therefore
+     * only one executor is created for a given DBMS.
+     *
      * @param string $config config file name
      * @return \cyclone\db\Executor
      */
@@ -70,6 +85,13 @@ class DB {
     }
 
     /**
+     * Static factory method for @c \cyclone\db\prepared\Executor instances.
+     * The prepared statement executor of the adapter of the <code>$config</code>
+     * connection will be returned.
+     *
+     * The instances are re-used (pooled) on subsequent calls, therefore only
+     * one executor is created for a given DBMS.
+     *
      * @param string $config config file name
      * @return \cyclone\db\prepared\Executor
      */
@@ -83,6 +105,10 @@ class DB {
     }
 
     /**
+     * Static factory method for @c \cyclone\db\Connector instances.
+     * Returns the connector instance which is able to connect to the DBMS
+     * handled by the adapter of the <code>$config</code> connection.
+     *
      * @param string $config config file name
      * @return \cyclone\db\Connector
      */
@@ -96,6 +122,9 @@ class DB {
     }
 
     /**
+     * Returns the database schema generator instance of the adapter of the
+     * given connection.
+     *
      * @param string $config config file name
      * @return \cyclone\db\schema\Generator
      */
@@ -144,7 +173,8 @@ class DB {
     }
 
     /**
-     * Helper factory method for SQL UPDATE statements.
+     * Helper factory method for creating objects representing SQL UPDATE
+     * statements.
      *
      * @param string $table the table name to be updated
      * @return db\query\Update
@@ -156,7 +186,7 @@ class DB {
     }
 
     /**
-     * Helper factory method for SQL INSERT statements.
+     * Helper factory method for creating objects representing SQL INSERT statements.
      *
      * @param string $table the table to insert into
      * @return \cyclone\db\query\Insert
@@ -168,7 +198,7 @@ class DB {
     }
 
     /**
-     * Helper factory method for SQL DELETE statements.
+     * Helper factory method for creating objects representing SQL DELETE statements.
      *
      * @param string $table the table to delete from
      * @return \cyclone\db\query\Delete
@@ -180,6 +210,30 @@ class DB {
     }
 
     /**
+     * Helper factory method for creating objects representing database expressions.
+     *
+     * Examples: @code
+     *
+     * use cyclone as cy;
+     * //...
+     *
+     * // binary operator expression
+     * $expr = cy\DB::expr('a', '=', 'b');
+     *
+     * // binary expression with subselect
+     * $expr = cy\DB::expr('id', 'IN', cy\DB::select('id')->from('users'));
+     *
+     * // binary expression with set expression as right operand
+     * $expr = cy\DB::expr('id', 'NOT IN', cy\DB::expr(array(1, 2, 3)));
+     *
+     * // unary expression with subselect
+     * $expr = cy\DB::expr('EXISTS', cy\DB::select('id')->from('users')
+     *      ->where('group_id', '=', NULL));
+     *
+     * // creating a more complex expression
+     * $expr = cy\DB::expr(cy\DB::expr('name', '=', cy\DB::esc($username))
+     *      , 'OR'
+     *      , cy\DB::expr('email', '=', cy\DB::esc($email))); @endcode
      *
      * @return \cyclone\db\query\Expression
      */
@@ -188,6 +242,10 @@ class DB {
     }
 
     /**
+     * Helper factory method for creating objects representing database expressions.
+     * Similar behavior to @c DB::expr() but it takes an array as its argument
+     * instead of using variable length argument list.
+     *
      * @param array $args
      * @return \cyclone\db\query\Expression
      */

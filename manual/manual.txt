@@ -1,14 +1,25 @@
 The DB library is
- - the low-level database abstraction layer of the CyclonePHP
-		framework.
- - It provides a DBMS-independent way of accessing and 
-		manipulating databases.
- - Similar to Kohana's Database module.
- - The back-end layer for JORK
- - Can be used as a stand-alone module
- - Supports transactions
- - Comes with a minimal active record implementation
- 
+<ul>
+ <li> the low-level database abstraction layer of the CyclonePHP
+		framework.</li>
+ <li> It provides a DBMS-independent way of accessing and
+		manipulating databases.</li>
+ <li> Similar to Kohana's Database module.</li>
+ <li> The back-end layer for JORK</li>
+ <li> Can be used as a stand-alone module</li>
+ <li> Supports transactions and prepared statements</li>
+ <li> Comes with a minimal active record implementation</li>
+</ul>
+
+The library provides an internal DSL (can be used via method call chains) to
+create objects representing SQL queries and statements. These objects are meant
+to be a DBMS-independent representation of the database operation. These query
+objects are compiled and executed by DBMS-specific adapters provided by the library,
+and the query result fetching is also wrapped by the adapters. This way the database
+operations can be handled in the application in a DBMS-independent manner. This
+way the application is more easily portable between different database systems.
+The adapters will hide the differences between SQL dialects and between the PHP API-s
+to access the different databases.
  
  @section db-gettingstarted Getting started with the DB library
  
@@ -25,7 +36,7 @@ The DB library is
 	);
 	@endcode
  
- Let's set up the database connection in <tt> application/config/db/default.php </tt> :
+ Let's set up the database connection in <tt> app/config/db/default.php </tt> :
  
  @code
  <?php
@@ -51,6 +62,10 @@ The DB library is
  do you want to use every time you execute an SQL query. If you
  don't then the default connection will be 'default'.
  More about it later.
+
+<em>Note: all examples below in the library manual will assume that the
+<code>\cyclone</code> namespace is aliased to <code>cy</code></em>.
+
  
  @section db-datamanip Data manipulation
  
@@ -61,7 +76,7 @@ The DB library is
  We are going to load some data into the database, so let's look
  at the INSERT statements:
  @code
- $id = DB::insert('users')->values(array('name' => 'user 01'))->exec();
+ $id = cy\DB::insert('users')->values(array('name' => 'user 01'))->exec();
  @endcode
  
  This piece of code creates an INSERT statement and executes it
@@ -80,7 +95,7 @@ The DB library is
  
  You can insert multiple rows in the same INSERT statement this way:
  @code
- DB::insert('users')->values(array('name' => 'user 02')
+ cy\DB::insert('users')->values(array('name' => 'user 02')
  , array('name' => 'user 03'))->exec();
  @endcode
  
@@ -94,17 +109,17 @@ The DB library is
  
  @code
  $id = 1;  // we are going to update the row with id = 1
- $row_count = DB::update('users')->values(array('name' => 'user 01 updated'))
-		->where('id, '=', DB::esc($id))->exec();
+ $row_count = cy\DB::update('users')->values(array('name' => 'user 01 updated'))
+		->where('id', '=', cy\DB::esc($id))->exec();
  @endcode
  
  We pass the table name to the \c update() call, then key-value pairs
  to the \c values() call, where keys should be column names and values
  should be the values to be updated. Then we create a \c WHERE condition.
- Note that the ID - the parameter of the query is in a \c DB::esc() call.
+ Note that the ID - the parameter of the query is in a \c cy\DB::esc() call.
  This method call should be used always when you want to pass
  any user-entered data to your queries, this way it will be escaped
- to avoid SQL injection. Furthermore, if you don't use \c DB::esc()
+ to avoid SQL injection. Furthermore, if you don't use \c cy\DB::esc()
  then most times the query execution will result into an SQL error.
  
  More about \c WHERE conditions later. Note that you also have to call
@@ -120,7 +135,7 @@ The DB library is
  The syntax of DELETE statements is very similar. Example:
  @code
  $id = 1;
- $row_count = DB::delete('users')->where('id', '=', DB::esc($id))->exec();
+ $row_count = cy\DB::delete('users')->where('id', '=', cy\DB::esc($id))->exec();
  @endcode
  
  The return value is the number of rows deleted.
@@ -134,7 +149,7 @@ The DB library is
   
   So let's get started with a simple query:
   @code
-  DB::select()->from('users')->exec();
+  cy\DB::select()->from('users')->exec();
   @endcode
   
   This will generate the SQL <tt>SELECT * FROM `users`</tt> and will execute
@@ -142,7 +157,7 @@ The DB library is
   
   To specify the columns to be selected pass them to the <tt>select()</tt> method:
   @code
-  DB::select('id', 'name')->from('users')->exec();
+  cy\DB::select('id', 'name')->from('users')->exec();
   @endcode
   
   Generated SQL:
@@ -156,16 +171,16 @@ The DB library is
   Let's add a \c WHERE clause:
   @code
   $id = 2;
-  DB::select()->from('users')->where('id', '=', DB::esc($id))->exec();
+  cy\DB::select()->from('users')->where('id', '=', cy\DB::esc($id))->exec();
   @endcode
   
   As it has already been mentioned in the UPDATE section, you have to put your
-  parameters into a \c DB::esc() call.
+  parameters into a \c cy\DB::esc() call.
   
   If you select from multiple tables then you have to qualify your table names, 
   as you normally should do in SQL:
   @code
-  DB::select('users.id', 'users.name', 'posts.text')->from('users', 'posts')->exec();
+  cy\DB::select('users.id', 'users.name', 'posts.text')->from('users', 'posts')->exec();
   @endcode
   
   Generated SQL:
@@ -179,14 +194,14 @@ The DB library is
   alias name to a table, you have to use it in <tt>array('table_name', 'alias')</tt>
   format:
   @code
-  DB::select('u.id', 'u.name', 'p.text')->from(array('users', 'u')
+  cy\DB::select('u.id', 'u.name', 'p.text')->from(array('users', 'u')
   		, array('posts', 'p'))->exec();
   @endcode
   
   If you want to give an alias name to your column in the \c SELECT clause, then
   you also have to use the same format:
   @code
-  DB::select(array('u.id', 'userid')
+  cy\DB::select(array('u.id', 'userid')
   		, array('u.name', 'username')
   		, 'p.text')->from(array('users', 'u'), array('posts', 'p'))->exec();
   @endcode
@@ -194,7 +209,7 @@ The DB library is
   You can build the JOIN clause of the query using the \c join() and \c on()
   builder methods. Example:
   @code
-  DB::select(array('u.id', 'userid')
+  cy\DB::select(array('u.id', 'userid')
   		, array('u.name', 'username')
   		, 'posts.text')->from(array('users', 'u'))
   		->join('posts')->on('u.id', '=', 'post.author_fk')->exec();
@@ -209,23 +224,23 @@ The DB library is
   use the same syntax as for table and column aliases, so let's alias
   the 'posts' table to 'p' in the previous example:
   @code
-  DB::select(array('u.id', 'userid')
+  cy\DB::select(array('u.id', 'userid')
   		, array('u.name', 'username')
   		, 'p.text')->from(array('users', 'u'))
   		->join(array('posts', 'p'))->on('u.id', '=', 'p.author_fk')->exec();
   @endcode
   
   If you want to select anything that is not a database column but any 
-  other database expression, then you have to put it into a \c DB::expr() call. 
-  Don't mix it up with \c DB::esc() since \c DB::expr() won't perform 
+  other database expression, then you have to put it into a \c cy\DB::expr() call.
+  Don't mix it up with \c cy\DB::esc() since \c cy\DB::expr() won't perform
   any escaping. Example:
   @code
-  DB::select('id')->from('users')
-  	->where('created_at', '=', DB::select(DB::expr('max(u.created_at)'))
+  cy\DB::select('id')->from('users')
+  	->where('created_at', '=', cy\DB::select(cy\DB::expr('max(u.created_at)'))
   		->from(array('users', 'u')))->exec();
   @endcode
   
-  The query builder won't care about the contents of your \c DB::expr() call,
+  The query builder won't care about the contents of your \c cy\DB::expr() call,
   so you can use here whatever complex expression you want.
   
   <em>Note: you can also put your database expression into the \c SELECT
@@ -239,8 +254,8 @@ The DB library is
   
   An example to select the count of posts for each users:
   @code
-  DB::select('name'
-  		, array(DB::select(DB::expr('count(posts.id)')->from('posts')
+  cy\DB::select('name'
+  		, array(cy\DB::select(cy\DB::expr('count(posts.id)')->from('posts')
   			->where('posts.author_fk', '=', 'users.id')
   		), 'post_count')->from('users')->exec();
   @endcode
@@ -254,9 +269,9 @@ The DB library is
   example @code SELECT * FROM users WHERE id IN (1, 2, 3) @endcode .
   
   With the DB library you can create such queries by putting an array into 
-  a \c DB::expr() call. Example:
+  a \c cy\DB::expr() call. Example:
   @code
-  DB::select()->from('users')->where('id', 'IN', DB::expr(array(1, 2, 3))->exec();
+  cy\DB::select()->from('users')->where('id', 'IN', cy\DB::expr(array(1, 2, 3))->exec();
   @endcode
 
 @section db-activerecord The Active Record implementation of the DB library
@@ -384,7 +399,7 @@ Reading one entity but not by its primary key:
 use cyclone as cy;
 // ...
 $user = UserRecord::inst()->get_one(
-    array('email, '=', cy\DB::esc('helloworld@example.org')));@endcode
+    array('email', '=', cy\DB::esc('helloworld@example.org')));@endcode
 
 Reading a "page" (assuming that we want to render the data in a
 paginated way):
