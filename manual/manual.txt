@@ -113,24 +113,24 @@ to access the different databases.
 		->where('id', '=', cy\DB::esc($id))->exec();
  @endcode
  
- We pass the table name to the \c update() call, then key-value pairs
- to the \c values() call, where keys should be column names and values
- should be the values to be updated. Then we create a \c WHERE condition.
- Note that the ID - the parameter of the query is in a \c cy\DB::esc() call.
+ We pass the table name to the @c update() call, then key-value pairs
+ to the @c values() call, where keys should be column names and values
+ should be the values to be updated. Then we create a @c WHERE condition.
+ Note that the ID - the parameter of the query is in a @c cy\DB::esc() call.
  This method call should be used always when you want to pass
  any user-entered data to your queries, this way it will be escaped
- to avoid SQL injection. Furthermore, if you don't use \c cy\DB::esc()
+ to avoid SQL injection. Furthermore, if you don't use @c cy\DB::esc()
  then most times the query execution will result into an SQL error.
  
- More about \c WHERE conditions later. Note that you also have to call
- \c exec() for \c UPDATE statements too, optionally by passing the database
+ More about @c WHERE conditions later. Note that you also have to call
+ @c exec() for @c UPDATE statements too, optionally by passing the database
  connection name.
  
- The \c exec() call for \c UPDATE statements return the number of affected
- rows by the SQL \c UPDATE (it's stored in the \c $row_count) variable 
+ The @c exec() call for @c UPDATE statements return the number of affected
+ rows by the SQL @c UPDATE (it's stored in the @c $row_count) variable
  in this case).
  
- @subsection DELETE
+ @subsection db-delete DELETE
  
  The syntax of DELETE statements is very similar. Example:
  @code
@@ -140,7 +140,7 @@ to access the different databases.
  
  The return value is the number of rows deleted.
  
- @section SELECT
+ @section db-select SELECT
  
  SELECT queries can be much more complicated then other SQL statements. In
   this chapter we are going to look at the most important guidelines of
@@ -168,14 +168,14 @@ to access the different databases.
   <em>Note that in the generated SQL the column and table names are escaped, 
   so you can use SQL keywords as table or columns names, but it's not recommended</em>
   
-  Let's add a \c WHERE clause:
+  Let's add a @c WHERE clause:
   @code
   $id = 2;
   cy\DB::select()->from('users')->where('id', '=', cy\DB::esc($id))->exec();
   @endcode
   
   As it has already been mentioned in the UPDATE section, you have to put your
-  parameters into a \c cy\DB::esc() call.
+  parameters into a @c cy\DB::esc() call.
   
   If you select from multiple tables then you have to qualify your table names, 
   as you normally should do in SQL:
@@ -189,7 +189,7 @@ to access the different databases.
   @endcode
   
   
-  When you have more than one tables in your \c FROM and \c JOIN clauses,
+  When you have more than one tables in your @c FROM and @c JOIN clauses,
   you will likely want to add an alias name for them. If you want to add an
   alias name to a table, you have to use it in <tt>array('table_name', 'alias')</tt>
   format:
@@ -198,7 +198,7 @@ to access the different databases.
   		, array('posts', 'p'))->exec();
   @endcode
   
-  If you want to give an alias name to your column in the \c SELECT clause, then
+  If you want to give an alias name to your column in the @c SELECT clause, then
   you also have to use the same format:
   @code
   cy\DB::select(array('u.id', 'userid')
@@ -206,7 +206,7 @@ to access the different databases.
   		, 'p.text')->from(array('users', 'u'), array('posts', 'p'))->exec();
   @endcode
   
-  You can build the JOIN clause of the query using the \c join() and \c on()
+  You can build the JOIN clause of the query using the @c join() and @c on()
   builder methods. Example:
   @code
   cy\DB::select(array('u.id', 'userid')
@@ -215,7 +215,7 @@ to access the different databases.
   		->join('posts')->on('u.id', '=', 'post.author_fk')->exec();
   @endcode
   
-  In the 2th parameter of the \c join() call you can specify what kind of
+  In the 2th parameter of the @c join() call you can specify what kind of
   join you want to perform (LEFT, RIGHT, INNER, whatever). The default
   value is LEFT. The DB library won't care about the contents of the 2th parameter,
   so feel free to use any DBMS-specific join types.
@@ -231,8 +231,8 @@ to access the different databases.
   @endcode
   
   If you want to select anything that is not a database column but any 
-  other database expression, then you have to put it into a \c cy\DB::expr() call.
-  Don't mix it up with \c cy\DB::esc() since \c cy\DB::expr() won't perform
+  other database expression, then you have to put it into a @c cy\DB::expr() call.
+  Don't mix it up with @c cy\DB::esc() since @c cy\DB::expr() won't perform
   any escaping. Example:
   @code
   cy\DB::select('id')->from('users')
@@ -240,17 +240,17 @@ to access the different databases.
   		->from(array('users', 'u')))->exec();
   @endcode
   
-  The query builder won't care about the contents of your \c cy\DB::expr() call,
+  The query builder won't care about the contents of your @c cy\DB::expr() call,
   so you can use here whatever complex expression you want.
   
-  <em>Note: you can also put your database expression into the \c SELECT
+  <em>Note: you can also put your database expression into the @c SELECT
   clause, but in that case you have to pass an alias name using an array.</em>
   
   @subsection db-subqueries Using subqueries
   
   An other thing you could notice in the previous example that we used a 
-  subquery in the \c WHERE clause. So just like in SQL, you can use subqueries
-  in many places: in the \c SELECT clause, \c FROM clause, \c JOIN clause, etc.
+  subquery in the @c WHERE clause. So just like in SQL, you can use subqueries
+  in many places: in the @c SELECT clause, @c FROM clause, @c JOIN clause, etc.
   
   An example to select the count of posts for each users:
   @code
@@ -260,7 +260,7 @@ to access the different databases.
   		), 'post_count')->from('users')->exec();
   @endcode
   
-  Note that you don't have to call the \c exec() method of the subquery,
+  Note that you don't have to call the @c exec() method of the subquery,
   it will be compiled with its 'parent' query.
   
   @subsection db-sets Using sets
@@ -269,7 +269,7 @@ to access the different databases.
   example @code SELECT * FROM users WHERE id IN (1, 2, 3) @endcode .
   
   With the DB library you can create such queries by putting an array into 
-  a \c cy\DB::expr() call. Example:
+  a @c cy\DB::expr() call. Example:
   @code
   cy\DB::select()->from('users')->where('id', 'IN', cy\DB::expr(array(1, 2, 3))->exec();
   @endcode
@@ -315,10 +315,10 @@ class UserRecord extends record\AbstractRecord {
 @endcode
 
 As it is shown in the above example to create an active record class you have to
-extend it from the \c cyclone\db\record\AbstractRecord class and you have to
+extend it from the @c cyclone\db\record\AbstractRecord class and you have to
 implement its <code>setup()</code> method. In this method you have to
 populate the properties of <code>$this->_schema</code> which is a
-\c cyclone\db\record\Schema instance. This object will hold the primitive "mapping"
+@c cyclone\db\record\Schema instance. This object will hold the primitive "mapping"
 information which means a table (to be exact: relation) name and a key-value
 pair of column names and DDL strings for the column name. The DDL will only be used
 by the database schema generator, so if you don't want to take the advantage of

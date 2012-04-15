@@ -101,16 +101,16 @@ abstract class AbstractRecord {
      * Returns one entity that matches the conditions given by the arguments.
      *
      * If 0 row is found the <code>NULL</code> will be returned, if 1 row is found
-     * then a \c AbstractRecord subclass instance will be returned representing the
-     * found row, if more than one row is found then an \c cyclone\db\Exception
+     * then a @c AbstractRecord subclass instance will be returned representing the
+     * found row, if more than one row is found then an @c cyclone\db\Exception
      * will be thrown.
      *
      * The method accepts any number of array arguments, every argument should be
      * a 3-element numeric array where
      * <ol>
-     *  <li>the first element must be a database column or \c cyclone\db\Expression instance</li>
+     *  <li>the first element must be a database column or @c cyclone\db\Expression instance</li>
      *  <li>the second element must be a database operator (string)</li>
-     *  <li>the third element must be a database column or \c cyclone\db\Expression instance</li>
+     *  <li>the third element must be a database column or @c cyclone\db\Expression instance</li>
      * </ol>
      *
      *
@@ -141,9 +141,9 @@ abstract class AbstractRecord {
      * The <code>WHERE</code> clause can be defined by the 3-element arrays in the
      * argument list, where
      * <ol>
-     *  <li>the first element must be a database column or \c cyclone\db\Expression instance</li>
+     *  <li>the first element must be a database column or @c cyclone\db\Expression instance</li>
      *  <li>the second element must be a database operator (string)</li>
-     *  <li>the third element must be a database column or \c cyclone\db\Expression instance</li>
+     *  <li>the third element must be a database column or @c cyclone\db\Expression instance</li>
      * </ol>
      *
      * The <code>ORDER BY</code> clause of the query can be defined using 2-elements
@@ -166,7 +166,7 @@ abstract class AbstractRecord {
     /**
      * Select all rows from the table of the current schema and returns them
      * as an array of active records representing the rows. The same as
-     * calling \c get_list() without arguments.
+     * calling @c get_list() without arguments.
      *
      * @return array<AbstractRecord>
      */
@@ -180,7 +180,7 @@ abstract class AbstractRecord {
      * Returns the given page from the table. The first <code>$page</code>
      * and <code>$page_size</code> parameters are used to create the OFFSET - LIMIT
      * clauses of the query, the optional following arguments can be used as
-     * WHERE and ORDER BY clause definitions as at \c get_list() .
+     * WHERE and ORDER BY clause definitions as at @c get_list() .
      * Example:
      * <pre><code>
      *  // returns the 31. - 60. rows from the table

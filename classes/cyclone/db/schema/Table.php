@@ -103,13 +103,13 @@ class Table {
     }
 
     /**
-     * Adds a new foreign key object to \c $foreign_keys if the new foreign key
+     * Adds a new foreign key object to @c $foreign_keys if the new foreign key
      * is not present yet. If the foreign key has been added already then it
      * won't be added again.
      *
      * If the <code>$local_table</code> of the foreign key is <code>NULL</code>
      * then it will default to <code>$this</code>. Otherwise if the local table of
-     * the foreign key is not <code>$this</code> then a \c \cyclone\db\Exception
+     * the foreign key is not <code>$this</code> then a @c \cyclone\db\Exception
      * will be thrown.
      *
      * @param ForeignKey $new_fk

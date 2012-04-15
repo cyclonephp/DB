@@ -7,7 +7,7 @@ use cyclone\db;
 /**
  * Value object representing a database column. It is used by database schema
  * generators to store internally the database schema to be created
- * and \c cyclone\db\schema\generator\AbstractGenerator subclass instances can
+ * and @c cyclone\db\schema\generator\AbstractGenerator subclass instances can
  * generate DBMS-specific DDL strings from it.
  *
  * @author Bence Eros <crystal@cyclonephp.org>
@@ -17,8 +17,8 @@ class Column {
 
     /**
      * Assoc. array with table-name => array-of-columns pairs. Every array of
-     * columns is a pair of column-name => \c Column instance pairs. This
-     * instance pool is maintained by \c get_for() and \c __construct()
+     * columns is a pair of column-name => @c Column instance pairs. This
+     * instance pool is maintained by @c get_for() and @c __construct()
      *
      * @var array
      */
