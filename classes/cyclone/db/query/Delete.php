@@ -34,6 +34,8 @@ class Delete implements db\Query {
      */
     public $limit;
 
+    public $returning = array();
+
     public function table($table) {
         $this->table = $table;
     }
@@ -48,13 +50,21 @@ class Delete implements db\Query {
         return $this;
     }
 
+
+    public function returning() {
+        foreach (func_get_args() as $returning) {
+            $this->returning []= (string) $returning;
+        }
+        return $this;
+    }
+
     public function compile($database = 'default') {
         return cy\DB::compiler($database)->compile_delete($this);
     }
 
     public function exec($database = 'default') {
         $sql = cy\DB::compiler($database)->compile_delete($this);
-        return cy\DB::executor($database)->exec_delete($sql);
+        return cy\DB::executor($database)->exec_delete($sql, $this);
     }
 
     public function  prepare($database = 'default') {

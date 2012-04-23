@@ -10,10 +10,20 @@ class DB_Mysqli_ExecTest extends DB_MySQLi_DbTest {
      * @expectedException cyclone\db\Exception
      */
     public function testExecUpdate() {
-        $affected = cy\DB::update('user')->values(array('name' => 'crystal88_'))
+        $result = cy\DB::update('user')->values(array('name' => 'crystal88_'))
                 ->exec('cytst-mysqli');
-        $this->assertEquals($affected, 2);
+        $this->assertInstanceOf('cyclone\\db\\StmtResult', $result);
+        $this->assertEquals($result->affected_row_count, 2);
         cy\DB::update('users')->values(array('name' => 'crystal88_'))->exec('cytst-mysqli');
+    }
+
+    public function test_exec_update_returning() {
+        $result = cy\DB::update('user')->values(array('email' => 'crystal@example.org'))
+            ->returning('name')->exec('cytst-mysqli');
+        $this->assertEquals(array(
+            array('name' => 'user1'),
+            array('name' => 'user2')
+        ), $result->rows);
     }
 
     /**
@@ -21,8 +31,9 @@ class DB_Mysqli_ExecTest extends DB_MySQLi_DbTest {
      * @expectedException cyclone\db\Exception
      */
     public function testExecDelete() {
-        $affected = cy\DB::delete('user')->exec('cytst-mysqli');
-        $this->assertEquals($affected, 2);
+        $result = cy\DB::delete('user')->exec('cytst-mysqli');
+        $this->assertInstanceOf('cyclone\\db\\StmtResult', $result);
+        $this->assertEquals($result->affected_row_count, 2);
         cy\DB::delete('users')->exec('cytst-mysqli');
     }
 
@@ -32,12 +43,30 @@ class DB_Mysqli_ExecTest extends DB_MySQLi_DbTest {
      */
     public function testExecInsert() {
         $insert_id = cy\DB::insert('user')->values(array('name' => 'crystal'))
-                ->exec('cytst-mysqli');
+                ->returning('id')
+                ->exec('cytst-mysqli')->rows[0]['id'];
         $this->assertEquals(3, $insert_id);
         $insert_id = cy\DB::insert('user')->values(array('name' => 'crystal'))
-                ->values(array('name' => 'crystal'))->exec('cytst-mysqli');
+                ->values(array('name' => 'crystal'))
+                ->returning('id')
+                ->exec('cytst-mysqli')->rows[0]['id'];
         $this->assertEquals(4, $insert_id);
         cy\DB::insert('users')->values(array('name' => 'crystal'))->exec('cytst-mysqli');
+    }
+
+    /**
+     *
+     */
+    public function testExecInsertReturning() {
+        $result = cy\DB::insert('user')->values(array(
+            'name' => 'crystal',
+            'email' => 'crystal@example.org')
+        )->returning('id', 'name', 'email')->exec('cytst-mysqli');
+        $this->assertEquals(array(
+            'id' => '3',
+            'name' => 'crystal',
+            'email' => 'crystal@example.org'
+        ), $result->rows[0]);
     }
 
     public function testExecSelect() {
@@ -100,12 +129,12 @@ class DB_Mysqli_ExecTest extends DB_MySQLi_DbTest {
         $conn = cy\DB::connector('cytst-mysqli');
         $conn->autocommit(false);
         $deleted_rows = cy\DB::delete('user')->exec('cytst-mysqli');
-        $this->assertEquals(2, $deleted_rows);
+        $this->assertEquals(2, $deleted_rows->affected_row_count);
         $conn->rollback();
         $existing_rows = cy\DB::select()->from('user')->exec('cytst-mysqli')->count();
         $this->assertEquals(2, $existing_rows); return;
         $deleted_rows = cy\DB::delete('user')->exec('cytst-mysqli');
-        $this->assertEquals(2, $deleted_rows);
+        $this->assertEquals(2, $deleted_rows->affected_row_count);
         $conn->commit();
         $existing_rows = cy\DB::select()->from('user')->exec('cytst-mysqli')->count();
         $this->assertEquals(0, $existing_rows);

@@ -13,9 +13,23 @@ interface Executor {
 
     public function exec_select($select_sql);
 
-    public function exec_insert($insert_sql, $return_insert_id);
+    /**
+     * @param $insert_sql
+     * @param query\Insert|null $orig_query
+     * @return \cyclone\db\StmtResult
+     */
+    public function exec_insert($insert_sql, query\Insert $orig_query = NULL);
 
-    public function exec_update($update_sql);
+    /**
+     * @param $update_sql
+     * @return \cyclone\db\StmtResult
+     */
+    public function exec_update($update_sql, query\Update $orig_query = NULL);
 
-    public function exec_delete($delete_sql);
+    /**
+     * @abstract
+     * @param $delete_sql
+     * @return \cyclone\db\StmtResult
+     */
+    public function exec_delete($delete_sql, query\Delete $orig_query = NULL);
 }

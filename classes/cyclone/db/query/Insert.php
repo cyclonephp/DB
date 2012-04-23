@@ -24,6 +24,8 @@ class Insert implements db\Query {
      */
     public $values = array();
 
+    public $returning = array();
+
     public function table($table) {
         $this->table = $table;
         return $this;
@@ -34,13 +36,23 @@ class Insert implements db\Query {
         return $this;
     }
 
+    /**
+     * @param $returning string a column name in the database relation @c $table .
+     */
+    public function returning($returning) {
+        foreach (func_get_args() as $arg) {
+            $this->returning []= (string) $arg;
+        }
+        return $this;
+    }
+
     public function compile($database = 'default') {
         return cy\DB::compiler($database)->compile_insert($this);
     }
 
-    public function exec($database = 'default', $return_insert_id = TRUE) {
+    public function exec($database = 'default') {
         $sql = cy\DB::compiler($database)->compile_insert($this);
-        return cy\DB::executor($database)->exec_insert($sql, $return_insert_id, $this->table);
+        return cy\DB::executor($database)->exec_insert($sql, $this);
     }
 
     public function  prepare($database = 'default') {

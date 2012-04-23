@@ -3,6 +3,7 @@
 namespace cyclone\db\executor;
 
 use cyclone\db;
+use cyclone\db\query;
 
 /**
  * @author Bence Eros <crystal@cyclonephp.com>
@@ -36,31 +37,21 @@ class Postgres extends AbstractExecutor {
         return new db\query\result\Postgres($result);
     }
 
-    public function exec_insert($sql, $return_insert_id, $table = NULL) {
-        if (@pg_query($this->_db_conn, $sql) == FALSE)
+    public function exec_insert($sql, query\Insert $orig_query = NULL) {
+        if ( ($insert_result = @pg_query($this->_db_conn, $sql)) == FALSE)
             throw PostgresConstraintExceptionBuilder::for_error(pg_last_error($this->_db_conn), $sql);
 
-        if ( ! $return_insert_id)
-            return NULL;
-
-        if (array_key_exists($table, $this->_generator_sequences)) {
-            $seq_name = $this->_generator_sequences[$table];
-        } else {
-            $seq_name = $table . '_id_seq';
-            $this->_generator_sequences[$table] = $seq_name;
+        if ($orig_query !== NULL && count($orig_query->returning) > 0) {
+            $rval = array();
+            while ( ($row = pg_fetch_assoc($insert_result)) !== FALSE) {
+                $rval []= $row;
+            }
+            return $rval;
         }
-        $result = @pg_query($this->_db_conn, 'select currval(\'' . $seq_name
-                . '\') as last_pk');
-
-        if (FALSE === $result)
-            throw new db\Exception('Failed to retrieve the primary key of the inserted row ('
-				. pg_last_error($this->_db_conn) . ')');
-
-        $row = pg_fetch_assoc($result);
-        return $row['last_pk'];
+        return NULL;
     }
 
-    public function exec_update($sql) {
+    public function exec_update($sql, query\Update $orig_query = NULL) {
         $result = @pg_query($this->_db_conn, $sql);
         if (FALSE == $result)
             throw new db\Exception('Failed to execute SQL: ' . pg_last_error($this->_db_conn)
@@ -69,7 +60,7 @@ class Postgres extends AbstractExecutor {
         return pg_affected_rows($result);
     }
 
-    public function exec_delete($sql) {
+    public function exec_delete($sql, query\Delete $orig_query = NULL) {
         $result = @pg_query($this->_db_conn, $sql);
         if (FALSE == $result)
             throw new db\Exception('Failed to execute SQL: ' . pg_last_error($this->_db_conn)

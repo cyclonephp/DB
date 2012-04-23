@@ -40,6 +40,8 @@ class Update implements db\Query {
      */
     public $limit;
 
+    public $returning = array();
+
     public function table($table) {
         $this->table = $table;
         return $this;
@@ -60,13 +62,20 @@ class Update implements db\Query {
         return $this;
     }
 
+    public function returning() {
+        foreach (func_get_args() as $returning) {
+            $this->returning []= (string) $returning;
+        }
+        return $this;
+    }
+
     public function compile($database = 'default') {
         return cy\DB::compiler($database)->compile_update($this);
     }
 
     public function exec($database = 'default') {
         $sql = cy\DB::compiler($database)->compile_update($this);
-        return cy\DB::executor($database)->exec_update($sql);
+        return cy\DB::executor($database)->exec_update($sql, $this);
     }
 
     public function  prepare($database = 'default') {

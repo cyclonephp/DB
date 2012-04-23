@@ -245,4 +245,53 @@ class Select implements db\Query, db\Expression {
         $this->hints[] = $hint;
         return $this;
     }
+
+    /**
+     * Checks if <code>$this</code> is the same as <code>$other</code>. Returns <code>TRUE</code> on
+     * success, <code>FALSE</code> on failure. The comparison is done with omitting the internal
+     * property holding a reference to the last join, every other properties of <code>$this</code>
+     * and <code>$other</code> are compared.
+     *
+     * @param Select $other the other select query to compare against
+     * @return bool
+     */
+    public function equals(Select $other) {
+        $rval = ($this->distinct == $other->distinct)
+            && ($this->columns == $other->columns)
+            && ($this->tables == $other->tables)
+            && ($this->joins == $other->joins)
+            && ($this->where_conditions == $other->where_conditions)
+            && ($this->group_by == $other->group_by)
+            && ($this->having_conditions == $other->having_conditions)
+            && ($this->order_by == $other->order_by)
+            && ($this->offset == $other->offset)
+            && ($this->limit == $other->limit)
+            && ($this->for_update == $other->for_update)
+            && ($this->hints == $other->hints)
+            ;
+        if ($rval) {
+            if (count($this->unions) !== count($other->unions))
+                return FALSE;
+
+            foreach ($this->unions as $k => $union) {
+                if ( ! isset($other->unions[$k])) {
+                    return FALSE;
+                }
+
+                $other_union = $other->unions[$k];
+                if ( ! (array_key_exists('select', $other_union) && array_key_exists('all', $other_union)))
+                    return FALSE;
+
+                if ($union['all'] !== $other_union[$k]['all'])
+                    return FALSE;
+
+                if ( ! ($union['select'] instanceof Select) || ! ($other_union['select'] instanceof Select))
+                    return FALSE;
+
+                if ( ! $union['select']->equals($other_union['select']))
+                    return FALSE;
+            }
+        }
+        return $rval;
+    }
 }
