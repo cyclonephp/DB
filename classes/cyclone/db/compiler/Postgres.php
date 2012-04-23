@@ -3,6 +3,7 @@
 namespace cyclone\db\compiler;
 
 use cyclone\db;
+use cyclone\db\query;
 
 /**
  * @author Bence Eros <crystal@cyclonephp.com>
@@ -16,6 +17,33 @@ class Postgres extends AbstractCompiler {
      * @var string
      */
     protected $esc_char = '"';
+
+    protected function add_returning($returning, $sql) {
+        if (count($returning) > 0) {
+            $sql .= ' RETURNING (';
+            $col_names = array();
+            foreach ($returning as $col_name) {
+                $col_names []= $this->escape_identifier($col_name);
+            }
+            $sql .= implode(', ', $col_names) . ')';
+        }
+        return $sql;
+    }
+
+    public function compile_insert(query\Insert $query) {
+        $sql = parent::compile_insert($query);
+        return $this->add_returning($query->returning, $sql);
+    }
+
+    public function compile_update(query\Update $query) {
+        $sql = parent::compile_update($query);
+        return $this->add_returning($query->returning, $sql);
+    }
+
+    public function compile_delete(query\Delete $query) {
+        $sql = parent::compile_delete($query);
+        return $this->add_returning($query->returning, $sql);
+    }
 
     public function  compile_hints($hints) {
         throw new db\Exception("postgres doesn't support hints");

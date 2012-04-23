@@ -37,18 +37,22 @@ class Postgres extends AbstractExecutor {
         return new db\query\result\Postgres($result);
     }
 
+    protected function create_stmt_result($stmt_result_resource, $returing_clause) {
+        $affected_rows = pg_affected_rows($stmt_result_resource);
+        $rows = array();
+        if ($returing_clause !== NULL && count($returing_clause) > 0) {
+            while ( ($row = pg_fetch_assoc($stmt_result_resource)) !== FALSE) {
+                $rows []= $row;
+            }
+        }
+        return new db\StmtResult($rows, $affected_rows);
+    }
+
     public function exec_insert($sql, query\Insert $orig_query = NULL) {
         if ( ($insert_result = @pg_query($this->_db_conn, $sql)) == FALSE)
             throw PostgresConstraintExceptionBuilder::for_error(pg_last_error($this->_db_conn), $sql);
 
-        if ($orig_query !== NULL && count($orig_query->returning) > 0) {
-            $rval = array();
-            while ( ($row = pg_fetch_assoc($insert_result)) !== FALSE) {
-                $rval []= $row;
-            }
-            return $rval;
-        }
-        return NULL;
+        return $this->create_stmt_result($insert_result, $orig_query === NULL ? NULL : $orig_query->returning);
     }
 
     public function exec_update($sql, query\Update $orig_query = NULL) {
@@ -57,7 +61,7 @@ class Postgres extends AbstractExecutor {
             throw new db\Exception('Failed to execute SQL: ' . pg_last_error($this->_db_conn)
                     . '(query: ' . $sql . ')');
 
-        return pg_affected_rows($result);
+        return $this->create_stmt_result($result, $orig_query === NULL ? NULL : $orig_query->returning);
     }
 
     public function exec_delete($sql, query\Delete $orig_query = NULL) {
@@ -66,7 +70,7 @@ class Postgres extends AbstractExecutor {
             throw new db\Exception('Failed to execute SQL: ' . pg_last_error($this->_db_conn)
                     . '(query: ' . $sql . ')');
 
-        return pg_affected_rows($result);
+        return $this->create_stmt_result($result, $orig_query === NULL ? NULL : $orig_query->returning);
     }
 
     public function exec_custom($sql) {

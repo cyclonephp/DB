@@ -238,7 +238,7 @@ abstract class AbstractCompiler implements db\Compiler {
 
         $segments = explode('.', $identifier);
         $rval = $esc_char . $segments[0] . $esc_char;
-        if(array_key_exists('prefix', $this->_config) && count($segments) == 2){
+        if(isset($this->_config['prefix']) && count($segments) == 2){
             if( ! in_array($segments[0], $this->_table_aliases)){
                 $rval =  $esc_char . $this->_config['prefix'].$segments[0] . $esc_char;
             }

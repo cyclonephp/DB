@@ -36,20 +36,28 @@ class DB_Postgres_ExecTest extends DB_Postgres_DbTest {
 
     public function testExecInsert() {
         cy\DB::delete('users')->exec('cytst-postgres');
-        $id = cy\DB::insert('users')->values(array('name' => 'user3'))->exec('cytst-postgres');
+        $result = cy\DB::insert('users')->values(array('name' => 'user3'))
+            ->returning('id')
+            ->exec('cytst-postgres');
+        $this->assertInstanceOf('cyclone\\db\\StmtResult', $result);
+        $this->assertEquals(3, $result->rows[0]['id']);
 
-        $this->assertEquals(3, $id);
-
-        $id = cy\DB::insert('serusers')->values(array('name' => 'user1'))->exec('cytst-postgres');
-        $this->assertEquals(3, $id);
-
-        $id = cy\DB::insert('users')->values(array('name' => 'user2'))->exec('cytst-postgres', FALSE);
-        $this->assertNull($id);
+        $result = cy\DB::insert('serusers')->values(array('name' => 'user4'))
+            ->values(array('name' => 'user5'))
+            ->returning('id')
+            ->exec('cytst-postgres');
+        $this->assertEquals(3, $result->rows[0]['id']);
+        $this->assertEquals(4, $result->rows[1]['id']);
     }
 
     public function testExecDelete() {
-        $affected = cy\DB::delete('users')->where('id', '=', cy\DB::esc(1))->exec('cytst-postgres');
-        $this->assertEquals(1, $affected);
+        $result = cy\DB::delete('users')
+            ->where('id', '=', cy\DB::esc(1))
+            ->returning('name')
+            ->exec('cytst-postgres');
+        $this->assertInstanceOf('cyclone\\db\\StmtResult', $result);
+        $this->assertEquals(1, $result->affected_row_count);
+        $this->assertEquals('user1', $result->rows[0]['name']);
         
         $result = pg_query('select count(1) cnt from users');
         $row = pg_fetch_assoc($result);
@@ -57,10 +65,13 @@ class DB_Postgres_ExecTest extends DB_Postgres_DbTest {
     }
 
     public function testExecUpdate() {
-        $affected = cy\DB::update('users')->values(array('name' => 'user2_mod'))
-                ->where('id', '=', cy\DB::esc(2))->exec('cytst-postgres');
-
-        $this->assertEquals(1, $affected);
+        $result = cy\DB::update('users')->values(array('name' => 'user2_mod'))
+                ->where('id', '=', cy\DB::esc(2))
+                ->returning('name')
+                ->exec('cytst-postgres');
+        $this->assertInstanceOf('cyclone\\db\\StmtResult', $result);
+        $this->assertEquals(1, $result->affected_row_count);
+        $this->assertEquals('user2_mod', $result->rows[0]['name']);
 
         $result = pg_query('select name from users where id = 2');
         $row = pg_fetch_assoc($result);
