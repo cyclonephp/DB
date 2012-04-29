@@ -5,7 +5,7 @@ namespace cyclone\db\executor;
 use cyclone\db;
 
 /**
- * @author Bence Eros <crystal@cyclonephp.com>
+ * @author Bence Eros <crystal@cyclonephp.org>
  * @package DB
  */
 abstract class AbstractExecutor implements db\Executor {

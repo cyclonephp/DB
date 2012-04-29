@@ -8,7 +8,7 @@ namespace cyclone\db;
  * SQL according to the DBMS and calling the appropriate PHP functions to execute
  * the SQL. They provide a common, database-independent API.
  *
- * @author Bence Eros <crystal@cyclonephp.com>
+ * @author Bence Eros <crystal@cyclonephp.org>
  * @package DB
  */
 abstract class Adapter {

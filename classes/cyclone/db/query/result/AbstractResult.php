@@ -18,7 +18,7 @@ use cyclone\db;
  *    echo "user #$id: {$user->name}";
  * } @endcode
  *
- * @author Bence Eros <crystal@cyclonephp.com>
+ * @author Bence Eros <crystal@cyclonephp.org>
  * @package DB
  */
 abstract class AbstractResult extends \ArrayIterator implements \Countable, \Traversable {

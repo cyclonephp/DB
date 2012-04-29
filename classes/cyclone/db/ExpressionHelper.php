@@ -3,7 +3,7 @@
 namespace cyclone\db;
 
 /**
- * @author Bence Eros <crystal@cyclonephp.com>
+ * @author Bence Eros <crystal@cyclonephp.org>
  * @package DB
  */
 class ExpressionHelper {

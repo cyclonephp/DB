@@ -6,7 +6,7 @@ namespace cyclone;
  * Wrapper class of static factory methods for creating database query objects.
  * Read the library manual for examples of using it.
  *
- * @author Bence Eros <crystal@cyclonephp.com>
+ * @author Bence Eros <crystal@cyclonephp.org>
  * @package DB
  */
 class DB {

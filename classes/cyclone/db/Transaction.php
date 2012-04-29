@@ -6,7 +6,7 @@ use cyclone as cy;
 /**
  * Represents a list of SQL queries that should be executed in a transaction.
  *
- * @author Bence Eros <crystal@cyclonephp.com>
+ * @author Bence Eros <crystal@cyclonephp.org>
  * @package DB
  */
 class Transaction extends \ArrayObject {

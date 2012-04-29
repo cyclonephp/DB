@@ -9,7 +9,7 @@ use cyclone\db;
  *
  * It contains only a constructor for dependency injection.
  *
- * @author Bence Eros <crystal@cyclonephp.com>
+ * @author Bence Eros <crystal@cyclonephp.org>
  * @package DB
  */
 abstract class AbstractPreparedExecutor implements db\prepared\Executor {

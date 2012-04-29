@@ -3,7 +3,7 @@
 namespace cyclone\db\prepared\query;
 
 /**
- * @author Bence Eros <crystal@cyclonephp.com>
+ * @author Bence Eros <crystal@cyclonephp.org>
  * @package DB
  */
 class Delete extends AbstractQuery {

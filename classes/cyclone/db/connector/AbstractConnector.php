@@ -5,7 +5,7 @@ namespace cyclone\db\connector;
 use cyclone\db;
 
 /**
- * @author Bence Eros <crystal@cyclonephp.com>
+ * @author Bence Eros <crystal@cyclonephp.org>
  * @package DB
  */
 abstract class AbstractConnector implements db\Connector {

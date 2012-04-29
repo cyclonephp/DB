@@ -6,7 +6,7 @@ namespace cyclone\db\compiler;
 use cyclone\db;
 
 /**
- * @author Bence Eros <crystal@cyclonephp.com>
+ * @author Bence Eros <crystal@cyclonephp.org>
  * @package DB
  */
 class Mysqli extends AbstractCompiler {
@@ -35,6 +35,9 @@ class Mysqli extends AbstractCompiler {
         $rval .= $this->escape_values($query->columns);
         $rval .= ' FROM (';
         $tbl_names = array();
+
+        if (empty($query->tables))
+            throw new db\Exception("failed to compile query: no tables found in FROM clause");
         foreach ($query->tables as $table) {
             $tbl_names []= $this->escape_table($table);
         }

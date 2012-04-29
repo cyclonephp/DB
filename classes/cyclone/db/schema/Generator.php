@@ -11,7 +11,7 @@ use cyclone\db;
  * represent database objects. These PHP objects are @c Table
  * and @c Column .
  * 
- * @author Bence Eros <crystal@cyclonephp.com>
+ * @author Bence Eros <crystal@cyclonephp.org>
  * @package DB
  */
 interface Generator {

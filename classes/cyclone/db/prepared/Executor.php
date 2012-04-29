@@ -5,7 +5,7 @@ namespace cyclone\db\prepared;
 use cyclone\db;
 
 /**
- * @author Bence Eros <crystal@cyclonephp.com>
+ * @author Bence Eros <crystal@cyclonephp.org>
  * @package DB
  */
 interface Executor {

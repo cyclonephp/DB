@@ -5,7 +5,7 @@ namespace cyclone\db\prepared\query;
 use cyclone\db;
 
 /**
- * @author Bence Eros <crystal@cyclonephp.com>
+ * @author Bence Eros <crystal@cyclonephp.org>
  * @package DB
  */
 abstract class AbstractQuery implements db\prepared\Query {

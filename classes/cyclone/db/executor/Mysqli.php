@@ -7,7 +7,7 @@ use cyclone\db\query;
 use cyclone as cy;
 
 /**
- * @author Bence Eros <crystal@cyclonephp.com>
+ * @author Bence Eros <crystal@cyclonephp.org>
  * @package DB
  */
 class Mysqli extends AbstractExecutor {

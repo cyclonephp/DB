@@ -7,7 +7,7 @@ use cyclone\db;
 /**
  * The result of a SELECT statement executed on a postgres database.
  *
- * @author Bence Eros <crystal@cyclonephp.com>
+ * @author Bence Eros <crystal@cyclonephp.org>
  * @package DB
  * @see \cyclone\db\executor\Mysqli::exec_select()
  */

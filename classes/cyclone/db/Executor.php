@@ -6,7 +6,7 @@ namespace cyclone\db;
  * Interface for classes that are able to execute an SQL query on a given
  * DBMS type, using the appropriate php functions and methods.
  * 
- * @author Bence Eros <crystal@cyclonephp.com>
+ * @author Bence Eros <crystal@cyclonephp.org>
  * @package DB
  */
 interface Executor {

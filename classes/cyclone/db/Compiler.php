@@ -14,7 +14,7 @@ namespace cyclone\db;
  * Exactly one implementation belongs to each DBMS types and one instance to
  * each database adapters.
  * 
- * @author Bence Eros <crystal@cyclonephp.com>
+ * @author Bence Eros <crystal@cyclonephp.org>
  * @package DB
  * @see cyclone\DB::compiler()
  */
