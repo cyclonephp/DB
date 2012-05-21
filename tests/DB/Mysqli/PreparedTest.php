@@ -6,7 +6,7 @@ use cyclone\db;
 class DB_Mysqli_PreparedTest extends DB_Mysqli_DbTest {
 
 
-    public function testPrepare() {
+    public function test_prepare() {
         $stmt = cy\DB::executor_prepared('cytst-mysqli')->prepare('select * from cy_user');
         $this->assertInstanceOf('MySQLi_Stmt', $stmt);
     }
@@ -15,12 +15,12 @@ class DB_Mysqli_PreparedTest extends DB_Mysqli_DbTest {
      * @expectedException cyclone\db\Exception
      * @expectedExceptionMessage failed to prepare statement: 'select * from dummy' Cause: Table 'simpledb.dummy' doesn't exist
      */
-    public function testPrepareFailure() {
+    public function test_prepare_failure() {
         $stmt = cy\DB::executor_prepared('cytst-mysqli')->prepare('select * from dummy');
     }
 
 
-    public function testExecSelect() {
+    public function test_exec_select() {
         $result = cy\DB::select('id', 'name')->from('user')->prepare('cytst-mysqli')->exec();
         $this->assertEquals(2, count($result));
     }
@@ -28,11 +28,11 @@ class DB_Mysqli_PreparedTest extends DB_Mysqli_DbTest {
     /**
      * @expectedException cyclone\db\Exception
      */
-    public function testExecSelectFailure() {
+    public function test_exec_select_failure() {
         $result = cy\DB::select()->from('user')->prepare('cytst-mysqli')->exec();
     }
 
-    public function testPreparedResult() {
+    public function test_prepared_result() {
         $stmt = cy\DB::connector('cytst-mysqli')->db_conn->prepare('select id, name from cy_user');
         $stmt->execute();
         $stmt->store_result();
@@ -58,7 +58,7 @@ class DB_Mysqli_PreparedTest extends DB_Mysqli_DbTest {
         }
     }
 
-    public function testPreparedResultIndexBy() {
+    public function test_prepared_result_index_by() {
         $stmt = cy\DB::connector('cytst-mysqli')->db_conn->prepare('select id, name from cy_user');
         $stmt->execute();
         $stmt->store_result();
@@ -85,24 +85,24 @@ class DB_Mysqli_PreparedTest extends DB_Mysqli_DbTest {
         }
     }
 
-    public function testInsert() {
+    public function test_insert() {
         $insert_id = cy\DB::insert('user')->values(array('name' => 'user3'))
                 ->prepare('cytst-mysqli')->exec();
         $this->assertEquals(3, $insert_id);
     }
 
-    public function testUpdate() {
+    public function test_update() {
         $aff_rows = cy\DB::update('user')->values(array('name' => 'u'))
                 ->prepare('cytst-mysqli')->exec();
         $this->assertEquals(2, $aff_rows);
     }
 
-    public function testDelete() {
+    public function test_delete() {
         $aff_rows = cy\DB::delete('user')->prepare('cytst-mysqli')->exec();
         $this->assertEquals(2, $aff_rows);
     }
 
-    public function testParamInt() {
+    public function test_param_int() {
         $result = cy\DB::select('name')->from('user')->where('id', '=', cy\DB::param())
                 ->prepare('cytst-mysqli')->param(2)->exec();
 
@@ -114,7 +114,7 @@ class DB_Mysqli_PreparedTest extends DB_Mysqli_DbTest {
         $this->assertEquals(0, count($result));
     }
 
-    public function testParamString() {
+    public function test_param_string() {
         $result = cy\DB::select('name')->from('user')->where('name', '=', cy\DB::param())
                 ->prepare('cytst-mysqli')->param('user1')->exec();
 
@@ -127,7 +127,7 @@ class DB_Mysqli_PreparedTest extends DB_Mysqli_DbTest {
         $this->assertEquals(0, count($result));
     }
 
-    public function testParamBoolean() {
+    public function test_param_boolean() {
         $result = cy\DB::select('name')->from('user')->where('id', '=', cy\DB::param())
                 ->prepare('cytst-mysqli')->param(TRUE)->exec();
 
@@ -138,7 +138,7 @@ class DB_Mysqli_PreparedTest extends DB_Mysqli_DbTest {
     /**
      * @expectedException cyclone\db\Exception
      */
-    public function testParamArray() {
+    public function test_param_array() {
         $result = cy\DB::select('name')->from('user')->where('id', '=', cy\DB::param())
                 ->prepare('cytst-mysqli')->param(array())->exec();
     }
