@@ -22,7 +22,7 @@ abstract class AbstractPreparedExecutor implements db\prepared\Executor {
     /**
      * The raw database connection.
      *
-     * @var recource
+     * @var resource
      */
     protected $_db_conn;
 
