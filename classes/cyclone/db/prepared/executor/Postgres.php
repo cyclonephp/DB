@@ -35,7 +35,16 @@ class Postgres extends AbstractPreparedExecutor {
     public function exec_insert($prepared_stmt
             , array $params
             , db\query\Insert $orig_query) {
-        throw new \Exception('not implemented');
+        $sql = $orig_query->compile($this->_config['config_name']);
+        $result = pg_execute($this->_db_conn, $sql, $params);
+        $rows = array();
+        if ( ! empty($orig_query->returning)) {
+            $result_reader = new db\query\result\Postgres($result);
+            foreach ($result_reader as $k => $row) {
+                $rows[$k] = $row;
+            }
+        }
+        return new db\StmtResult($rows, pg_affected_rows($result));
     }
 
     public function exec_update($prepared_stmt

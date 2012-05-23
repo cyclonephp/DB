@@ -24,4 +24,13 @@ class DB_Postgres_PreparedTest extends Kohana_Unittest_TestCase {
         $this->assertEquals(2, count($result));
     }
 
+    public function test_exec_insert() {
+        $result = cy\DB::insert('users')->values(array('name' => 'user3'))
+            ->returning('id')
+            ->prepare('cytst-postgres')->exec();
+        $this->assertInstanceOf('cyclone\\db\\StmtResult', $result);
+        $this->assertEquals(1, $result->affected_row_count);
+        $this->assertEquals(3, $result->rows[0]['id']);
+    }
+
 }
