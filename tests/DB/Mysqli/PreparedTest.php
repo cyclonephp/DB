@@ -96,9 +96,14 @@ class DB_Mysqli_PreparedTest extends DB_Mysqli_DbTest {
 
     public function test_update() {
         $result = cy\DB::update('user')->values(array('name' => 'u'))
+                ->returning('id', 'name')
                 ->prepare('cytst-mysqli')->exec();
         $this->assertInstanceOf('cyclone\\db\\StmtResult', $result);
         $this->assertEquals(2, $result->affected_row_count);
+        $this->assertEquals(1, $result->rows[0]['id']);
+        $this->assertEquals('u', $result->rows[0]['name']);
+        $this->assertEquals(2, $result->rows[1]['id']);
+        $this->assertEquals('u', $result->rows[1]['name']);
     }
 
     public function test_delete() {

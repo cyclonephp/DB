@@ -90,8 +90,10 @@ class Mysqli extends AbstractPreparedExecutor {
             call_user_func_array(array($prepared_stmt, 'bind_params'), $params);
         }
         $prepared_stmt->execute();
-        return executor\Mysqli::stmt_result_for_insert($orig_query, $this->_config['config_name'],
-            $this->_db_conn->affected_rows, $this->_db_conn->insert_id);
+        return executor\Mysqli::stmt_result_for_insert($orig_query
+            , $this->_config['config_name']
+            , $this->_db_conn->affected_rows
+            , $this->_db_conn->insert_id);
     }
 
     public function exec_update($prepared_stmt, array $params
@@ -103,7 +105,9 @@ class Mysqli extends AbstractPreparedExecutor {
             call_user_func_array(array($prepared_stmt, 'bind_params'), $params);
         }
         $prepared_stmt->execute();
-        return $this->_db_conn->affected_rows;
+        return executor\Mysqli::stmt_result_for_update($orig_query
+            , $this->_config['config_name']
+            , $this->_db_conn->affected_rows);
     }
 
     public function exec_delete($prepared_stmt, array $params
