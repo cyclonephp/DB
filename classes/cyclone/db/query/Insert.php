@@ -57,6 +57,6 @@ class Insert implements db\Query {
 
     public function  prepare($database = 'default') {
         $sql = cy\DB::compiler($database)->compile_insert($this);
-        return new db\prepared\query\Insert($sql, $database);
+        return new db\prepared\query\Insert($sql, $database, $this);
     }
 }

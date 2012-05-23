@@ -15,10 +15,13 @@ interface Executor {
     public function exec_select($prepared_stmt, array $params
             , db\query\Select $orig_query);
 
-    public function exec_insert($prepared_stmt, array $params);
+    public function exec_insert($prepared_stmt, array $params
+            , db\query\Insert $orig_query);
 
-    public function exec_update($prepared_stmt, array $params);
+    public function exec_update($prepared_stmt, array $params
+            , db\query\Update $orig_query);
 
-    public function exec_delete($prepared_stmt, array $params);
+    public function exec_delete($prepared_stmt, array $params
+        , db\query\Delete $orig_query);
 
 }

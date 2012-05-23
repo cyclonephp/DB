@@ -69,6 +69,6 @@ class Delete implements db\Query {
 
     public function  prepare($database = 'default') {
         $sql = cy\DB::compiler($database)->compile_delete($this);
-        return new db\prepared\query\Delete($sql, $database);
+        return new db\prepared\query\Delete($sql, $database, $this);
     }
 }

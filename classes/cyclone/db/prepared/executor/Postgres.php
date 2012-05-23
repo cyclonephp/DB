@@ -26,15 +26,21 @@ class Postgres extends AbstractPreparedExecutor {
         return new db\query\result\Postgres($result);
     }
 
-    public function exec_delete($prepared_stmt, array $params) {
+    public function exec_delete($prepared_stmt
+            , array $params
+            , db\query\Delete $orig_query) {
         throw new \Exception('not implemented');
     }
 
-    public function exec_insert($prepared_stmt, array $params) {
+    public function exec_insert($prepared_stmt
+            , array $params
+            , db\query\Insert $orig_query) {
         throw new \Exception('not implemented');
     }
 
-    public function exec_update($prepared_stmt, array $params) {
+    public function exec_update($prepared_stmt
+            , array $params
+            , db\query\Update $orig_query) {
         throw new \Exception('not implemented');
     }
 

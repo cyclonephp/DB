@@ -80,7 +80,7 @@ class Update implements db\Query {
 
     public function  prepare($database = 'default') {
         $sql = cy\DB::compiler($database)->compile_update($this);
-        return new db\prepared\query\Update($sql, $database);
+        return new db\prepared\query\Update($sql, $database, $this);
     }
 
 }
