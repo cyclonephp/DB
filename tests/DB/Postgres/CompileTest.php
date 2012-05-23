@@ -16,7 +16,7 @@ class DB_Postgres_CompileTest extends Kohana_Unittest_TestCase {
             'name' => 'user'
             , 'email' => 'user@example.com'))->returning('id', 'name', 'email');
         $this->assertEquals('INSERT INTO "user" ("name", "email") VALUES (\'user\', \'user@example.com\')'
-                . ' RETURNING ("id", "name", "email")'
+                . ' RETURNING "id", "name", "email"'
                 , $query->compile('cytst-postgres'));
     }
 
@@ -25,7 +25,7 @@ class DB_Postgres_CompileTest extends Kohana_Unittest_TestCase {
                 ->where('id', '=', DB::esc(1))->limit(10)->returning('name');
 
         $this->assertEquals('UPDATE "user" SET "name" = NULL, "email" = \'ebence88@gmail.com\' WHERE "id" = \'1\' LIMIT 10'
-                . ' RETURNING ("name")',
+                . ' RETURNING "name"',
                 $query->compile('cytst-postgres'));
     }
 
@@ -34,7 +34,7 @@ class DB_Postgres_CompileTest extends Kohana_Unittest_TestCase {
             ->limit(10)->returning('name');
 
         $this->assertEquals('DELETE FROM "user" WHERE "name" like "%crys%" LIMIT 10'
-                . ' RETURNING ("name")'
+                . ' RETURNING "name"'
                 , $query->compile('cytst-postgres'));
     }
 

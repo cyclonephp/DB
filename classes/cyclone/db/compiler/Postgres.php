@@ -20,12 +20,12 @@ class Postgres extends AbstractCompiler {
 
     protected function add_returning($returning, $sql) {
         if (count($returning) > 0) {
-            $sql .= ' RETURNING (';
+            $sql .= ' RETURNING ';
             $col_names = array();
             foreach ($returning as $col_name) {
                 $col_names []= $this->escape_identifier($col_name);
             }
-            $sql .= implode(', ', $col_names) . ')';
+            $sql .= implode(', ', $col_names);
         }
         return $sql;
     }
