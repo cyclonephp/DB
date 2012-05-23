@@ -12,13 +12,6 @@ use cyclone as cy;
  */
 class Mysqli extends AbstractExecutor {
 
-    public function  exec_select($sql) {
-        $result = $this->_db_conn->query($sql);
-        if ($result === false)
-            throw new db\Exception($this->_db_conn->error . ' ( ' . $sql . ' )', $this->_db_conn->errno);
-        return new db\query\result\Mysqli($result);
-    }
-
     public static function stmt_result_for_insert(query\Insert $insert
             , $config_name
             , $affected_rows
@@ -45,6 +38,29 @@ class Mysqli extends AbstractExecutor {
         return new db\StmtResult($rows, $affected_rows);
     }
 
+    public static function stmt_result_for_update(query\Update $update = NULl
+            , $config_name
+            , $affected_rows) {
+        $rows = array();
+        if ($update !== NULL && count($update->returning) > 0) {
+            $query = new query\Select;
+            $query->columns = $update->returning;
+            $query->where_conditions = $update->conditions;
+            $query->tables = array($update->table);
+            $sql = cy\DB::compiler($config_name)->compile_select($query);
+            $result = cy\DB::executor($config_name)->exec_select($sql);
+            $rows = $result->as_array();
+        }
+        return new db\StmtResult($rows, $affected_rows);
+    }
+
+    public function  exec_select($sql) {
+        $result = $this->_db_conn->query($sql);
+        if ($result === false)
+            throw new db\Exception($this->_db_conn->error . ' ( ' . $sql . ' )', $this->_db_conn->errno);
+        return new db\query\result\Mysqli($result);
+    }
+
     public function  exec_insert($sql, query\Insert $orig_query = NULL) {
         if ( ! $this->_db_conn->query($sql))
             throw new db\Exception($this->_db_conn->error, $this->_db_conn->errno);
@@ -58,17 +74,10 @@ class Mysqli extends AbstractExecutor {
     public function  exec_update($sql, query\Update $orig_query = NULL) {
         if ( ! $this->_db_conn->query($sql))
             throw new db\Exception($this->_db_conn->error, $this->_db_conn->errno);
-        $rows = array();
-        if ($orig_query !== NULL && count($orig_query->returning) > 0) {
-            $query = new query\Select;
-            $query->columns = $orig_query->returning;
-            $query->where_conditions = $orig_query->conditions;
-            $query->tables = array($orig_query->table);
-            $sql = cy\DB::compiler($this->_config['config_name'])->compile_select($query);
-            $result = $this->exec_select($sql);
-            $rows = $result->as_array();
-        }
-        return new db\StmtResult($rows, $this->_db_conn->affected_rows);
+
+        return self::stmt_result_for_update($orig_query
+            , $this->_config['config_name']
+            , $this->_db_conn->affected_rows);
     }
 
     public function  exec_delete($sql, query\Delete $orig_query = NULL) {
