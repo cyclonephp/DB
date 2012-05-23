@@ -20,8 +20,13 @@ class DB_Postgres_PreparedTest extends Kohana_Unittest_TestCase {
     }
 
     public function test_exec_select() {
-        $result = cy\DB::select('id', 'name')->from('users')->prepare('cytst-postgres')->exec();
+        $result = cy\DB::select('id', 'name')->from('users')->prepare('cytst-postgres')
+            ->exec()->as_array();
         $this->assertEquals(2, count($result));
+        $this->assertEquals(1, $result[0]['id']);
+        $this->assertEquals('user1', $result[0]['name']);
+        $this->assertEquals(2, $result[1]['id']);
+        $this->assertEquals('user2', $result[1]['name']);
     }
 
     public function test_exec_insert() {
@@ -31,6 +36,17 @@ class DB_Postgres_PreparedTest extends Kohana_Unittest_TestCase {
         $this->assertInstanceOf('cyclone\\db\\StmtResult', $result);
         $this->assertEquals(1, $result->affected_row_count);
         $this->assertEquals(3, $result->rows[0]['id']);
+    }
+
+    public function test_exec_update() {
+        $result = cy\DB::update('users')->values(array('name' => 'u'))
+            ->where('id', '=', cy\DB::esc(1))
+            ->returning('id', 'name')
+            ->prepare('cytst-postgres')->exec();
+        $this->assertInstanceOf('cyclone\\db\\StmtResult', $result);
+        $this->assertEquals(1, $result->affected_row_count);
+        $this->assertEquals(1, $result->rows[0]['id']);
+        $this->assertEquals('u', $result->rows[0]['name']);
     }
 
 }
