@@ -9,7 +9,7 @@ class DB_Mysqli_ExecTest extends DB_MySQLi_DbTest {
      *
      * @expectedException cyclone\db\Exception
      */
-    public function testExecUpdate() {
+    public function test_exec_update() {
         $result = cy\DB::update('user')->values(array('name' => 'crystal88_'))
                 ->exec('cytst-mysqli');
         $this->assertInstanceOf('cyclone\\db\\StmtResult', $result);
@@ -30,7 +30,7 @@ class DB_Mysqli_ExecTest extends DB_MySQLi_DbTest {
      *
      * @expectedException cyclone\db\Exception
      */
-    public function testExecDelete() {
+    public function test_exec_delete() {
         $result = cy\DB::delete('user')->exec('cytst-mysqli');
         $this->assertInstanceOf('cyclone\\db\\StmtResult', $result);
         $this->assertEquals($result->affected_row_count, 2);
@@ -41,7 +41,7 @@ class DB_Mysqli_ExecTest extends DB_MySQLi_DbTest {
      *
      * @expectedException cyclone\db\Exception
      */
-    public function testExecInsert() {
+    public function test_exec_insert() {
         $insert_id = cy\DB::insert('user')->values(array('name' => 'crystal'))
                 ->returning('id')
                 ->exec('cytst-mysqli')->rows[0]['id'];
@@ -57,7 +57,7 @@ class DB_Mysqli_ExecTest extends DB_MySQLi_DbTest {
     /**
      *
      */
-    public function testExecInsertReturning() {
+    public function test_exec_insert_returning() {
         $result = cy\DB::insert('user')->values(array(
             'name' => 'crystal',
             'email' => 'crystal@example.org')
@@ -69,7 +69,7 @@ class DB_Mysqli_ExecTest extends DB_MySQLi_DbTest {
         ), $result->rows[0]);
     }
 
-    public function testExecSelect() {
+    public function test_exec_select() {
         $names = array('user1', 'user2');
         $result = cy\DB::select()->from('user')
                 ->exec('cytst-mysqli');
@@ -94,7 +94,7 @@ class DB_Mysqli_ExecTest extends DB_MySQLi_DbTest {
         }
     }
 
-    public function testExecMultiquery() {
+    public function test_exec_multiquery() {
         $result1 = cy\DB::select()->from('user')->exec('cytst-mysqli');
         $result2 = cy\DB::select()->from('user')->exec('cytst-mysqli');
         foreach ($result1 as $k => $v) {
@@ -108,11 +108,11 @@ class DB_Mysqli_ExecTest extends DB_MySQLi_DbTest {
         cy\DB::connector('cytst-mysqli')->connect();
     }
 
-    public function testExecCustom() {
+    public function test_exec_custom() {
         cy\DB::executor('cytst-mysqli')->exec_custom('create table if not exists tmp (id int)');
     }
 
-    public function testAsArray() {
+    public function test_as_array() {
         $names = array('user1', 'user2');
         $result = cy\DB::select()->from('user')->exec('cytst-mysqli')->index_by('name')->rows('stdClass')->as_array();
         $this->assertEquals(count($result), 2);
@@ -123,7 +123,7 @@ class DB_Mysqli_ExecTest extends DB_MySQLi_DbTest {
         }
     }
 
-    public function testCommitRollback() {
+    public function test_commit_rollback() {
         $existing_rows = cy\DB::select()->from('user')->exec('cytst-mysqli')->count();
         $this->assertEquals(2, $existing_rows);
         $conn = cy\DB::connector('cytst-mysqli');
@@ -140,14 +140,14 @@ class DB_Mysqli_ExecTest extends DB_MySQLi_DbTest {
         $this->assertEquals(0, $existing_rows);
     }
 
-    public function testTransactionSuccess() {
+    public function test_transaction_success() {
         $tx = new db\Transaction;
         $tx []= cy\DB::delete('user')->limit(1);
         $tx []= cy\DB::delete('user')->limit(1);
         $tx->exec('cytst-mysqli');
     }
 
-    public function testTransactionFailure() {
+    public function test_transaction_failure() {
         $tx = new db\Transaction;
         $tx []= cy\DB::delete('user')->limit(1);
         $tx []= cy\DB::delete('badtablename')->limit(1);
