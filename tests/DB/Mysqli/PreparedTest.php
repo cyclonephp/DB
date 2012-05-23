@@ -107,8 +107,8 @@ class DB_Mysqli_PreparedTest extends DB_Mysqli_DbTest {
     }
 
     public function test_delete() {
-        $aff_rows = cy\DB::delete('user')->prepare('cytst-mysqli')->exec();
-        $this->assertEquals(2, $aff_rows);
+        $result = cy\DB::delete('user')->prepare('cytst-mysqli')->exec();
+        $this->assertEquals(2, $result->affected_row_count);
     }
 
     public function test_param_int() {

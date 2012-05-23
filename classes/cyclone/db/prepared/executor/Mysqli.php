@@ -119,7 +119,7 @@ class Mysqli extends AbstractPreparedExecutor {
             call_user_func_array(array($prepared_stmt, 'bind_params'), $params);
         }
         $prepared_stmt->execute();
-        return $this->_db_conn->affected_rows;
+        return new db\StmtResult(array(), $this->_db_conn->affected_rows);
     }
     
 }
