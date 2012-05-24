@@ -12,11 +12,18 @@ use cyclone as cy;
  * @author Bence Erős <crystal@cyclonephp.org>
  * @package DB
  */
-class SchemaColumnException {
+class SchemaColumnException extends SchemaException {
 
     protected $_relation;
 
     protected $_column;
+
+    public function __construct($sql, $code, $relation, $column) {
+        parent::__construct($sql, $code);
+        $this->_relation = $relation;
+        $this->_column = $column;
+    }
+
 
     public function __get($name) {
         static $enabled_attributes = array('relation', 'column');

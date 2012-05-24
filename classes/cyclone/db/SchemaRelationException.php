@@ -11,9 +11,15 @@ use cyclone as cy;
  * @author Bence Erős <crystal@cyclonephp.org>
  * @package DB
  */
-class SchemaRelationException {
+class SchemaRelationException extends SchemaException {
 
     protected $_relation;
+
+    public function __construct($sql, $code, $relation) {
+        parent::__construct($sql, $code);
+        $this->_relation = $relation;
+    }
+
 
     public function __get($name) {
         if ($name == 'relation')

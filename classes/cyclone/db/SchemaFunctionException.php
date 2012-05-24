@@ -11,9 +11,15 @@ use cyclone as cy;
  * @author Bence Erős <crystal@cyclonephp.org>
  * @package DB
  */
-class SchemaFunctionException {
+class SchemaFunctionException extends SchemaException {
 
     protected $_function_name;
+
+    public function __construct($sql, $code, $function_name) {
+        parent::__construct($sql, $code);
+        $this->_function_name = $function_name;
+    }
+
 
     public function __get($name) {
         if ($name == 'function_name')
