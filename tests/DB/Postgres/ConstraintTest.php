@@ -1,20 +1,21 @@
 <?php
 
 use cyclone\db;
+use cyclone as cy;
 
 class DB_Postgres_ConstraintTest extends DB_Postgres_DbTest {
 
     /**
-     * @dataProvider providerConstraintExceptions
+     * @dataProvider provider_constraint_exceptions
      */
-    public function testConstraintExceptions($err_str, $expected_params) {
+    public function test_constraint_exceptions($err_str, $expected_params) {
         $ex = db\executor\PostgresConstraintExceptionBuilder::for_error($err_str);
         foreach ($expected_params as $k => $v) {
             $this->assertEquals($v, $ex->$k);
         }
     }
     
-    private function createConstraintException($params) {
+    private function create_constraint_exception($params) {
         $rval = new db\ConstraintException;
         foreach ($params as $k => $v) {
             $rval->$k = $v;
@@ -22,7 +23,7 @@ class DB_Postgres_ConstraintTest extends DB_Postgres_DbTest {
         return $rval;
     }
 
-    public function providerConstraintExceptions() {
+    public function provider_constraint_exceptions() {
         return array(
             array('ERROR: null value in column "notnull_unnamed" violates not-null constraint'
                 , array(
@@ -57,6 +58,68 @@ DETAIL:  Key (uniq_named)=(5) already exists.', array(
             ))
 
         );
+    }
+
+    public function test_unique_constraint_exception() {
+        $thrown = FALSE;
+        try {
+            cy\DB::insert('users')
+                ->values(array('name' => 'u'))
+                ->values(array('name' => 'u'))->exec('cytst-postgres');
+        } catch (db\ConstraintException $ex) {
+            $this->assertEquals('users_name_key', $ex->constraint_name);
+            $this->assertEquals(db\ConstraintException::UNIQUE_CONSTRAINT, $ex->constraint_type);
+            $this->assertEquals('name', $ex->column);
+            $thrown = TRUE;
+        }
+        $this->assertTrue($thrown, 'ConstraintException thrown');
+    }
+
+    public function test_not_null_constraint_exception() {
+        $thrown = FALSE;
+        $query = cy\DB::update('users')->values(array('name' => null));
+        try {
+            $query->exec('cytst-postgres');
+        } catch (db\ConstraintException $ex) {
+            $this->assertEquals(db\ConstraintException::NOTNULL_CONSTRAINT, $ex->constraint_type);
+            $this->assertEquals('name', $ex->column);
+            $thrown = TRUE;
+        }
+        $this->assertTrue($thrown, 'ConstraintException thrown');
+
+        try {
+            $query->prepare('cytst-postgres')->exec();
+        } catch (db\ConstraintException $ex) {
+            $this->assertEquals(db\ConstraintException::NOTNULL_CONSTRAINT, $ex->constraint_type);
+            $this->assertEquals('name', $ex->column);
+            $thrown = TRUE;
+        }
+        $this->assertTrue($thrown, 'ConstraintException for prepared stmt thrown');
+    }
+
+    public function test_foreign_key_constraint_exception() {
+        $thrown = FALSE;
+        $query = cy\DB::insert('user_emails')->values(array(
+            'user_fk' => 5,
+            'email' => 'somebody@example.org'
+        ));
+        try {
+            $query->exec('cytst-postgres');
+        } catch (db\ConstraintException $ex) {
+            $this->assertEquals(db\ConstraintException::FOREIGNKEY_CONSTRAINT, $ex->constraint_type);
+            $this->assertEquals('user_fk', $ex->column);
+            $thrown = TRUE;
+        }
+        $this->assertTrue($thrown, 'ConstraintException thrown');
+
+        try {
+            $query->prepare('cytst-postgres')->exec();
+        } catch (db\ConstraintException $ex) {
+            $this->assertEquals(db\ConstraintException::FOREIGNKEY_CONSTRAINT, $ex->constraint_type);
+            $this->assertEquals('user_fk', $ex->column);
+            $thrown = TRUE;
+        }
+        $this->assertTrue($thrown, 'ConstraintException for prepared stmt thrown');
     }
 
 }
