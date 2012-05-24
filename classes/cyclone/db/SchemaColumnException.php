@@ -1,5 +1,5 @@
 <?php
-namespace cyclone;
+namespace cyclone\db;
 
 use cyclone as cy;
 /**
@@ -8,7 +8,7 @@ use cyclone as cy;
  * referenced in the problematic query doesn't exist.
  *
  * @property-read $relation string the name of the relation which' column is missing
- * @property-read $column the name of the missing column
+ * @property-read $column string the name of the missing column
  * @author Bence Erős <crystal@cyclonephp.org>
  * @package DB
  */
