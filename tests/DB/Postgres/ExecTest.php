@@ -95,14 +95,24 @@ class DB_Postgres_ExecTest extends DB_Postgres_DbTest {
 
     public function testNotNullConstraintException() {
         $thrown = FALSE;
+        $query = cy\DB::update('users')->values(array('name' => null));
         try {
-            cy\DB::insert('users')->values(array('name' => null))->exec('cytst-postgres');
+            $query->exec('cytst-postgres');
         } catch (db\ConstraintException $ex) {
             $this->assertEquals(db\ConstraintException::NOTNULL_CONSTRAINT, $ex->constraint_type);
             $this->assertEquals('name', $ex->column);
             $thrown = TRUE;
         }
         $this->assertTrue($thrown, 'ConstraintException thrown');
+
+        try {
+            $query->prepare('cytst-postgres')->exec();
+        } catch (db\ConstraintException $ex) {
+            $this->assertEquals(db\ConstraintException::NOTNULL_CONSTRAINT, $ex->constraint_type);
+            $this->assertEquals('name', $ex->column);
+            $thrown = TRUE;
+        }
+        $this->assertTrue($thrown, 'ConstraintException for prepared stmt thrown');
     }
 
     public function testForeignKeyConstraintException() {

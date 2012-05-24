@@ -36,7 +36,11 @@ class Postgres extends AbstractPreparedExecutor {
             , array $params
             , db\query\Delete $orig_query) {
         $sql = $orig_query->compile($this->_config['config_name']);
-        $result = pg_execute($this->_db_conn, $sql, $params);
+        $result = @pg_execute($this->_db_conn, $sql, $params);
+        if (FALSE === $result)
+            throw executor\PostgresConstraintExceptionBuilder::for_error(
+                pg_last_error($this->_db_conn), $sql
+            );
         if (empty($orig_query->returning)) {
             $result_reader = new db\query\result\Postgres($result);
             $rows = $result_reader->as_array();
@@ -68,7 +72,11 @@ class Postgres extends AbstractPreparedExecutor {
             , array $params
             , db\query\Update $orig_query) {
         $sql = $orig_query->compile($this->_config['config_name']);
-        $result = pg_execute($this->_db_conn, $sql, $params);
+        $result = @pg_execute($this->_db_conn, $sql, $params);
+        if (FALSE === $result)
+            throw executor\PostgresConstraintExceptionBuilder::for_error(
+                pg_last_error($this->_db_conn), $sql
+            );
         if (empty($orig_query->returning)) {
             $rows = array();
         } else {

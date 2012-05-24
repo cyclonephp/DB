@@ -58,8 +58,7 @@ class Postgres extends AbstractExecutor {
     public function exec_update($sql, query\Update $orig_query = NULL) {
         $result = @pg_query($this->_db_conn, $sql);
         if (FALSE == $result)
-            throw new db\Exception('Failed to execute SQL: ' . pg_last_error($this->_db_conn)
-                    . '(query: ' . $sql . ')');
+            throw PostgresConstraintExceptionBuilder::for_error(pg_last_error($this->_db_conn), $sql);
 
         return $this->create_stmt_result($result, $orig_query === NULL ? NULL : $orig_query->returning);
     }
@@ -67,8 +66,7 @@ class Postgres extends AbstractExecutor {
     public function exec_delete($sql, query\Delete $orig_query = NULL) {
         $result = @pg_query($this->_db_conn, $sql);
         if (FALSE == $result)
-            throw new db\Exception('Failed to execute SQL: ' . pg_last_error($this->_db_conn)
-                    . '(query: ' . $sql . ')');
+            throw PostgresConstraintExceptionBuilder::for_error(pg_last_error($this->_db_conn), $sql);
 
         return $this->create_stmt_result($result, $orig_query === NULL ? NULL : $orig_query->returning);
     }
