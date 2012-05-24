@@ -30,6 +30,12 @@ class PostgresExceptionBuilder {
             self::build_foreignkey_exc($rval, $exc_details);
         } elseif (strpos($err_line, 'new row for relation ') === 0) {
             self::build_app_constraint_exc($rval, $exc_details);
+        } elseif (strpos($err_line, 'relation "') === 0) {
+            return self::build_schema_relation_exc($exc_details, $sql);
+        } elseif (strpos($err_line, 'column "') === 0) {
+            return self::build_schema_column_exc($exc_details, $sql);
+        }  elseif (strpos($err_line, 'function ') === 0) {
+            return self::build_schema_function_exc($exc_details, $sql);
         }
         return $rval->build_exception();
     }
@@ -78,5 +84,27 @@ class PostgresExceptionBuilder {
         $ex->constraint_name = substr($err_line, $ap_pos + 1
                 , strlen($err_line) - $ap_pos - 2);
     }
-    
+
+    private static function build_schema_relation_exc($exc_details, $sql) {
+        $err_line = $exc_details['ERROR'];
+        $ap_pos_first = strpos($err_line, '"');
+        $ap_pos_last = strrpos($err_line, '"');
+        $relation = substr($err_line, $ap_pos_first + 1, $ap_pos_last - $ap_pos_first - 1);
+        return new db\SchemaRelationException($sql, 0, $relation);
+    }
+
+    private static function build_schema_column_exc($exc_details, $sql) {
+        $err_line = $exc_details['ERROR'];
+        $parts = explode('"', $err_line);
+        $relation = $parts[3];
+        $column = $parts[1];
+        return new db\SchemaColumnException($sql, 0, $relation, $column);
+    }
+
+    private static function build_schema_function_exc($exc_details, $sql) {
+        $err_line = $exc_details['ERROR'];
+        $fn_literal_len = strlen('function ');
+        $function = substr($err_line, $fn_literal_len, strpos($err_line, '(') - $fn_literal_len);
+        return new db\SchemaFunctionException($sql, 0, $function);
+    }
 }
