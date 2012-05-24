@@ -7,7 +7,7 @@ require_once cy\FileSystem::get_root_path('db') . 'tests/DB/Postgres/DBTest.php'
 
 class DB_Postgres_ExecTest extends DB_Postgres_DbTest {
 
-    public function testExecSelect() {
+    public function test_exec_select() {
         $arr = cy\DB::select()->from('users')->exec('cytst-postgres')->as_array();
         $this->assertEquals(array(
             array('id' => 1, 'name' => 'user1'),
@@ -34,7 +34,7 @@ class DB_Postgres_ExecTest extends DB_Postgres_DbTest {
         }
     }
 
-    public function testExecInsert() {
+    public function test_exec_insert() {
         cy\DB::delete('users')->exec('cytst-postgres');
         $result = cy\DB::insert('users')->values(array('name' => 'user3'))
             ->returning('id')
@@ -50,7 +50,7 @@ class DB_Postgres_ExecTest extends DB_Postgres_DbTest {
         $this->assertEquals(4, $result->rows[1]['id']);
     }
 
-    public function testExecDelete() {
+    public function test_exec_delete() {
         $result = cy\DB::delete('users')
             ->where('id', '=', cy\DB::esc(1))
             ->returning('name')
@@ -64,7 +64,7 @@ class DB_Postgres_ExecTest extends DB_Postgres_DbTest {
         $this->assertEquals(1, $row['cnt']);
     }
 
-    public function testExecUpdate() {
+    public function test_exec_update() {
         $result = cy\DB::update('users')->values(array('name' => 'user2_mod'))
                 ->where('id', '=', cy\DB::esc(2))
                 ->returning('name')
@@ -78,7 +78,7 @@ class DB_Postgres_ExecTest extends DB_Postgres_DbTest {
         $this->assertEquals('user2_mod', $row['name']);
     }
 
-    public function testUniqueConstraintException() {
+    public function test_unique_constraint_exception() {
         $thrown = FALSE;
         try {
             cy\DB::insert('users')
@@ -93,7 +93,7 @@ class DB_Postgres_ExecTest extends DB_Postgres_DbTest {
         $this->assertTrue($thrown, 'ConstraintException thrown');
     }
 
-    public function testNotNullConstraintException() {
+    public function test_not_null_constraint_exception() {
         $thrown = FALSE;
         $query = cy\DB::update('users')->values(array('name' => null));
         try {
@@ -115,7 +115,7 @@ class DB_Postgres_ExecTest extends DB_Postgres_DbTest {
         $this->assertTrue($thrown, 'ConstraintException for prepared stmt thrown');
     }
 
-    public function testForeignKeyConstraintException() {
+    public function test_foreign_key_constraint_exception() {
         $thrown = FALSE;
         $query = cy\DB::insert('user_emails')->values(array(
             'user_fk' => 5,
