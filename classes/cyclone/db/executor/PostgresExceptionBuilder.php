@@ -8,7 +8,7 @@ use cyclone\db;
  * @package db
  * @author Bence Eros<crystal@cyclonephp.org>
  */
-class PostgresConstraintExceptionBuilder {
+class PostgresExceptionBuilder {
 
     public static function for_error($err_str, $sql = '') {
         $rval = new db\ConstraintException($err_str);

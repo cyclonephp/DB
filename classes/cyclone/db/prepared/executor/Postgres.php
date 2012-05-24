@@ -38,7 +38,7 @@ class Postgres extends AbstractPreparedExecutor {
         $sql = $orig_query->compile($this->_config['config_name']);
         $result = @pg_execute($this->_db_conn, $sql, $params);
         if (FALSE === $result)
-            throw executor\PostgresConstraintExceptionBuilder::for_error(
+            throw executor\PostgresExceptionBuilder::for_error(
                 pg_last_error($this->_db_conn), $sql
             );
         if (empty($orig_query->returning)) {
@@ -56,7 +56,7 @@ class Postgres extends AbstractPreparedExecutor {
         $sql = $orig_query->compile($this->_config['config_name']);
         $result = @pg_execute($this->_db_conn, $sql, $params);
         if (FALSE === $result)
-            throw executor\PostgresConstraintExceptionBuilder::for_error(
+            throw executor\PostgresExceptionBuilder::for_error(
                 pg_last_error($this->_db_conn), $sql
             );
         if (empty($orig_query->returning)) {
@@ -74,7 +74,7 @@ class Postgres extends AbstractPreparedExecutor {
         $sql = $orig_query->compile($this->_config['config_name']);
         $result = @pg_execute($this->_db_conn, $sql, $params);
         if (FALSE === $result)
-            throw executor\PostgresConstraintExceptionBuilder::for_error(
+            throw executor\PostgresExceptionBuilder::for_error(
                 pg_last_error($this->_db_conn), $sql
             );
         if (empty($orig_query->returning)) {

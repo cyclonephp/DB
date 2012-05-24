@@ -50,7 +50,7 @@ class Postgres extends AbstractExecutor {
 
     public function exec_insert($sql, query\Insert $orig_query = NULL) {
         if ( ($insert_result = @pg_query($this->_db_conn, $sql)) == FALSE)
-            throw PostgresConstraintExceptionBuilder::for_error(pg_last_error($this->_db_conn), $sql);
+            throw PostgresExceptionBuilder::for_error(pg_last_error($this->_db_conn), $sql);
 
         return $this->create_stmt_result($insert_result, $orig_query === NULL ? NULL : $orig_query->returning);
     }
@@ -58,7 +58,7 @@ class Postgres extends AbstractExecutor {
     public function exec_update($sql, query\Update $orig_query = NULL) {
         $result = @pg_query($this->_db_conn, $sql);
         if (FALSE == $result)
-            throw PostgresConstraintExceptionBuilder::for_error(pg_last_error($this->_db_conn), $sql);
+            throw PostgresExceptionBuilder::for_error(pg_last_error($this->_db_conn), $sql);
 
         return $this->create_stmt_result($result, $orig_query === NULL ? NULL : $orig_query->returning);
     }
@@ -66,7 +66,7 @@ class Postgres extends AbstractExecutor {
     public function exec_delete($sql, query\Delete $orig_query = NULL) {
         $result = @pg_query($this->_db_conn, $sql);
         if (FALSE == $result)
-            throw PostgresConstraintExceptionBuilder::for_error(pg_last_error($this->_db_conn), $sql);
+            throw PostgresExceptionBuilder::for_error(pg_last_error($this->_db_conn), $sql);
 
         return $this->create_stmt_result($result, $orig_query === NULL ? NULL : $orig_query->returning);
     }

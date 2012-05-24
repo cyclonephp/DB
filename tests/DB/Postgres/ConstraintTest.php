@@ -9,7 +9,7 @@ class DB_Postgres_ConstraintTest extends DB_Postgres_DbTest {
      * @dataProvider provider_constraint_exceptions
      */
     public function test_constraint_exceptions($err_str, $expected_params) {
-        $ex = db\executor\PostgresConstraintExceptionBuilder::for_error($err_str);
+        $ex = db\executor\PostgresExceptionBuilder::for_error($err_str);
         foreach ($expected_params as $k => $v) {
             $this->assertEquals($v, $ex->$k);
         }
