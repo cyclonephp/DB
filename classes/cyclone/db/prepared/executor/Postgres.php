@@ -2,7 +2,9 @@
 namespace cyclone\db\prepared\executor;
 
 use cyclone\db;
+use cyclone\db\executor;
 use cyclone as cy;
+
 /**
  * @author Bence Erős <crystal@cyclonephp.org>
  * @package DB
@@ -48,7 +50,11 @@ class Postgres extends AbstractPreparedExecutor {
             , array $params
             , db\query\Insert $orig_query) {
         $sql = $orig_query->compile($this->_config['config_name']);
-        $result = pg_execute($this->_db_conn, $sql, $params);
+        $result = @pg_execute($this->_db_conn, $sql, $params);
+        if (FALSE === $result)
+            throw executor\PostgresConstraintExceptionBuilder::for_error(
+                pg_last_error($this->_db_conn), $sql
+            );
         if (empty($orig_query->returning)) {
             $rows = array();
         } else {
