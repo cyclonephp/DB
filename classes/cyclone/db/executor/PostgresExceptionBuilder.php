@@ -5,11 +5,29 @@ namespace cyclone\db\executor;
 use cyclone\db;
 
 /**
+ * Helper class which is responsible for creating proper exception instances from
+ * the error message of failed Postgres queries.
+ *
+ * The @c \cyclone\db\executor\Postgres and @c \cyclone\db\prepared\executor\Postgres
+ * instances use the <code>PostgresExceptionBuilder</code> to create the exceptions to
+ * be thrown on failed SQL queries and statements.
+ *
  * @package db
  * @author Bence Eros<crystal@cyclonephp.org>
  */
 class PostgresExceptionBuilder {
 
+    /**
+     * Creates the exception instance which should be thrown by the executor.
+     *
+     * The return value can be a @c \cyclone\db\ConstraintException or
+     * a @c \cyclone\db\SchemaException instance.
+     *
+     * @param string $err_str the error message raised by the DBMS (obtained by
+     *  the executors using <code>pg_last_error()</code>
+     * @param string $sql the SQL command which failed
+     * @return \cyclone\db\Exception
+     */
     public static function for_error($err_str, $sql = '') {
         $rval = new db\ConstraintExceptionBuilder($err_str);
         $rval->sql = $sql;
@@ -84,6 +102,15 @@ class PostgresExceptionBuilder {
                 , strlen($err_line) - $ap_pos - 2);
     }
 
+    /**
+     * Extracts the name of the missing relation and creates an exception
+     * instance containing it.
+     *
+     * @param $exc_details array assoc. array, containing error message lines
+     * @param $sql string the SQL command which raised the exception
+     * @usedby for_error()
+     * @return \cyclone\db\SchemaRelationException
+     */
     private static function build_schema_relation_exc($exc_details, $sql) {
         $err_line = $exc_details['ERROR'];
         $ap_pos_first = strpos($err_line, '"');
@@ -92,6 +119,16 @@ class PostgresExceptionBuilder {
         return new db\SchemaRelationException($sql, 0, $relation);
     }
 
+    /**
+     * Extracts the relation name and the name of the missing column from
+     * the error message string and created an exception instance containing
+     * them.
+     *
+     * @param $exc_details array assoc. array containing error message lines
+     * @param $sql string the SQL command which raised the exception
+     * @usedby for_error()
+     * @return \cyclone\db\SchemaColumnException
+     */
     private static function build_schema_column_exc($exc_details, $sql) {
         $err_line = $exc_details['ERROR'];
         $parts = explode('"', $err_line);
@@ -100,6 +137,15 @@ class PostgresExceptionBuilder {
         return new db\SchemaColumnException($sql, 0, $relation, $column);
     }
 
+    /**
+     * Exctracts the name of the missing SQL function and creates an
+     * exception instance containing it.
+     *
+     * @param $exc_details array assoc. array, containing error message lines
+     * @param $sql string the SQL command which raised the exception
+     * @usedby for_error()
+     * @return \cyclone\db\SchemaFunctionException
+     */
     private static function build_schema_function_exc($exc_details, $sql) {
         $err_line = $exc_details['ERROR'];
         $fn_literal_len = strlen('function ');

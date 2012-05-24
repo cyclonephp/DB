@@ -4,6 +4,10 @@ namespace cyclone\db;
 use cyclone as cy;
 
 /**
+ * Instances of <code>ConstraintException</code> are thrown by executors (in \cyclone\db\executor
+ * and \cyclone\db\prepared\executor namespaces) in cases when an SQL query or statement
+ * violates a database constraint.
+ *
  * @property-read $constraint_type string
  * @property-read $constraint_name string
  * @property-read $errcode string
