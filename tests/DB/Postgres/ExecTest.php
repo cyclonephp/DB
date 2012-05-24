@@ -105,4 +105,19 @@ class DB_Postgres_ExecTest extends DB_Postgres_DbTest {
         $this->assertTrue($thrown, 'ConstraintException thrown');
     }
 
+    public function testForeignKeyConstraintException() {
+        $thrown = FALSE;
+        try {
+            cy\DB::insert('user_emails')->values(array(
+                'user_fk' => 5,
+                'email' => 'somebody@example.org'
+            ))->exec('cytst-postgres');
+        } catch (db\ConstraintException $ex) {
+            $this->assertEquals(db\ConstraintException::FOREIGNKEY_CONSTRAINT, $ex->constraint_type);
+            $this->assertEquals('user_fk', $ex->column);
+            $thrown = TRUE;
+        }
+        $this->assertTrue($thrown, 'ConstraintException thrown');
+    }
+
 }
