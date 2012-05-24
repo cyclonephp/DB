@@ -14,7 +14,6 @@ class PostgresExceptionBuilder {
         $rval = new db\ConstraintExceptionBuilder($err_str);
         $rval->sql = $sql;
         $lines = explode(PHP_EOL, $err_str);
-        $line = $lines[0];
         $exc_details = array();
         foreach ($lines as $line) {
             $sep_pos = strpos($line, ':');
