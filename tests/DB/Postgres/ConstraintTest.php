@@ -15,14 +15,6 @@ class DB_Postgres_ConstraintTest extends DB_Postgres_DbTest {
         }
     }
     
-    private function create_constraint_exception($params) {
-        $rval = new db\ConstraintException;
-        foreach ($params as $k => $v) {
-            $rval->$k = $v;
-        }
-        return $rval;
-    }
-
     public function provider_constraint_exceptions() {
         return array(
             array('ERROR: null value in column "notnull_unnamed" violates not-null constraint'
