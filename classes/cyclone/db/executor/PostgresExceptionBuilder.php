@@ -11,7 +11,7 @@ use cyclone\db;
 class PostgresExceptionBuilder {
 
     public static function for_error($err_str, $sql = '') {
-        $rval = new db\ConstraintException($err_str);
+        $rval = new db\ConstraintExceptionBuilder($err_str);
         $rval->sql = $sql;
         $lines = explode(PHP_EOL, $err_str);
         $line = $lines[0];
@@ -31,10 +31,10 @@ class PostgresExceptionBuilder {
         } elseif (strpos($err_line, 'new row for relation ') === 0) {
             self::build_app_constraint_exc($rval, $exc_details);
         }
-        return $rval;
+        return $rval->build_exception();
     }
 
-    private static function build_unique_exc(db\ConstraintException $ex, $exc_details) {
+    private static function build_unique_exc(db\ConstraintExceptionBuilder $ex, $exc_details) {
         $err_line = $exc_details['ERROR'];
         $ap_pos = strpos($err_line, '"');
         $ex->constraint_name = substr($err_line, $ap_pos + 1
@@ -51,14 +51,14 @@ class PostgresExceptionBuilder {
         }
     }
 
-    private static function build_notnull_exc(db\ConstraintException $ex, $exc_details) {
+    private static function build_notnull_exc(db\ConstraintExceptionBuilder $ex, $exc_details) {
         $ex->constraint_type = db\ConstraintException::NOTNULL_CONSTRAINT;
         $before_str_len = strlen('null value in column "');
         $err_line = $exc_details['ERROR'];
         $ex->column = substr($err_line, $before_str_len, strrpos($err_line, '"') - $before_str_len);
     }
 
-    private static function build_foreignkey_exc(db\ConstraintException $ex, $exc_details) {
+    private static function build_foreignkey_exc(db\ConstraintExceptionBuilder $ex, $exc_details) {
         $ex->constraint_type = db\ConstraintException::FOREIGNKEY_CONSTRAINT;
         $err_line = $exc_details['ERROR'];
         $ap_pos = strrpos($err_line, '"', -2);
@@ -71,7 +71,7 @@ class PostgresExceptionBuilder {
                 strpos($detail_line, ')') - $opening_bracket_pos - 1);
     }
 
-    private static function build_app_constraint_exc(db\ConstraintException $ex, $exc_details) {
+    private static function build_app_constraint_exc(db\ConstraintExceptionBuilder $ex, $exc_details) {
         $ex->constraint_type = db\ConstraintException::APP_CONSTRAINT;
         $err_line = $exc_details['ERROR'];
         $ap_pos = strrpos($err_line, '"', -2);
