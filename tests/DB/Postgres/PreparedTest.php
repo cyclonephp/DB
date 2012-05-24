@@ -5,7 +5,7 @@ use cyclone\db;
 /**
  * @author Bence Erős <crystal@cyclonephp.org>
  */
-class DB_Postgres_PreparedTest extends Kohana_Unittest_TestCase {
+class DB_Postgres_PreparedTest extends DB_Postgres_DbTest {
 
     public function test_prepare() {
         $this->assertTrue(is_resource(cy\DB::executor_prepared('cytst-postgres')
@@ -47,6 +47,11 @@ class DB_Postgres_PreparedTest extends Kohana_Unittest_TestCase {
         $this->assertEquals(1, $result->affected_row_count);
         $this->assertEquals(1, $result->rows[0]['id']);
         $this->assertEquals('u', $result->rows[0]['name']);
+    }
+
+    public function test_exec_delete() {
+        $result = cy\DB::delete('users')->prepare('cytst-postgres')->exec();
+        $this->assertEquals(2, $result->affected_row_count);
     }
 
 }

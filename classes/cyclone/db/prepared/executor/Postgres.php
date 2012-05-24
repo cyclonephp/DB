@@ -18,6 +18,10 @@ class Postgres extends AbstractPreparedExecutor {
         return $rval;
     }
 
+    private function read_result() {
+
+    }
+
     public function exec_select($prepared_stmt, array $params
             , db\query\Select $orig_query) {
         $sql = cy\DB::compiler($this->_config['config_name'])->compile_select($orig_query);
@@ -29,7 +33,15 @@ class Postgres extends AbstractPreparedExecutor {
     public function exec_delete($prepared_stmt
             , array $params
             , db\query\Delete $orig_query) {
-        throw new \Exception('not implemented');
+        $sql = $orig_query->compile($this->_config['config_name']);
+        $result = pg_execute($this->_db_conn, $sql, $params);
+        if (empty($orig_query->returning)) {
+            $result_reader = new db\query\result\Postgres($result);
+            $rows = $result_reader->as_array();
+        } else {
+            $rows = array();
+        }
+        return new db\StmtResult($rows, pg_affected_rows($result));
     }
 
     public function exec_insert($prepared_stmt
@@ -37,12 +49,11 @@ class Postgres extends AbstractPreparedExecutor {
             , db\query\Insert $orig_query) {
         $sql = $orig_query->compile($this->_config['config_name']);
         $result = pg_execute($this->_db_conn, $sql, $params);
-        $rows = array();
-        if ( ! empty($orig_query->returning)) {
+        if (empty($orig_query->returning)) {
+            $rows = array();
+        } else {
             $result_reader = new db\query\result\Postgres($result);
-            foreach ($result_reader as $k => $row) {
-                $rows[$k] = $row;
-            }
+            $rows = $result_reader->as_array();
         }
         return new db\StmtResult($rows, pg_affected_rows($result));
     }
@@ -52,12 +63,11 @@ class Postgres extends AbstractPreparedExecutor {
             , db\query\Update $orig_query) {
         $sql = $orig_query->compile($this->_config['config_name']);
         $result = pg_execute($this->_db_conn, $sql, $params);
-        $rows = array();
-        if ( ! empty($orig_query->returning)) {
+        if (empty($orig_query->returning)) {
+            $rows = array();
+        } else {
             $result_reader = new db\query\result\Postgres($result);
-            foreach ($result_reader as $k => $row) {
-                $rows[$k] = $row;
-            }
+            $rows = $result_reader->as_array();
         }
         return new db\StmtResult($rows, pg_affected_rows($result));
     }
