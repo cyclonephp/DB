@@ -1,8 +1,15 @@
 <?php
 
 namespace cyclone\db;
+use cyclone as cy;
 
 /**
+ * @property-read $constraint_type string
+ * @property-read $constraint_name string
+ * @property-read $errcode string
+ * @property-read $column string
+ * @property-read $detail string
+ * @property-read $hint string
  * @package db
  * @author Bence Eros<crystal@cyclonephp.org>
  */
@@ -23,25 +30,40 @@ class ConstraintException extends Exception {
             , $detail
             , $hint) {
         parent::__construct($message, $errcode);
-        $this->constraint_type = $constraint_type;
-        $this->constraint_name = $constraint_name;
-        $this->errcode = $errcode;
-        $this->column = $column;
-        $this->detail = $detail;
-        $this->hint = $hint;
+        $this->_constraint_type = $constraint_type;
+        $this->_constraint_name = $constraint_name;
+        $this->_errcode = $errcode;
+        $this->_column = $column;
+        $this->_detail = $detail;
+        $this->_hint = $hint;
     }
 
 
-    public $constraint_type;
+    protected $_constraint_type;
 
-    public $constraint_name;
+    protected $_constraint_name;
 
-    public $errcode;
+    protected $_errcode;
 
-    public $column;
+    protected $_column;
 
-    public $detail;
+    protected $_detail;
 
-    public $hint;
+    protected $_hint;
+
+    public function __get($name) {
+        static $enabled_attributes = array(
+            'constraint_type',
+            'constraint_name',
+            'errcode',
+            'column',
+            'detail',
+            'hint'
+        );
+        if (in_array($name, $enabled_attributes))
+            return $this->{'_' . $name};
+
+        throw new cy\Exception("property '$name' of class " . __CLASS__ . " doesn't exist or is not readable");
+    }
 
 }
