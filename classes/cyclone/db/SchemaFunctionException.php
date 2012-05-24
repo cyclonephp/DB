@@ -13,17 +13,17 @@ use cyclone as cy;
  */
 class SchemaFunctionException extends SchemaException {
 
-    protected $_function_name;
+    protected $_function;
 
     public function __construct($sql, $code, $function_name) {
         parent::__construct($sql, $code);
-        $this->_function_name = $function_name;
+        $this->_function = $function_name;
     }
 
 
     public function __get($name) {
-        if ($name == 'function_name')
-            return $this->_function_name;
+        if ($name == 'function')
+            return $this->_function;
 
         throw new cy\Exception("property '$name' of class " . __CLASS__ . " doesn't exist or is not readable");
     }
