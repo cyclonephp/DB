@@ -66,9 +66,28 @@ DETAIL:  Key (uniq_named)=(5) already exists.', array(
         );
     }
 
+    public function test_unique_constraint_exception() {
+        $thrown = FALSE;
+        try {
+            cy\DB::insert('user_email')
+                ->values(array(
+                    'user_fk' => 1,
+                    'email' => 'user@example.org'))
+                ->values(array(
+                    'user_fk' => 2,
+                    'email' => 'user@example.org'
+                ))->exec('cytst-mysqli');
+        } catch (db\ConstraintException $ex) {
+            $this->assertEquals(db\ConstraintException::UNIQUE_CONSTRAINT, $ex->constraint_type);
+            $this->assertEquals('email', $ex->column);
+            $thrown = TRUE;
+        }
+        $this->assertTrue($thrown, 'ConstraintException thrown');
+    }
+
     public function test_not_null_constraint_exception() {
         $thrown = FALSE;
-        $query = cy\DB::update('users')->values(array('name' => null));
+        $query = cy\DB::insert('user')->values(array('name' => null));
         try {
             $query->exec('cytst-mysqli');
         } catch (db\ConstraintException $ex) {
