@@ -2,13 +2,17 @@
 
 namespace cyclone\db\connector;
 
+use cyclone as cy;
 use cyclone\db;
+use cyclone\db\executor;
 
 /**
  * @author Bence Eros <crystal@cyclonephp.org>
  * @package DB
  */
 class Postgres extends AbstractConnector {
+
+    protected $_in_transaction = FALSE;
 
     public function connect() {
         $conn_params = array();
@@ -51,15 +55,33 @@ class Postgres extends AbstractConnector {
      * @param boolean $autocommit
      */
     public function autocommit($autocommit) {
+        if ($this->_in_transaction)
+            throw new db\Exception('postgres connection "'
+                . $this->_config['config_name']
+                . ' is already in a transaction');
 
+        cy\DB::executor($this->_config['config_name'])->exec_custom('BEGIN WORK');
+        $this->_in_transaction = TRUE;
     }
 
     public function commit() {
+        if ( ! $this->_in_transaction)
+            throw new db\Exception('Failed to commit. Postgres connection "'
+                . $this->_config['config_name']
+                . ' is not in a transaction');
 
+        cy\DB::executor($this->_config['config_name'])->exec_custom('COMMIT');
+        $this->_in_transaction = FALSE;
     }
 
     public function rollback() {
+        if ( ! $this->_in_transaction)
+            throw new db\Exception('Failed to rollback. Postgres connection "'
+                . $this->_config['config_name']
+                . ' is not in a transaction');
 
+        cy\DB::executor($this->_config['config_name'])->exec_custom('ROLLBACK');
+        $this->_in_transaction = FALSE;
     }
     
 }
