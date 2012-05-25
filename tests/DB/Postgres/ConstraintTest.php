@@ -54,10 +54,22 @@ DETAIL:  Key (uniq_named)=(5) already exists.', array(
 
     public function test_unique_constraint_exception() {
         $thrown = FALSE;
+        $query = cy\DB::insert('users')
+            ->values(array('name' => 'u'))
+            ->values(array('name' => 'u'));
         try {
-            cy\DB::insert('users')
-                ->values(array('name' => 'u'))
-                ->values(array('name' => 'u'))->exec('cytst-postgres');
+            $query->exec('cytst-postgres');
+        } catch (db\ConstraintException $ex) {
+            $this->assertEquals('users_name_key', $ex->constraint_name);
+            $this->assertEquals(db\ConstraintException::UNIQUE_CONSTRAINT, $ex->constraint_type);
+            $this->assertEquals('name', $ex->column);
+            $thrown = TRUE;
+        }
+        $this->assertTrue($thrown, 'ConstraintException thrown');
+
+        $thrown = FALSE;
+        try {
+            $query->prepare('cytst-postgres')->exec();
         } catch (db\ConstraintException $ex) {
             $this->assertEquals('users_name_key', $ex->constraint_name);
             $this->assertEquals(db\ConstraintException::UNIQUE_CONSTRAINT, $ex->constraint_type);
@@ -79,6 +91,7 @@ DETAIL:  Key (uniq_named)=(5) already exists.', array(
         }
         $this->assertTrue($thrown, 'ConstraintException thrown');
 
+        $thrown = FALSE;
         try {
             $query->prepare('cytst-postgres')->exec();
         } catch (db\ConstraintException $ex) {
@@ -104,6 +117,7 @@ DETAIL:  Key (uniq_named)=(5) already exists.', array(
         }
         $this->assertTrue($thrown, 'ConstraintException thrown');
 
+        $thrown = FALSE;
         try {
             $query->prepare('cytst-postgres')->exec();
         } catch (db\ConstraintException $ex) {
