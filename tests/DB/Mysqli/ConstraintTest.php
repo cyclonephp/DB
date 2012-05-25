@@ -68,15 +68,28 @@ DETAIL:  Key (uniq_named)=(5) already exists.', array(
 
     public function test_unique_constraint_exception() {
         $thrown = FALSE;
+        $query = cy\DB::insert('user_email')
+            ->values(array(
+            'user_fk' => 1,
+            'email' => 'user@example.org'))
+            ->values(array(
+            'user_fk' => 2,
+            'email' => 'user@example.org'
+        ));
         try {
-            cy\DB::insert('user_email')
-                ->values(array(
-                    'user_fk' => 1,
-                    'email' => 'user@example.org'))
-                ->values(array(
-                    'user_fk' => 2,
-                    'email' => 'user@example.org'
-                ))->exec('cytst-mysqli');
+            $query->exec('cytst-mysqli');
+        } catch (db\ConstraintException $ex) {
+            $this->assertEquals(db\ConstraintException::UNIQUE_CONSTRAINT, $ex->constraint_type);
+            $this->assertEquals('email', $ex->column);
+            $thrown = TRUE;
+        }
+        $this->assertTrue($thrown, 'ConstraintException thrown');
+
+        cy\DB::delete('user_email')->exec('cytst-mysqli');
+
+        $thrown = FALSE;
+        try {
+            $query->prepare('cytst-mysqli')->exec();
         } catch (db\ConstraintException $ex) {
             $this->assertEquals(db\ConstraintException::UNIQUE_CONSTRAINT, $ex->constraint_type);
             $this->assertEquals('email', $ex->column);
@@ -97,6 +110,7 @@ DETAIL:  Key (uniq_named)=(5) already exists.', array(
         }
         $this->assertTrue($thrown, 'ConstraintException thrown');
 
+        $thrown = FALSE;
         try {
             $query->prepare('cytst-mysqli')->exec();
         } catch (db\ConstraintException $ex) {
@@ -121,6 +135,7 @@ DETAIL:  Key (uniq_named)=(5) already exists.', array(
         }
         $this->assertTrue($thrown, 'ConstraintException thrown');
 
+        $thrown = FALSE;
         try {
             $query->prepare('cytst-mysqli')->exec();
         } catch (db\ConstraintException $ex) {

@@ -76,7 +76,11 @@ class Mysqli extends AbstractPreparedExecutor {
             foreach ($params as $k => $p) $tmp [$k]= &$params[$k];
             call_user_func_array(array($prepared_stmt, 'bind_param'), $tmp);
         }
-        $prepared_stmt->execute();
+        if ( ! $prepared_stmt->execute())
+            throw executor\MysqlExceptionBuilder::for_error(
+                $this->_db_conn->error
+                , $this->_db_conn->errno);
+
         $prepared_stmt->store_result();
         return new db\prepared\result\MySQLi($prepared_stmt, $orig_query);
     }
@@ -89,7 +93,11 @@ class Mysqli extends AbstractPreparedExecutor {
             foreach ($params as $k => $p) $tmp [$k]= &$params[$k];
             call_user_func_array(array($prepared_stmt, 'bind_params'), $params);
         }
-        $prepared_stmt->execute();
+        if ( ! $prepared_stmt->execute())
+            throw executor\MysqlExceptionBuilder::for_error(
+                $this->_db_conn->error
+                , $this->_db_conn->errno);
+
         return executor\Mysqli::stmt_result_for_insert($orig_query
             , $this->_config['config_name']
             , $this->_db_conn->affected_rows
@@ -104,7 +112,12 @@ class Mysqli extends AbstractPreparedExecutor {
             foreach ($params as $k => $p) $tmp [$k]= &$params[$k];
             call_user_func_array(array($prepared_stmt, 'bind_params'), $params);
         }
-        $prepared_stmt->execute();
+
+        if ( ! $prepared_stmt->execute())
+            throw executor\MysqlExceptionBuilder::for_error(
+                $this->_db_conn->error
+                , $this->_db_conn->errno);
+
         return executor\Mysqli::stmt_result_for_update($orig_query
             , $this->_config['config_name']
             , $this->_db_conn->affected_rows);
@@ -118,7 +131,12 @@ class Mysqli extends AbstractPreparedExecutor {
             foreach ($params as $k => $p) $tmp [$k]= &$params[$k];
             call_user_func_array(array($prepared_stmt, 'bind_params'), $params);
         }
-        $prepared_stmt->execute();
+
+        if ( ! $prepared_stmt->execute())
+            throw executor\MysqlExceptionBuilder::for_error(
+                $this->_db_conn->error
+                , $this->_db_conn->errno);
+
         return new db\StmtResult(array(), $this->_db_conn->affected_rows);
     }
     
