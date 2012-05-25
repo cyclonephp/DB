@@ -1,4 +1,9 @@
+drop table if exists cy_user_email;
+
+DROP TABLE IF EXISTS t_posts;
+
 DROP TABLE IF EXISTS cy_user;
+
 CREATE TABLE cy_user (
   id int(11) NOT NULL AUTO_INCREMENT,
   name varchar(32) NOT NULL,
@@ -6,14 +11,11 @@ CREATE TABLE cy_user (
   PRIMARY KEY (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
-drop table if exists cy_user_email;
-
 create table cy_user_email(
   user_fk int primary key references cy_user(id),
   email varchar(128) unique
 );
 
-DROP TABLE IF EXISTS t_posts;
 CREATE TABLE t_posts (
   id int primary key auto_increment,
   user_fk int,
