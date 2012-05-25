@@ -399,7 +399,7 @@ Reading one entity but not by its primary key:
 use cyclone as cy;
 // ...
 $user = UserRecord::inst()->get_one(
-    array('email', '=', cy\DB::esc('helloworld@example.org')));@endcode
+    array('email', '=', cy\DB::esc('helloworld@example.org'))); @endcode
 
 Reading a "page" (assuming that we want to render the data in a
 paginated way):
