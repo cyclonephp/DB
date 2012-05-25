@@ -17,6 +17,7 @@ abstract class DB_Mysqli_DbTest extends Kohana_Unittest_TestCase {
             $insert->exec('cytst-mysqli');
 
             cy\DB::query('truncate cy_user_email')->exec('cytst-mysqli');
+            cy\DB::query('truncate cy_posts')->exec('cytst-mysqli');
         } catch (db\Exception $ex) {
             error_log($ex->getMessage() . ' class: ' . get_class($this));
             $this->markTestSkipped('skipping simpledb tests');

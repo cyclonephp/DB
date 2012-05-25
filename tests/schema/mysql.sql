@@ -12,11 +12,12 @@ CREATE TABLE cy_user (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 create table cy_user_email(
-  user_fk int primary key references cy_user(id),
-  email varchar(128) unique
+  user_fk int primary key,
+  email varchar(128) unique,
+  foreign key (user_fk) references cy_user(id)
 );
 
-CREATE TABLE t_posts (
+CREATE TABLE cy_posts (
   id int primary key auto_increment,
   user_fk int,
   foreign key (user_fk) references cy_user(id)

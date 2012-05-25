@@ -107,4 +107,28 @@ DETAIL:  Key (uniq_named)=(5) already exists.', array(
         $this->assertTrue($thrown, 'ConstraintException for prepared stmt thrown');
     }
 
+    public function test_foreign_key_constraint_exception() {
+        $thrown = FALSE;
+        $query = cy\DB::insert('posts')->values(array(
+            'user_fk' => 5
+        ));
+        try {
+            $query->exec('cytst-mysqli');
+        } catch (db\ConstraintException $ex) {
+            $this->assertEquals(db\ConstraintException::FOREIGNKEY_CONSTRAINT, $ex->constraint_type);
+            $this->assertEquals('user_fk', $ex->column);
+            $thrown = TRUE;
+        }
+        $this->assertTrue($thrown, 'ConstraintException thrown');
+
+        try {
+            $query->prepare('cytst-mysqli')->exec();
+        } catch (db\ConstraintException $ex) {
+            $this->assertEquals(db\ConstraintException::FOREIGNKEY_CONSTRAINT, $ex->constraint_type);
+            $this->assertEquals('user_fk', $ex->column);
+            $thrown = TRUE;
+        }
+        $this->assertTrue($thrown, 'ConstraintException for prepared stmt thrown');
+    }
+
 }
