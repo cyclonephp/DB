@@ -21,9 +21,6 @@ interface Connector {
 
     public function rollback();
 
-    /**
-     * @param boolean $autocommit
-     */
-    public function autocommit($autocommit);
+    public function start_transaction();
 
 }

@@ -406,3 +406,6 @@ paginated way):
 @code
 // second page with 30 items per page
 $users = UserRecord::inst()->get_page(2, 30); @endcode
+
+@section db-transactions Transaction handling
+

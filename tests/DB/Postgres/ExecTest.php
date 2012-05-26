@@ -78,4 +78,8 @@ class DB_Postgres_ExecTest extends DB_Postgres_DbTest {
         $this->assertEquals('user2_mod', $row['name']);
     }
 
+    public function test_commit_rollback() {
+
+    }
+
 }

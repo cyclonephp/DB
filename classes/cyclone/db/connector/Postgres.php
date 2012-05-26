@@ -51,10 +51,7 @@ class Postgres extends AbstractConnector {
             throw new db\Exception("failed to disconnect from database '{$this->_config['connection']['dbname']}'");
     }
 
-    /**
-     * @param boolean $autocommit
-     */
-    public function autocommit($autocommit) {
+    public function start_transaction() {
         if ($this->_in_transaction)
             throw new db\Exception('postgres connection "'
                 . $this->_config['config_name']

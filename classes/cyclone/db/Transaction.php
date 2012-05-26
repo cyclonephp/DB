@@ -69,7 +69,7 @@ class Transaction extends \ArrayObject {
      */
     public function exec($database = 'default') {
         $db = cy\DB::connector($database);
-        $db->autocommit(false);
+        $db->start_transaction();
         foreach ($this->_queries as $query) {
             try {
                 $query->exec($database);
@@ -80,7 +80,6 @@ class Transaction extends \ArrayObject {
             }
         }
         $db->commit();
-        $db->autocommit(true);
     }
 
 }

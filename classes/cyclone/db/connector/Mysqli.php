@@ -34,20 +34,26 @@ class Mysqli extends AbstractConnector {
         @$this->db_conn->close();
     }
 
-    public function  autocommit($autocommit) {
-         if ( ! $this->db_conn->autocommit($autocommit))
-            throw new db\Exception ('failed to change autocommit mode');
+    public function  start_transaction() {
+         if ( ! $this->db_conn->autocommit(FALSE))
+            throw new db\Exception ('failed to change autocommit mode: ' . $this->db_conn->error);
     }
 
     public function  commit() {
         if ( ! $this->db_conn->commit())
             throw new db\Exception('failed to commit transaction: '
                     .$this->db_conn->error);
+
+        if ( ! $this->db_conn->autocommit(TRUE))
+            throw new db\Exception('failed to change autocommit mode: '  . $this->db_conn->error);
     }
 
     public function rollback() {
         if ( ! $this->db_conn->rollback())
-            throw new db\Exception('failed to rollback transaction');
+            throw new db\Exception('failed to rollback transaction: ' . $this->db_conn->error);
+
+        if ( ! $this->db_conn->autocommit(TRUE))
+            throw new db\Exception('failed to change autocommit mode: ' . $this->db_conn->error);
     }
     
 }
