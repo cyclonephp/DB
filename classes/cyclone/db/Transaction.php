@@ -26,10 +26,22 @@ class Transaction extends \ArrayObject {
         $this->_queries = $queries;
     }
 
+    /**
+     * Adds a database query for later execution of the transaction. The
+     * query won't be executed immediately but when the @c exec() method
+     * of the transaction is called.
+     *
+     * @param \cyclone\db\Query $value
+     */
     public function append($value) {
         $this->_queries []= $value;
     }
 
+    /**
+     * Returns the number of queries in the transaction.
+     *
+     * @return int
+     */
     public function  count() {
         return count($this->_queries);
     }
