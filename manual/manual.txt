@@ -408,3 +408,47 @@ paginated way):
 $users = UserRecord::inst()->get_page(2, 30); @endcode
 
 @section db-transactions Transaction handling
+
+Transaction management can be done in two ways. The first is by calling the
+<code>start_transaction()</code>, <code>commit()</code> and <code>rollback</code>
+methods of the database connector of a database connection. Example: @code
+use cyclone as cy;
+//...
+
+// obtaining the connector object of the default database connection
+$conn = cy\DB::connector();
+
+// working in the transaction
+cy\DB::update('users')->values(array('name' => 'user 01 updated'))
+ 		->where('id', '=', cy\DB::esc($id))->exec();
+
+// committing the transaction
+$conn->commit(); @endcode
+
+The second way is to use a <code>\cyclone\db\Transaction</code> instance which is
+in short a collection of SQL queries and commands. The items of the collections are
+represented with query objects (instances of classes in \cyclone\db\query namespace).
+The transaction can be executed using its <code>exec()</code> method which will
+<ul>
+    <li>start a transaction</li>
+    <li>execute the SQL commands in the same order as they were added to the transaction</li>
+    <li>if an SQL command fails (throws an exception) then the transaction will be rolled back
+        and a <code>\cyclone\db\Exception</code> will be thrown. The original exception of
+        the failing query can be obtained using the <code>getPrevious()</code> method of the
+        transaction exception.</li>
+    <li>if all SQL commands are executed succesfully then the database transaction will be
+        committed</li>
+</ul>
+Example: @code $tx = new db\Transaction;
+$tx []= cy\DB::delete('user')->limit(1);
+$tx []= cy\DB::delete('user')->limit(1);
+$tx->exec(); @endcode
+
+Example (failing transaction): @code $tx = new db\Transaction;
+$tx []= cy\DB::delete('user')->limit(1);
+$tx []= cy\DB::delete('badtablename')->limit(1);
+try {
+    $tx->exec('cytst-mysqli');
+} catch (db\Exception $ex) {
+    var_dump($ex);
+} @endcode

@@ -55,7 +55,7 @@ class Transaction extends \ArrayObject {
     }
 
     /**
-     * Executes the transaction on the given database.
+     * Executes the transaction on the given database connection.
      *
      * Executes the queries in the same order as they were added to the
      * transaction. If any of the queries throw an exception then rolls
