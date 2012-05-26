@@ -10,6 +10,8 @@ use cyclone\db;
  */
 class Mysqli extends AbstractConnector {
 
+    protected $_in_transaction = FALSE;
+
     public function connect() {
         $conn = $this->_config['connection'];
 
@@ -35,25 +37,46 @@ class Mysqli extends AbstractConnector {
     }
 
     public function  start_transaction() {
-         if ( ! $this->db_conn->autocommit(FALSE))
+        if ($this->_in_transaction)
+            throw new db\Exception('MySQL connection "'
+                . $this->_config['config_name']
+                . '" is already in a transaction');
+
+        if ( ! $this->db_conn->autocommit(FALSE))
             throw new db\Exception ('failed to change autocommit mode: ' . $this->db_conn->error);
+
+        $this->_in_transaction = TRUE;
     }
 
     public function  commit() {
+        if ( ! $this->_in_transaction)
+            throw new db\Exception('Failed to commit. MySQL connection "'
+                . $this->_config['config_name']
+                . ' is not in a transaction');
+
         if ( ! $this->db_conn->commit())
             throw new db\Exception('failed to commit transaction: '
                     .$this->db_conn->error);
 
         if ( ! $this->db_conn->autocommit(TRUE))
             throw new db\Exception('failed to change autocommit mode: '  . $this->db_conn->error);
+
+        $this->_in_transaction = FALSE;
     }
 
     public function rollback() {
+        if ( ! $this->_in_transaction)
+            throw new db\Exception('Failed to rollback. MySQL connection "'
+                . $this->_config['config_name']
+                . ' is not in a transaction');
+
         if ( ! $this->db_conn->rollback())
             throw new db\Exception('failed to rollback transaction: ' . $this->db_conn->error);
 
         if ( ! $this->db_conn->autocommit(TRUE))
             throw new db\Exception('failed to change autocommit mode: ' . $this->db_conn->error);
+
+        $this->_in_transaction = FALSE;
     }
     
 }

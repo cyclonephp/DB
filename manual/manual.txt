@@ -408,4 +408,3 @@ paginated way):
 $users = UserRecord::inst()->get_page(2, 30); @endcode
 
 @section db-transactions Transaction handling
-
