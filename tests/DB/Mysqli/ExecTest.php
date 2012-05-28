@@ -133,6 +133,7 @@ class DB_Mysqli_ExecTest extends DB_MySQLi_DbTest {
         $conn->rollback();
         $existing_rows = cy\DB::select()->from('user')->exec('cytst-mysqli')->count();
         $this->assertEquals(2, $existing_rows);
+        $conn->start_transaction();
         $deleted_rows = cy\DB::delete('user')->exec('cytst-mysqli');
         $this->assertEquals(2, $deleted_rows->affected_row_count);
         $conn->commit();
