@@ -25,7 +25,7 @@ class SchemaRelationException extends SchemaException {
         if ($name == 'relation')
             return $this->_relation;
 
-        throw new cy\Exception("property '$name' of class " . __CLASS__ . " doesn't exist or is not readable");
+        throw new \cyclone\PropertyAccessException(get_class($this), $name);
     }
 
 }

@@ -85,8 +85,8 @@ class Table {
     public function __get($name) {
         if (in_array($name, self::$_enabled_attributes))
             return $this->{'_' . $name};
-            
-        throw new db\Exception("property $name doesn't exist or is not readable");
+
+        throw new \cyclone\PropertyAccessException(get_class($this), $name);
     }
 
     /**

@@ -4,6 +4,8 @@ use cyclone as cy;
 use cyclone\db;
 
 
+require_once __DIR__ . '/Mysqli/DBTest.php';
+
 class DB_Test extends DB_Mysqli_DbTest {
 
     public function testPools() {

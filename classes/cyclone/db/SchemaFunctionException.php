@@ -25,7 +25,7 @@ class SchemaFunctionException extends SchemaException {
         if ($name == 'function')
             return $this->_function;
 
-        throw new cy\Exception("property '$name' of class " . __CLASS__ . " doesn't exist or is not readable");
+        throw new \cyclone\PropertyAccessException(get_class($this), $name);
     }
 
 }

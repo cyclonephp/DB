@@ -5,6 +5,9 @@ use cyclone\db;
 /**
  * @author Bence Erős <crystal@cyclonephp.org>
  */
+
+require_once __DIR__ . '/DBTest.php';
+
 class DB_Postgres_PreparedTest extends DB_Postgres_DbTest {
 
     public function test_prepare() {

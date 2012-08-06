@@ -14,7 +14,7 @@ class DB {
     /**
      * Object pool for the compiler instances.
      *
-     * @var array<\cyclone\dbCompiler>
+     * @var array<\cyclone\db\Compiler>
      */
     private static $_compilers = array();
 
@@ -35,7 +35,7 @@ class DB {
     /**
      * Object pool for the connector instances.
      *
-     * @var array<\cyclone\db\ConnectorConnector>
+     * @var array<\cyclone\db\Connector>
      */
     private static $_connectors = array();
 
@@ -240,7 +240,7 @@ class DB {
      *      , 'OR'
      *      , cy\DB::expr('email', '=', cy\DB::esc($email))); @endcode
      *
-     * @return \cyclone\db\query\Expression
+     * @return \cyclone\db\Expression
      */
     public static function expr() {
         return self::create_expr(func_get_args());
@@ -252,7 +252,7 @@ class DB {
      * instead of using variable length argument list.
      *
      * @param array $args
-     * @return \cyclone\db\query\Expression
+     * @return \cyclone\db\Expression
      */
     public static function create_expr($args) {
         switch (count($args)) {
