@@ -12,9 +12,9 @@ abstract class AbstractRecord {
 
     /**
      *
-     * @var array classname => singleton instance pairs
+     * @var array classname => @c Schema instance pairs
      */
-    private static $_instances = array();
+    private static $_schemas = array();
 
     /**
      * Holds the data of the database row represented by the object.
@@ -43,39 +43,22 @@ abstract class AbstractRecord {
      * the $_schema object properties must be set up here by the implementations
      * in the subclasses.
      */
-    protected abstract function setup();
+    protected static function setup() {
 
-    /**
-     * This method must be called by the singleton accessor static methods
-     * of descendant Record classes. The parameter must be __CLASS__ in all cases.
-     * A singleton instance is created for the class, and its <code>setup()</code> method is
-     * called.
-     *
-     * @param string $classname
-     * @return AbstractRecord
-     */
-    protected static function _inst($classname) {
-        if ( ! array_key_exists($classname, self::$_instances)) {
-            $inst = new $classname;
-            $inst->_schema = new Schema;
-            $inst->_schema->class = $classname;
-            $inst->_row = null;
-            $inst->setup();
-            self::$_instances[$classname] = $inst;
-        }
-        return self::$_instances[$classname];
     }
 
     /**
-     * Accessor for the singleton instance related to the object.
-     * 
+     *
      * @return Schema
      */
-    public function schema() {
-        if ( ! array_key_exists(get_class($this), self::$_instances)) {
-            self::_inst(get_class($this));
+    protected static function schema() {
+        $classname = get_called_class();
+        if ( ! isset(self::$_schemas[$classname])) {
+            $schema = call_user_func(array(get_called_class(), 'setup'));
+            $schema->class = $classname;
+            self::$_schemas[$classname] = $schema;
         }
-        return self::$_instances[get_class($this)]->_schema;
+        return self::$_schemas[$classname];
     }
 
     /**
@@ -85,12 +68,12 @@ abstract class AbstractRecord {
      * @param int/mixed $id
      * @return AbstractRecord
      */
-    public function get($id) {
+    public static function get($id) {
         $query = cy\DB::select()
-                ->from($this->schema()->table_name)
-                ->where($this->schema()->primary_key, '=', DB::esc($id))
-                ->exec($this->schema()->database)
-                        ->rows($this->schema()->class)->as_array();
+                ->from(static::schema()->table_name)
+                ->where(static::schema()->primary_key, '=', DB::esc($id))
+                ->exec(static::schema()->database)
+                        ->rows(static::schema()->class)->as_array();
         if (empty($query))
             return null;
         return $query[0];
@@ -155,11 +138,11 @@ abstract class AbstractRecord {
      *
      * @return array<AbstractRecord>
      */
-    public function get_list() {
-        $schema = $this->schema();
+    public static function get_list() {
+        $schema = static::schema();
         $query = cy\DB::select()->from($schema->table_name);
         $args = func_get_args();
-        $this->build_sfw($query, $args);
+        static::build_sfw($query, $args);
         return $query->exec($schema->database)->rows($schema->class);
     }
 
@@ -170,8 +153,8 @@ abstract class AbstractRecord {
      *
      * @return array<AbstractRecord>
      */
-    public function get_all() {
-        $schema = $this->schema();
+    public static function get_all() {
+        $schema = static::schema();
         return cy\DB::select()->from($schema->table_name)
                 ->exec($schema->database)->rows($schema->class);
     }
@@ -190,22 +173,22 @@ abstract class AbstractRecord {
      * @param int $page_size
      * @return array<AbstractRecord>
      */
-    public function get_page($page, $page_size) {
-        $schema = $this->schema();
+    public static function get_page($page, $page_size) {
+        $schema = static::schema();
         $query = cy\DB::select()->from($schema->table_name);
         $args = func_get_args();
         array_shift($args);
         array_shift($args);
-        $this->build_sfw($query, $args);
-        $this->paginate($page, $page_size, $query);
+        static::build_sfw($query, $args);
+        static::paginate($page, $page_size, $query);
         return $query->exec($schema->database)->rows($schema->class);
     }
 
-    protected function paginate($page, $page_size, db\query\Select $query) {
+    protected static function paginate($page, $page_size, db\query\Select $query) {
         $query->offset(($page - 1) * $page_size)->limit($page_size);
     }
 
-    protected function build_sfw(db\query\Select $query, $args) {
+    protected static function build_sfw(db\query\Select $query, $args) {
         foreach ($args as $arg) {
             if ( ! is_array($arg))
                 throw new Exception("$arg is not an array");
@@ -240,7 +223,7 @@ abstract class AbstractRecord {
      * @return int
      */
     public function delete() {
-        $schema = $this->schema();
+        $schema = static::schema();
         switch (func_num_args()) {
             case 0:
                 if (is_null($this->_row))
@@ -258,11 +241,11 @@ abstract class AbstractRecord {
         }
     }
 
-    public function count() {
-        $schema = $this->schema();
+    public static function count() {
+        $schema = static::schema();
         $query = cy\DB::select(array(cy\DB::expr('count(1)'), 'count'))->from($schema->table_name);
         $args = func_get_args();
-        $this->build_sfw($query, $args);
+        static::build_sfw($query, $args);
         $result = $query->exec($schema->database)->as_array();
         return $result[0]['count'];
     }

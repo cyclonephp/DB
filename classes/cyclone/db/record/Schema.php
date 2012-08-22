@@ -16,6 +16,15 @@ namespace cyclone\db\record;
 class Schema {
 
     /**
+     * Static factory method.
+     *
+     * @return Schema
+     */
+    public static function factory() {
+        return new Schema;
+    }
+
+    /**
      * The name of the database connection to be used when working with the record
      *
      * @var string
