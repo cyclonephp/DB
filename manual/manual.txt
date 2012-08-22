@@ -342,24 +342,22 @@ use cyclone\db\record;
 
 class UserRecord extends record\AbstractRecord {
 
-    protected function setup() {
-        // defininig the table name
-        $this->_schema->table_name = 'user';
-        // defining the table columns
-        $this->_schema->columns = array(
+    protected static function  setup() {
+        $schema = new record\Schema;
+        // the database connection to be used when working with the instances
+        $schema->database = 'default';
+        // the table where the records are stored
+        $schema->table_name = 'user';
+        // table columns: table name => DDL string pairs
+        $schema->columns = array(
             'id' => 'int primary key auto_increment',
             'name' => 'varchar(32) not null',
             'email' => 'varchar(32)'
         );
-        // defining hte primary key column
-        $this->_schema->primary_key = 'id';
+        // the primary key column
+        $schema->primary_key = 'id';
+        return $schema;
     }
-
-    // boilerplate singleton accessor method
-    public static function  inst() {
-        return parent::_inst(__CLASS__);
-    }
-
 }
 @endcode
 
@@ -376,18 +374,12 @@ to <code>TRUE</code> (or any other value is ok, since the active record itself
 will only take into account the array keys in the column list array).
 The name of the primary key column is also a mandatory property to be defined (see above).
 
-A boilerplate singleton accessor method should also exist in the active record
-classes. Their implementation is always the same (see above). The <code>AbstractRecord</code>
-class holds an internal object pool for these singletons (classname => instance)
-which are used for operations which doesn't belong to any row already represented
-by an existing active record instance.
-
 @subsection db-activerecord-examples Examples of using the above active record
 
 Reading one entity with id #1:
 @code
 // $user will be an UserRecord instance or NULL if not found
-$user = UserRecord::inst()->get(1); @endcode
+$user = UserRecord::get(1); @endcode
 
 Creating an entity:
 @code
@@ -404,7 +396,7 @@ $user->save(); @endcode
 
 Updating an entity:
 @code
-$user = UserRecord::inst()->get(1);
+$user = UserRecord::get(1);
 $user->email = 'changed@example.com';
 
 // the primary key is already known here since it has been read from the database
@@ -415,46 +407,44 @@ $user->save(); @endcode
 Deleting an entity (this method is recommended only if reading the
 row is mandatory):
 @code
-$user = UserModel::inst()->get(1);
+$user = UserModel::get(1);
 $user->delete(); @endcode
 
 Deleting an entity (this method is recommended in most cases, when we just want
 to delete the row and we don't need to process it before/after deleting):
 @code
-UserRecord::inst()->delete(1); @endcode
+UserRecord::delete(1); @endcode
 
 Reading all entities:
 @code
 // returns an array of UserRecord instances
-$users = UserRecord::inst()->get_all(); @endcode
+$users = UserRecord::get_all(); @endcode
 
 Reading some entities, filtered by email domain:
 @code
 use cyclone as cy;
 // ...
-$example_users = UserRecord::inst()
-    ->get_list(array('email', 'LIKE', cy\DB::esc('%example.org'))); @endcode
+$example_users = UserRecord::get_list(array('email', 'LIKE', cy\DB::esc('%example.org'))); @endcode
 
 Reading some entities, filtered and ordered list:
 @code
 use cyclone as cy;
 // ...
-$example_users = UserRecord::inst()
-    ->get_list(array('email', 'LIKE', cy\DB::esc('%example.org'))
+$example_users = UserRecord::get_list(array('email', 'LIKE', cy\DB::esc('%example.org'))
         , array('name', 'desc')); @endcode
 
 Reading one entity but not by its primary key:
 @code
 use cyclone as cy;
 // ...
-$user = UserRecord::inst()->get_one(
+$user = UserRecord::get_one(
     array('email', '=', cy\DB::esc('helloworld@example.org'))); @endcode
 
 Reading a "page" (assuming that we want to render the data in a
 paginated way):
 @code
 // second page with 30 items per page
-$users = UserRecord::inst()->get_page(2, 30); @endcode
+$users = UserRecord::get_page(2, 30); @endcode
 
 @section db-transactions Transaction handling
 

@@ -11,8 +11,9 @@ use cyclone as cy;
 abstract class AbstractRecord {
 
     /**
+     * classname =&gt; @c Schema instance pairs
      *
-     * @var array classname => @c Schema instance pairs
+     * @var array
      */
     private static $_schemas = array();
 
@@ -24,30 +25,29 @@ abstract class AbstractRecord {
     protected $_row = array();
 
     /**
-     *
-     * @property array holds the transient properties of the object that hasn't got
+     * Holds the transient properties of the object that hasn't got
      * suitable database fields
+     *
+     * @var array
      */
     protected $_transient_data = array();
 
     /**
-     * This property only has non-null value in the singleton
-     * instances. This holds the mapping-related information. Must be set up
-     * in the setup() abstract method.
+     * Subclasses should implement this method and should return the mapping schema
+     * for the given record class.
      *
-     * @var Schema
-     */
-    protected $_schema;
-
-    /**
-     * the $_schema object properties must be set up here by the implementations
-     * in the subclasses.
+     * @return Schema
      */
     protected static function setup() {
 
     }
 
     /**
+     * Gets the mapping schema for the class this method has been called on.
+     * If the schema already exists in the internal cache then it is returned
+     * immediately, otherwise the @c setup() method of the actual subclass will
+     * be called, its return value (which should be the appropriate @c Schema instance)
+     * will be cached and returned.
      *
      * @return Schema
      */
@@ -62,18 +62,22 @@ abstract class AbstractRecord {
     }
 
     /**
-     * Returns a record object that represents the databae row
-     * that owns the primary key passed by the $id parameter
+     * Returns a record object that represents the database row
+     * that owns the primary key specified by the <code>$id</code> parameter
+     *
+     * Example: @code //getting the user with id = 1
+     * $user = UserRecord::get(1); @endcode
      *
      * @param int/mixed $id
      * @return AbstractRecord
      */
     public static function get($id) {
+        $schema = static::schema();
         $query = cy\DB::select()
-                ->from(static::schema()->table_name)
-                ->where(static::schema()->primary_key, '=', DB::esc($id))
-                ->exec(static::schema()->database)
-                        ->rows(static::schema()->class)->as_array();
+                ->from($schema->table_name)
+                ->where($schema->primary_key, '=', DB::esc($id))
+                ->exec($schema->database)
+                        ->rows($schema->class)->as_array();
         if (empty($query))
             return null;
         return $query[0];
@@ -96,15 +100,18 @@ abstract class AbstractRecord {
      *  <li>the third element must be a database column or @c cyclone\db\Expression instance</li>
      * </ol>
      *
+     * @code $user = UserRecord::get_one(
+     *   array('email', '=', cy\DB::esc('helloworld@example.org'))); @endcode
+     *
      *
      * @return AbstractRecord
      * @throws cyclone\db\Exception
      */
-    public function get_one() {
-        $schema = $this->schema();
+    public static function get_one() {
+        $schema = static::schema();
         $query = cy\DB::select()->from($schema->table_name);
         $args = func_get_args();
-        $this->build_sfw($query, $args);
+        static::build_sfw($query, $args);
         $result = $query->exec($schema->database)->rows($schema->class)->as_array();
         switch(count($result)) {
             case 1: return $result[0];
@@ -136,6 +143,10 @@ abstract class AbstractRecord {
      *      <li>the order direction (string, <code>'ASC'</code> or <code>'DESC'</code>)</li>
      * </ol>
      *
+     * Example:
+     * @code $example_users = UserRecord::get_list(array('email', 'LIKE', cy\DB::esc('%example.org'))
+     *      , array('name', 'desc')); @endcode
+     *
      * @return array<AbstractRecord>
      */
     public static function get_list() {
@@ -165,10 +176,10 @@ abstract class AbstractRecord {
      * clauses of the query, the optional following arguments can be used as
      * WHERE and ORDER BY clause definitions as at @c get_list() .
      * Example:
-     * <pre><code>
-     *  // returns the 31. - 60. rows from the table
-     *  $users = UserRecord::inst()->get_page(2, 30);
-     * </code></pre>
+     *
+     * @code   // returns the 31. - 60. rows from the table
+     * $users = UserRecord::inst()->get_page(2, 30); @endcode
+     *
      * @param int $page
      * @param int $page_size
      * @return array<AbstractRecord>
@@ -206,14 +217,12 @@ abstract class AbstractRecord {
      * key parameter which is the primary key value of the row to be deleted from
      * the table of the actual schema, in the second case it deletes the row of the current
      * instance from the database. Examples:
-     * <pre><code>
-     * // calling on the singleton instance
-     * UserRecord::inst()->delete(3);
      *
-     * // calling on an actual instance
+     * @code
+     * UserRecord::delete(3);
+     *
      * $user->id = 3;
-     * $user->delete();
-     * </code></pre>
+     * $user->delete(); @endcode
      *
      * If we have a an <code>UserRecord</code> active record class mapped to a
      * <code>users</code> table with <code>id</code> as primary key column then
