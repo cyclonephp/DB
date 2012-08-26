@@ -13,7 +13,7 @@ class DB_Mysqli_PreparedTest extends DB_Mysqli_DbTest {
 
     /**
      * @expectedException cyclone\db\Exception
-     * @expectedExceptionMessage failed to prepare statement: 'select * from dummy' Cause: Table 'simpledb.dummy' doesn't exist
+     * @expectedExceptionMessage failed to prepare statement: 'select * from dummy' Cause: Table 'cyclone_test.dummy' doesn't exist
      */
     public function test_prepare_failure() {
         $stmt = cy\DB::executor_prepared('cytst-mysqli')->prepare('select * from dummy');

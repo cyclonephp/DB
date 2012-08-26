@@ -3,8 +3,9 @@
 use cyclone as cy;
 use cyclone\db;
 
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'Mysqli/DBTest.php';
 
-class DB_PreparedTest extends Kohana_Unittest_TestCase {
+class DB_PreparedTest extends DB_Mysqli_DbTest {
 
     public function testPrepareSelect() {
         $query = cy\DB::select()->from('user')->prepare('cytst-mysqli');

@@ -4,9 +4,9 @@ return array(
     'adapter' => 'mysqli',
     'prefix' => 'cy_',
     'connection' => array(
-        'username' => 'simpledb',
-        'password' => 'simpledb',
-        'database' => 'simpledb',
+        'username' => 'cyclone_test',
+        'password' => 'cyclone_test',
+        'database' => 'cyclone_test',
         'host' => 'localhost',
         //'socket' => '/var/mysql/mysql.sock'
     )
