@@ -27,7 +27,7 @@ class Mysqli extends AbstractConnector {
                 , \cyclone\Arr::get($conn, 'port',  ini_get('mysqli.default_port'))
                 , \cyclone\Arr::get($conn, 'socket', ini_get('mysqli.default_socket')));
         if (mysqli_connect_errno())
-            throw new db\Exception('failed to connect: '.mysqli_connect_error());
+            throw new db\ConnectionException('failed to connect: '.mysqli_connect_error());
         $this->db_conn->set_charset(isset($conn['charset']) ? $conn['charset'] : \cyclone\Env::$charset);
     }
 

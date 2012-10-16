@@ -37,7 +37,7 @@ class Postgres extends AbstractConnector {
         }
         
         if (FALSE == $this->db_conn)
-            throw new db\Exception('failed to connect to database: '.$conn_str);
+            throw new db\ConnectionException('failed to connect to database: '.$conn_str);
 
         if (array_key_exists('pk_generator_sequences', $this->_config)) {
             $this->_generator_sequences = $this->_config['pk_generator_sequences'];

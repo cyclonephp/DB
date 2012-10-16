@@ -8,6 +8,8 @@ abstract class DB_Mysqli_DbTest extends Kohana_Unittest_TestCase {
     public function setUp() {
         cy\DB::clear_connections();
         try {
+            cy\DB::query('SET FOREIGN_KEY_CHECKS=0')->exec('cytst-mysqli');
+            cy\DB::query('truncate cy_posts')->exec('cytst-mysqli');
             cy\DB::query('truncate cy_user')->exec('cytst-mysqli');
             $names = array('user1', 'user2');
             $insert = cy\DB::insert('user');
@@ -17,7 +19,7 @@ abstract class DB_Mysqli_DbTest extends Kohana_Unittest_TestCase {
             $insert->exec('cytst-mysqli');
 
             cy\DB::query('truncate cy_user_email')->exec('cytst-mysqli');
-            cy\DB::query('truncate cy_posts')->exec('cytst-mysqli');
+            cy\DB::query('SET FOREIGN_KEY_CHECKS=1')->exec('cytst-mysqli');
         } catch (db\Exception $ex) {
             error_log($ex->getMessage() . ' class: ' . get_class($this));
             $this->markTestSkipped('skipping simpledb tests');

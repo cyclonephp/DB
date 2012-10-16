@@ -3,6 +3,7 @@
 use cyclone as cy;
 use cyclone\db;
 
+require_once __DIR__ . '/DBTest.php';
 class DB_Mysqli_PreparedTest extends DB_Mysqli_DbTest {
 
 
