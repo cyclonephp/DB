@@ -106,4 +106,20 @@ abstract class AbstractResult extends \ArrayIterator implements \Countable, \Tra
         return $this->_current_row;
     }
 
+    public function get_single_row() {
+        $count = $this->count();
+        switch ($count) {
+            case 0:
+                throw new ResultException('query returned 0 rows', ResultException::NO_ROWS_FOUND);
+                break;
+            case 1:
+                $this->rewind();
+                if ( ! $this->valid())
+                    throw new db\Exception('internal error: count() returned 1 but the iterator is not valid at position 0');
+                return $this->current();
+            default:
+                throw new ResultException("query returned $count rows", ResultException::TOO_MANY_ROWS);
+        }
+    }
+
 }
