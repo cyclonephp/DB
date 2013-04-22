@@ -109,7 +109,7 @@ class Table {
      *
      * If the <code>$local_table</code> of the foreign key is <code>NULL</code>
      * then it will default to <code>$this</code>. Otherwise if the local table of
-     * the foreign key is not <code>$this</code> then a @c \cyclone\db\Exception
+     * the foreign key is not <code>$this</code> then a @c \cyclone\db\CycloneException
      * will be thrown.
      *
      * @param ForeignKey $new_fk

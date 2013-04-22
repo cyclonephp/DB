@@ -66,7 +66,7 @@ class Mysqli extends AbstractExecutor {
             throw MysqlExceptionBuilder::for_error($this->_db_conn->error
                 , $this->_db_conn->errno
                 , $sql);
-            //throw new db\Exception($this->_db_conn->error, $this->_db_conn->errno);
+            //throw new db\CycloneException($this->_db_conn->error, $this->_db_conn->errno);
 
         return self::stmt_result_for_insert($orig_query
             , $this->_config['config_name']
@@ -79,7 +79,7 @@ class Mysqli extends AbstractExecutor {
             throw MysqlExceptionBuilder::for_error($this->_db_conn->error
                 , $this->_db_conn->errno
                 , $sql);
-            //throw new db\Exception($this->_db_conn->error, $this->_db_conn->errno);
+            //throw new db\CycloneException($this->_db_conn->error, $this->_db_conn->errno);
 
         return self::stmt_result_for_update($orig_query
             , $this->_config['config_name']

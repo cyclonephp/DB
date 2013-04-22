@@ -89,7 +89,7 @@ abstract class AbstractRecord {
      *
      * If 0 row is found the <code>NULL</code> will be returned, if 1 row is found
      * then a @c AbstractRecord subclass instance will be returned representing the
-     * found row, if more than one row is found then an @c cyclone\db\Exception
+     * found row, if more than one row is found then an @c cyclone\db\CycloneException
      * will be thrown.
      *
      * The method accepts any number of array arguments, every argument should be
@@ -105,7 +105,7 @@ abstract class AbstractRecord {
      *
      *
      * @return AbstractRecord
-     * @throws cyclone\db\Exception
+     * @throws cyclone\db\CycloneException
      */
     public static function get_one() {
         $schema = static::schema();
