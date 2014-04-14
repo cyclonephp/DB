@@ -16,16 +16,16 @@ class Mysqli extends AbstractConnector {
         $conn = $this->_config['connection'];
 
         if (array_key_exists('persistent', $this->_config['connection'])
-                && $conn['connection']) {
-           $host = 'p:'.$conn['host'];
+            && $conn['connection']) {
+            $host = 'p:'.$conn['host'];
         } else {
             $host = $conn['host'];
         }
 
-        $this->db_conn = @new \mysqli($host, $conn['username'],
-                $conn['password'], $conn['database']
-                , \cyclone\Arr::get($conn, 'port',  ini_get('mysqli.default_port'))
-                , \cyclone\Arr::get($conn, 'socket', ini_get('mysqli.default_socket')));
+        $this->db_conn = new \mysqli($host, $conn['username'],
+            $conn['password'], $conn['database']
+            , \cyclone\Arr::get($conn, 'port',  ini_get('mysqli.default_port'))
+            , \cyclone\Arr::get($conn, 'socket', ini_get('mysqli.default_socket')));
         if (mysqli_connect_errno())
             throw new db\ConnectionException('failed to connect: '.mysqli_connect_error());
         $this->db_conn->set_charset(isset($conn['charset']) ? $conn['charset'] : \cyclone\Env::$charset);

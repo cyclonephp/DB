@@ -3,7 +3,7 @@
 use cyclone as cy;
 use cyclone\db;
 
-require_once cy\FileSystem::get_root_path('db') . 'tests/DB/Postgres/DBTest.php';
+require_once cy\FileSystem::get_default()->get_root_path('db') . 'tests/DB/Postgres/DBTest.php';
 
 class DB_Postgres_CompileTest extends Kohana_Unittest_TestCase {
 

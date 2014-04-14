@@ -4,9 +4,10 @@ use cyclone as cy;
 use cyclone\db;
 
 
-require_once __DIR__ . '/Mysqli/DBTest.php';
 
-class DB_Test extends DB_Mysqli_DbTest {
+//require_once __DIR__ . '/Mysqli/DBTest.php';
+
+class DB_Test extends PHPUnit_Framework_TestCase {
 
     public function testPools() {
         $this->assertInstanceOf('\\cyclone\\db\\Compiler', cy\DB::compiler('cytst-mysqli'));

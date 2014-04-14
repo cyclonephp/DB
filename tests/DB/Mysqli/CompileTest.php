@@ -4,7 +4,7 @@ use cyclone as cy;
 use cyclone\db;
 
 
-require_once cy\FileSystem::get_root_path('db') . 'tests/DB/Mysqli/DBTest.php';
+require_once cy\FileSystem::get_default()->get_root_path('db') . 'tests/DB/Mysqli/DBTest.php';
 
 class DB_Mysqli_CompileTest extends DB_Mysqli_DbTest {
 

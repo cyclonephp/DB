@@ -1,8 +1,9 @@
 <?php
 
 namespace cyclone\db\schema;
-use cyclone\db;
-use cyclone as cy;
+
+use cyclone\DB;
+use cyclone\FileSystem;
 
 /**
  * @author Bence Eros <crystal@cyclonephp.org>
@@ -25,10 +26,10 @@ class Builder {
     }
 
     public function ddl_for_table(Table $table) {
-        $generator = cy\DB::schema_generator($table->database);
+        $generator = DB::schema_generator($table->database);
         $ddl = $generator->ddl_create_table($table, $this->_forced);
         if ( ! $this->_suppress_execution) {
-            cy\DB::executor($table->database)->exec_custom($ddl);
+            DB::executor($table->database)->exec_custom($ddl);
         }
         return $ddl;
     }
@@ -59,7 +60,7 @@ class Builder {
         $namespaces = NULL === $this->_namespace ? NULL : explode(',', $this->_namespace);
         $files = array();
         foreach ($namespaces as $ns) {
-            $files += cy\FileSystem::list_directory('classes/' . \str_replace('\\', \DIRECTORY_SEPARATOR, $ns));
+            $files += FileSystem::get_default()->list_directory('classes/' . \str_replace('\\', \DIRECTORY_SEPARATOR, $ns));
         }
         $classes = array();
         foreach ($files as $rel_path => $abs_path) {

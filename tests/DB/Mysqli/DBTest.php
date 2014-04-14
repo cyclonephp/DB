@@ -3,7 +3,7 @@
 use cyclone as cy;
 use cyclone\db;
 
-abstract class DB_Mysqli_DbTest extends Kohana_Unittest_TestCase {
+abstract class DB_Mysqli_DBTest extends PHPUnit_Framework_TestCase {
 
     public function setUp() {
         cy\DB::clear_connections();
@@ -22,11 +22,11 @@ abstract class DB_Mysqli_DbTest extends Kohana_Unittest_TestCase {
             cy\DB::query('SET FOREIGN_KEY_CHECKS=1')->exec('cytst-mysqli');
         } catch (db\Exception $ex) {
             error_log($ex->getMessage() . ' class: ' . get_class($this));
-            $this->markTestSkipped('skipping simpledb tests');
+            $this->markTestSkipped('skipping db tests');
         }
     }
 
     public function tearDown() {
-        DB::clear_connections();
+         DB::clear_connections();
     }
 }

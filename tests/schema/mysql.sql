@@ -1,8 +1,8 @@
-drop table if exists cy_user_email;
+DROP TABLE IF EXISTS cy_user_email;
 
 DROP TABLE IF EXISTS cy_user;
 
-DROP TABLE IF EXISTS t_posts;
+DROP TABLE IF EXISTS cy_posts;
 
 CREATE TABLE cy_user (
   id int(11) NOT NULL AUTO_INCREMENT,

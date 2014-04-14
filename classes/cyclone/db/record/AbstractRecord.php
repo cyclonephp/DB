@@ -105,7 +105,7 @@ abstract class AbstractRecord {
      *
      *
      * @return AbstractRecord
-     * @throws cyclone\db\CycloneException
+     * @throws \cyclone\db\Exception
      */
     public static function get_one() {
         $schema = static::schema();
